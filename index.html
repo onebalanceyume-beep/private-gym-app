@@ -3,521 +3,437 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIVATE GYM — Yonago</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#E24B4A">
+<title>one-BALANCE BOXING GYM</title>
+<link rel="manifest" href="manifest.json">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#f9f6f1;--bg2:#ffffff;--bg3:#f4ede3;--wood:#c8a876;--wood2:#e8d9c0;--gold:#9a7235;--gold2:#c9924a;--text:#2c2018;--text2:#6b5840;--text3:#a89070;--border:#e2d4bc;--border2:#c8a876;--green:#3a7a5a;--pink:#9a3050}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.app{max-width:960px;margin:0 auto}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-top:3px solid var(--wood)}
-.logo{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);letter-spacing:3px;font-weight:700}
-.logo-sub{font-size:9px;color:var(--text3);letter-spacing:4px;margin-top:2px}
-.mbtn{font-size:11px;padding:7px 18px;border-radius:2px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:1px;font-family:'Noto Sans JP',sans-serif;margin-left:6px}
-.mbtn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
-.nav{background:var(--bg3);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0;flex-wrap:wrap}
-.nbtn{font-size:11px;padding:13px 18px;border:none;background:transparent;color:var(--text3);cursor:pointer;letter-spacing:1px;font-family:'Noto Sans JP',sans-serif;border-bottom:2px solid transparent}
-.nbtn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.nbtn:hover{color:var(--text2)}
-.page{display:none;padding:24px}.page.active{display:block}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
-.metric{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:16px;border-left:3px solid var(--wood)}
-.ml{font-size:9px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:7px}
-.mv{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);font-weight:600}
-.ms{font-size:11px;color:var(--gold2);margin-top:2px}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:20px;margin-bottom:14px}
-.ctitle{font-size:9px;letter-spacing:4px;color:var(--gold);margin-bottom:16px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-.ctitle::after{content:'';flex:1;height:1px;background:var(--border)}
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.mrow{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--bg3);border-radius:3px;margin-bottom:7px;border:1px solid transparent}
-.mrow:hover{border-color:var(--border2);background:var(--bg2)}
-.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;flex-shrink:0}
-.av-f{background:#fdf0f4;color:var(--pink)}
-.av-m{background:#f0f4fd;color:#2a5a8a}
-.mname{font-size:13px;color:var(--text);font-weight:500}
-.mmeta{font-size:11px;color:var(--text3);margin-top:2px}
-.badge{font-size:9px;padding:3px 10px;border-radius:2px;letter-spacing:1px;font-weight:500}
-.badge-f{background:#fdf0f4;color:var(--pink)}
-.badge-m{background:#f0f4fd;color:#2a5a8a}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fg label{font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase}
-.fg input,.fg select{font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--gold)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn-gold{background:var(--gold);color:#fff;border:none;padding:10px 22px;border-radius:3px;font-size:12px;cursor:pointer;letter-spacing:2px;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
-.btn-ghost{background:transparent;border:1px solid var(--border2);padding:7px 14px;border-radius:3px;font-size:11px;cursor:pointer;color:var(--text2);font-family:'Noto Sans JP',sans-serif;letter-spacing:1px}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.set-row{display:grid;grid-template-columns:2fr 1fr 1fr 30px;gap:7px;align-items:center;margin-bottom:7px}
-.set-row input{font-size:12px;padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif}
-.del-btn{width:28px;height:28px;border-radius:3px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text3);font-size:14px}
-.pi{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-.pi:last-child{border:none}
-.pn{font-size:13px;color:var(--text)}
-.pvs{display:flex;gap:10px;font-size:12px;align-items:center}
-.pp{color:var(--text3)}.pc{color:var(--text);font-weight:500}.pu{color:var(--green);font-size:11px;font-weight:500}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cday{text-align:center;padding:7px 3px;font-size:11px;border-radius:3px;color:var(--text3)}
-.cday.hdr{font-size:9px;letter-spacing:2px;color:var(--text3);font-weight:500}
-.cday.has{background:var(--wood2);color:var(--gold);cursor:pointer;font-weight:500}
-.cday.has:hover{background:var(--wood);color:#fff}
-.cday.today{border:1.5px solid var(--gold)}
-.msel{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-.msel select,.msel input[type=date]{font-size:12px;padding:7px 11px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif}
-.pr-badge{display:inline-block;background:#fdf5e8;color:var(--gold);font-size:9px;padding:2px 7px;border-radius:2px;letter-spacing:1px;font-weight:500;margin-left:6px;border:1px solid var(--wood2)}
-.mv-card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;overflow:hidden}
-.mv-hero{background:var(--bg3);padding:32px 24px 24px;text-align:center;border-bottom:1px solid var(--border)}
-.mv-av{width:72px;height:72px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:28px;font-weight:700;border:2px solid var(--wood)}
-.mv-name{font-family:'Playfair Display',serif;font-size:22px;color:var(--text);margin-bottom:3px}
-.mv-lbl{font-size:9px;letter-spacing:4px;color:var(--text3);text-transform:uppercase}
-.mv-kpi{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
-.mv-k{padding:16px 10px;text-align:center;border-right:1px solid var(--border)}
-.mv-k:last-child{border:none}
-.mv-kv{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);font-weight:600}
-.mv-kl{font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:3px;text-transform:uppercase}
-.mv-sec{padding:20px 22px;border-bottom:1px solid var(--border)}
-.mv-sec:last-child{border:none}
-.mv-st{font-size:9px;letter-spacing:4px;color:var(--gold);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-.mv-st::after{content:'';flex:1;height:1px;background:var(--border)}
-.pr-list{display:flex;flex-direction:column;gap:8px}
-.pr-item{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--bg3);border-radius:3px}
-.pr-name{font-size:12px;color:var(--text)}
-.pr-val{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);font-weight:600}
-.pr-date{font-size:10px;color:var(--text3);margin-top:1px}
-.loading{text-align:center;padding:40px;color:var(--text3);font-size:13px}
-.sales-kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
-.sales-kpi .metric{border-left-color:var(--green)}
-.course-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-.course-item:last-child{border:none}
-.course-name{font-size:12px;color:var(--text)}
-.course-val{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600}
-.course-count{font-size:10px;color:var(--text3);margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;}
+body{background:#f5f5f5;display:flex;justify-content:center;}
+.app{width:100%;max-width:430px;min-height:100vh;background:#fff;}
+.screen{display:none;}.screen.active{display:block;}
+.red-hd{background:#E24B4A;padding:14px 18px;}
+.logo-bar{display:flex;align-items:center;gap:10px;}
+.logo-img{width:34px;height:34px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,0.15);padding:2px;}
+.logo-text{font-size:13px;color:#fff;letter-spacing:0.04em;}
+.logo-text span{font-size:10px;color:rgba(255,255,255,0.75);display:block;}
+.back-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;display:inline-block;margin-bottom:10px;}
+
+/* PIN */
+.pin-wrap{padding:30px 24px 20px;display:flex;flex-direction:column;align-items:center;}
+.pin-logo-wrap{width:90px;height:90px;margin-bottom:18px;border-radius:50%;background:#fff;padding:8px;box-shadow:0 4px 20px rgba(226,75,74,0.2);}
+.pin-logo-wrap img{width:100%;height:100%;object-fit:contain;}
+.pin-title{font-size:19px;color:#333;margin-bottom:6px;}
+.pin-sub{font-size:13px;color:#888;margin-bottom:20px;text-align:center;line-height:1.7;}
+.step-dots{display:flex;gap:8px;margin-bottom:20px;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:background 0.2s;}
+.step-dot.active{background:#E24B4A;}
+.hira-display{width:100%;background:#fff;border:1px solid #eee;border-radius:10px;padding:12px;font-size:24px;color:#333;text-align:center;min-height:52px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.hira-display.placeholder{color:#bbb;font-size:14px;line-height:28px;}
+.hira-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:100%;margin-bottom:14px;}
+.hira-key{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px 4px;font-size:16px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;color:#333;transition:all 0.1s;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.hira-key:active,.hira-key.selected{background:#FCEBEB;border-color:#E24B4A;color:#A32D2D;}
+.next-btn{width:100%;background:#E24B4A;color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;}
+.next-btn:disabled{opacity:0.35;cursor:default;}
+.pin-dots{display:flex;gap:16px;margin-bottom:24px;}
+.pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid #ddd;background:transparent;transition:all 0.15s;}
+.pin-dot.filled{background:#E24B4A;border-color:#E24B4A;}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;}
+.pin-key{width:72px;height:72px;border-radius:50%;border:1px solid #eee;background:#fff;font-size:22px;color:#333;cursor:pointer;font-family:Helvetica,Arial,sans-serif;transition:background 0.1s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.pin-key:active{background:#f5f5f5;}
+.pin-key.del{font-size:13px;color:#888;}
+.pin-key.empty{background:transparent;border:none;cursor:default;box-shadow:none;}
+.pin-err{margin-top:12px;font-size:13px;color:#A32D2D;min-height:20px;text-align:center;}
+.loading-msg{margin-top:8px;font-size:12px;color:#888;text-align:center;}
+
+/* HOME */
+.home-hd{background:linear-gradient(135deg,#E24B4A,#c0392b);padding:20px 18px;}
+.home-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.logout-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;}
+.name-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.member-av{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;}
+.member-hello{font-size:12px;color:rgba(255,255,255,0.8);}
+.member-fullname{font-size:20px;color:#fff;}
+.grade-display{background:rgba(255,255,255,0.18);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;}
+.grade-icon{font-size:26px;}
+.grade-lbl{font-size:11px;color:rgba(255,255,255,0.75);}
+.grade-nm{font-size:16px;color:#fff;}
+.home-content{padding:20px;}
+.sec-lbl{font-size:12px;color:#999;margin-bottom:12px;margin-top:20px;}
+.sec-lbl:first-child{margin-top:0;}
+.menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.menu-item{background:#fff;border:1px solid #f0f0f0;border-radius:16px;padding:16px;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;gap:8px;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.menu-item:active{transform:scale(0.98);border-color:#E24B4A;}
+.menu-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.menu-nm{font-size:14px;color:#333;}
+.menu-desc{font-size:11px;color:#999;}
+.notice-card{background:#fff;border:1px solid #f0f0f0;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.notice-tag{display:inline-block;background:#FCEBEB;color:#E24B4A;font-size:11px;border-radius:20px;padding:3px 12px;margin-bottom:8px;}
+.notice-title{font-size:14px;color:#333;}
+.notice-date{font-size:11px;color:#bbb;margin-top:4px;}
+
+/* CURRICULUM */
+.cur-hd{background:linear-gradient(135deg,#E24B4A,#c0392b);padding:20px 18px;}
+.cur-hd h2{font-size:18px;color:#fff;margin-bottom:14px;}
+.prog-wrap{background:rgba(255,255,255,0.25);border-radius:20px;height:10px;margin-bottom:8px;}
+.prog-fill{background:#fff;border-radius:20px;height:10px;transition:width 0.5s;}
+.prog-stats{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,0.9);}
+.pass-badge{display:inline-flex;align-items:center;gap:6px;background:#EF9F27;border-radius:20px;padding:8px 16px;font-size:14px;color:#fff;margin-top:12px;}
+.cur-list{padding:14px 16px;display:flex;flex-direction:column;gap:10px;padding-bottom:40px;}
+.cur-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.cur-main{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+.item-nm{flex:1;font-size:14px;color:#333;font-weight:500;}
+.st-group{display:flex;gap:6px;flex-shrink:0;}
+.st-btn{font-size:10px;border-radius:20px;padding:5px 10px;border:1px solid #eee;cursor:pointer;background:#f8f8f8;color:#999;font-family:Helvetica,Arial,sans-serif;transition:all 0.12s;white-space:nowrap;}
+.st-btn.ch{background:#E6F1FB;color:#185FA5;border-color:#378ADD;}
+.st-btn.ok{background:#EAF3DE;color:#3B6D11;border-color:#639922;}
+.yt-section{background:#fafafa;border-top:1px solid #f0f0f0;padding:10px 14px;display:flex;flex-direction:column;gap:6px;}
+.yt-link{display:flex;align-items:center;gap:8px;text-decoration:none;background:#fff;border:1px solid #f0f0f0;border-radius:8px;padding:8px 10px;transition:all 0.15s;}
+.yt-link:active{border-color:#FF0000;background:#fff5f5;}
+.yt-icon{width:24px;height:18px;background:#FF0000;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.yt-icon::after{content:'▶';color:#fff;font-size:8px;}
+.yt-text{font-size:11px;color:#333;font-weight:500;flex:1;}
+.no-yt{font-size:11px;color:#bbb;padding:4px 0;}
+
+/* GRADE */
+.grade-card{border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+.grade-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.grade-icon-wrap{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.grade-name{font-size:16px;font-weight:500;margin-bottom:2px;}
+.grade-desc{font-size:12px;opacity:0.8;}
+.grade-status{display:inline-block;font-size:11px;border-radius:20px;padding:3px 10px;margin-bottom:10px;background:rgba(255,255,255,0.4);}
+.grade-yt-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.35);border:none;border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;font-family:Helvetica,Arial,sans-serif;width:100%;margin-bottom:6px;text-decoration:none;color:inherit;}
+.grade-yt-btn:last-child{margin-bottom:0;}
+.grade-yt-icon{width:20px;height:16px;background:#FF0000;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.grade-yt-icon::after{content:'▶';color:#fff;font-size:7px;}
+.g-white{background:#F5F5F0;}.g-white .grade-name{color:#555;}.g-white .grade-icon-wrap{background:#E8E8E0;}
+.g-green{background:#D4EDDA;}.g-green .grade-name{color:#1A5C2A;}.g-green .grade-icon-wrap{background:#A8D5B0;}
+.g-blue{background:#CCE5FF;}.g-blue .grade-name{color:#0A3D6B;}.g-blue .grade-icon-wrap{background:#99CAFF;}
+.g-orange{background:#FFE5CC;}.g-orange .grade-name{color:#7A3500;}.g-orange .grade-icon-wrap{background:#FFB980;}
+.g-red{background:#FFCCCC;}.g-red .grade-name{color:#7A0000;}.g-red .grade-icon-wrap{background:#FF9999;}
+.g-gold{background:#FFF3CC;}.g-gold .grade-name{color:#7A5500;}.g-gold .grade-icon-wrap{background:#FFD966;}
+.locked{opacity:0.4;}
+.current-badge{display:inline-block;background:#E24B4A;color:#fff;font-size:10px;border-radius:20px;padding:2px 8px;margin-left:8px;vertical-align:middle;}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="topbar">
-    <div><div class="logo">PRIVATE GYM</div><div class="logo-sub">YONAGO — TRAINER CONSOLE</div></div>
-    <div>
-      <button class="mbtn active" onclick="setMode('trainer',this)">トレーナー</button>
-      <button class="mbtn" onclick="setMode('member',this)">会員向け表示</button>
+
+<!-- STEP1: 頭文字 -->
+<div class="screen active" id="s-hira">
+  <div class="red-hd">
+    <div class="logo-bar">
+      <img class="logo-img" src="logo.jpg" alt="logo">
+      <div class="logo-text">one-BALANCE BOXING GYM<span>会員ページ</span></div>
     </div>
   </div>
-
-  <div id="tui">
-    <div class="nav">
-      <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
-      <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
-      <button class="nbtn" onclick="sp('members',this)">会員管理</button>
-      <button class="nbtn" onclick="sp('training',this)">トレーニング記録</button>
-      <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
-      <button class="nbtn" onclick="sp('progress',this)">成長グラフ</button>
-    </div>
-
-    <div id="page-dashboard" class="page active">
-      <div class="metrics">
-        <div class="metric"><div class="ml">Total Members</div><div class="mv" id="mt">0</div><div class="ms">名</div></div>
-        <div class="metric"><div class="ml">Female</div><div class="mv" id="mf">0</div><div class="ms" id="mfp">-%</div></div>
-        <div class="metric"><div class="ml">Male</div><div class="mv" id="mm">0</div><div class="ms" id="mmp">-%</div></div>
-        <div class="metric"><div class="ml">Avg Age</div><div class="mv" id="ma">-</div><div class="ms">歳</div></div>
-      </div>
-      <div class="charts-row">
-        <div class="card"><div class="ctitle">Gender Ratio</div><div style="position:relative;height:185px"><canvas id="cg"></canvas></div></div>
-        <div class="card"><div class="ctitle">Age Group</div><div style="position:relative;height:185px"><canvas id="ca"></canvas></div></div>
-      </div>
-    </div>
-
-    <div id="page-sales" class="page">
-      <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
-      <div id="sales-content" style="display:none">
-        <div class="sales-kpi">
-          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">今月の売上</div><div class="mv" id="s-month">¥0</div><div class="ms" id="s-month-count">0件</div></div>
-          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">年間売上（今年）</div><div class="mv" id="s-year">¥0</div><div class="ms" id="s-year-count">0件</div></div>
-          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">累計売上</div><div class="mv" id="s-total">¥0</div><div class="ms" id="s-total-count">0件</div></div>
-        </div>
-        <div class="charts-row">
-          <div class="card"><div class="ctitle">月別売上推移（今年）</div><div style="position:relative;height:200px"><canvas id="cs-month"></canvas></div></div>
-          <div class="card"><div class="ctitle">コース別売上内訳</div><div style="position:relative;height:200px"><canvas id="cs-course"></canvas></div></div>
-        </div>
-        <div class="card">
-          <div class="ctitle">コース別詳細</div>
-          <div id="course-detail"></div>
-        </div>
-        <div class="card">
-          <div class="ctitle">申込一覧（スプレッドシートより）</div>
-          <div id="form-list"></div>
-        </div>
-      </div>
-      <div id="sales-error" style="display:none;padding:20px;color:#9a3050;font-size:13px">データの取得に失敗しました。GAS WebアプリのURLを確認してください。</div>
-    </div>
-
-    <div id="page-members" class="page">
-      <div class="card">
-        <div class="ctitle">新規会員登録</div>
-        <div class="form-grid">
-          <div class="fg"><label>氏名</label><input id="in" placeholder="山田 花子"></div>
-          <div class="fg"><label>生年月日</label><input id="id" type="date"></div>
-          <div class="fg"><label>性別</label><select id="ig"><option value="f">女性</option><option value="m">男性</option></select></div>
-          <div class="fg"><label>体重 (kg)</label><input id="iw" type="number" step="0.1" placeholder="55.0"></div>
-        </div>
-        <button class="btn-gold" onclick="addM()">登録する</button>
-      </div>
-      <div class="card"><div class="ctitle">会員一覧</div><div id="mlist"></div></div>
-    </div>
-
-    <div id="page-training" class="page">
-      <div class="card">
-        <div class="ctitle">トレーニング記録入力</div>
-        <div class="msel">
-          <select id="str"><option value="">会員を選択</option></select>
-          <input id="idate" type="date">
-        </div>
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 30px;gap:7px;margin-bottom:8px">
-          <span style="font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase">種目名</span>
-          <span style="font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase">重量kg</span>
-          <span style="font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase">回数</span>
-          <span></span>
-        </div>
-        <div id="sw"></div>
-        <div style="display:flex;gap:10px;margin-top:10px">
-          <button class="btn-ghost" onclick="addS()">+ 種目追加</button>
-          <button class="btn-gold" onclick="saveTr()">記録を保存</button>
-        </div>
-      </div>
-      <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
-    </div>
-
-    <div id="page-calendar" class="page">
-      <div class="card">
-        <div class="msel">
-          <select id="scal" onchange="rCal()"><option value="">全会員</option></select>
-          <button class="btn-ghost" onclick="cPrev()">&#8249;</button>
-          <span style="font-family:'Playfair Display',serif;font-size:16px;color:var(--text);font-weight:600" id="ctitle"></span>
-          <button class="btn-ghost" onclick="cNext()">&#8250;</button>
-        </div>
-        <div class="cal-grid" id="chdr"></div>
-        <div class="cal-grid" style="margin-top:4px" id="cbody"></div>
-      </div>
-    </div>
-
-    <div id="page-progress" class="page">
-      <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
-      <div class="charts-row">
-        <div class="card"><div class="ctitle">体重推移</div><div style="position:relative;height:180px"><canvas id="cw"></canvas></div></div>
-        <div class="card"><div class="ctitle">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
-      </div>
-      <div class="charts-row">
-        <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
-        <div class="card"><div class="ctitle">種目別 重量の伸び</div><div style="position:relative;height:180px"><canvas id="ce"></canvas></div></div>
-      </div>
-      <div class="card"><div class="ctitle">最高重量 自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
-      <div class="card"><div class="ctitle">前回比較</div><div id="pcmp"></div></div>
-    </div>
-  </div>
-
-  <div id="mui" style="display:none;padding:24px">
-    <div class="msel"><select id="smv" onchange="rMV()"><option value="">会員を選択</option></select></div>
-    <div id="mvc"></div>
+  <div class="pin-wrap">
+    <div class="pin-logo-wrap"><img src="logo.jpg" alt="logo"></div>
+    <div class="pin-title">会員ページにログイン</div>
+    <div class="pin-sub">名前の頭文字（ひらがな）を<br>選んでください</div>
+    <div class="step-dots"><div class="step-dot active"></div><div class="step-dot"></div></div>
+    <div class="hira-display placeholder" id="hira-display">未選択</div>
+    <div class="hira-grid" id="hira-grid"></div>
+    <button class="next-btn" id="hira-next" disabled onclick="goToPin()">次へ →</button>
   </div>
 </div>
 
+<!-- STEP2: PIN -->
+<div class="screen" id="s-pin">
+  <div class="red-hd">
+    <div class="logo-bar">
+      <img class="logo-img" src="logo.jpg" alt="logo">
+      <div class="logo-text">one-BALANCE BOXING GYM<span>会員ページ</span></div>
+    </div>
+  </div>
+  <div class="pin-wrap">
+    <div class="pin-logo-wrap"><img src="logo.jpg" alt="logo"></div>
+    <div class="pin-title">暗証番号を入力</div>
+    <div class="pin-sub">頭文字「<span id="pin-hira-show"></span>」の<br>4桁PINを入力してください</div>
+    <div class="step-dots"><div class="step-dot"></div><div class="step-dot active"></div></div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-keypad">
+      <button class="pin-key" onclick="pk('1')">1</button><button class="pin-key" onclick="pk('2')">2</button><button class="pin-key" onclick="pk('3')">3</button>
+      <button class="pin-key" onclick="pk('4')">4</button><button class="pin-key" onclick="pk('5')">5</button><button class="pin-key" onclick="pk('6')">6</button>
+      <button class="pin-key" onclick="pk('7')">7</button><button class="pin-key" onclick="pk('8')">8</button><button class="pin-key" onclick="pk('9')">9</button>
+      <button class="pin-key" onclick="showScreen('s-hira')" style="font-size:12px;color:#888;">戻る</button>
+      <button class="pin-key" onclick="pk('0')">0</button>
+      <button class="pin-key del" onclick="pd()">削除</button>
+    </div>
+    <div class="pin-err" id="pin-err"></div>
+    <div class="loading-msg" id="loading-msg"></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="s-home">
+  <div class="home-hd">
+    <div class="home-top">
+      <div class="logo-bar">
+        <img class="logo-img" src="logo.jpg" alt="logo">
+        <div class="logo-text">one-BALANCE BOXING GYM<span>会員ページ</span></div>
+      </div>
+      <button class="logout-btn" onclick="logout()">ログアウト</button>
+    </div>
+    <div class="name-row">
+      <div class="member-av" id="h-av">田</div>
+      <div>
+        <div class="member-hello">ようこそ</div>
+        <div class="member-fullname" id="h-name">田中 健太</div>
+      </div>
+    </div>
+    <div class="grade-display">
+      <div class="grade-icon" id="h-gicon">⚪</div>
+      <div>
+        <div class="grade-lbl">現在のグレード</div>
+        <div class="grade-nm" id="h-gname">ホワイトメダル</div>
+      </div>
+    </div>
+  </div>
+  <div class="home-content">
+    <div class="sec-lbl">メニュー</div>
+    <div class="menu-grid">
+      <div class="menu-item" onclick="showScreen('s-cur')">
+        <div class="menu-icon" style="background:#FCEBEB;">📋</div>
+        <div class="menu-nm">カリキュラム</div>
+        <div class="menu-desc">進捗を確認する</div>
+      </div>
+      <div class="menu-item" onclick="showScreen('s-grade')">
+        <div class="menu-icon" style="background:#FAEEDA;">🏅</div>
+        <div class="menu-nm">グレード認定</div>
+        <div class="menu-desc">取得バッジを見る</div>
+      </div>
+      <div class="menu-item" onclick="showScreen('s-notice')">
+        <div class="menu-icon" style="background:#E6F1FB;">📢</div>
+        <div class="menu-nm">お知らせ</div>
+        <div class="menu-desc">キャンペーン情報</div>
+      </div>
+      <div class="menu-item" onclick="window.open('https://www.facebook.com/share/g/1CWGbwdZmm/','_blank')">
+        <div class="menu-icon" style="background:#EAF3DE;">👥</div>
+        <div class="menu-nm">コミュニティ</div>
+        <div class="menu-desc">Facebookグループ</div>
+      </div>
+    </div>
+    <div class="sec-lbl">最新のお知らせ</div>
+    <div class="notice-card">
+      <div class="notice-tag">キャンペーン</div>
+      <div class="notice-title">春の入会金いっしょ割キャンペーン開催中！</div>
+      <div class="notice-date">2026年3月16日</div>
+    </div>
+  </div>
+</div>
+
+<!-- CURRICULUM -->
+<div class="screen" id="s-cur">
+  <div style="padding-bottom:40px;">
+    <div class="cur-hd">
+      <button class="back-btn" onclick="showScreen('s-home')">← 戻る</button>
+      <h2>基本カリキュラム</h2>
+      <div class="prog-wrap"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
+      <div class="prog-stats"><span id="prog-txt">合格: 0 / 14</span><span id="prog-pct">0%</span></div>
+      <div id="pass-bdg" style="display:none;"><div class="pass-badge">🏅 基本カリキュラム修了！</div></div>
+    </div>
+    <div class="cur-list" id="cur-list"></div>
+  </div>
+</div>
+
+<!-- GRADE -->
+<div class="screen" id="s-grade">
+  <div style="padding-bottom:40px;">
+    <div class="red-hd">
+      <button class="back-btn" onclick="showScreen('s-home')">← 戻る</button>
+      <div style="font-size:18px;color:#fff;font-weight:500;">グレード認定</div>
+    </div>
+    <div style="padding:16px;" id="grade-wrap"></div>
+  </div>
+</div>
+
+<!-- NOTICE -->
+<div class="screen" id="s-notice">
+  <div style="padding-bottom:40px;">
+    <div class="red-hd">
+      <button class="back-btn" onclick="showScreen('s-home')">← 戻る</button>
+      <div style="font-size:18px;color:#fff;font-weight:500;">お知らせ</div>
+    </div>
+    <div style="padding:20px;">
+      <div class="notice-card"><div class="notice-tag">キャンペーン</div><div class="notice-title">春の入会金いっしょ割キャンペーン開催中！</div><div class="notice-date">2026年3月16日</div></div>
+      <div class="notice-card"><div class="notice-tag">お知らせ</div><div class="notice-title">4月の祝日営業について</div><div class="notice-date">2026年3月10日</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
 <script>
-// ============================================================
-// GAS WebアプリURL（スプレッドシートと連動）
-// ============================================================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzw-z8FjYzdBiJ-9mI8p2S7lfWobRrE99t8t8vVHAUY1FJu1v8WG2pKJhH-UHSO_EZi/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbyuzVrcogYqq8SjjRn98c2_M9X8wJuA7mGOnt9Ac0cPcm6bK9JuGyX76MpMmmKB01IMiw/exec';
 
-let M=JSON.parse(localStorage.getItem('g4_m')||'[]');
-let T=JSON.parse(localStorage.getItem('g4_t')||'[]');
-let cY=new Date().getFullYear(),cM2=new Date().getMonth();
-let C={};
-let gasData=[];
+const curItems=[
+  {name:'ジャブ',videos:[{url:'https://youtu.be/Aqvc5L3u1so',label:'動画①'},{url:'https://youtu.be/zHveV-_FKGg',label:'動画②'},{url:'https://youtu.be/Ja6mVvvPV4w',label:'動画③'},{url:'https://youtu.be/HxGKebXOCbM',label:'動画④'}]},
+  {name:'ワンツー',videos:[{url:'https://youtu.be/zHveV-_FKGg',label:'動画①'},{url:'https://youtu.be/KNTLVDEeVvk',label:'動画②'},{url:'https://youtu.be/Ja6mVvvPV4w',label:'動画③'}]},
+  {name:'フック',videos:[{url:'https://youtu.be/oeAQGLeDL08',label:'動画①'}]},
+  {name:'ワンツーステップ',videos:[{url:'https://youtu.be/KNTLVDEeVvk',label:'動画①'},{url:'https://youtu.be/AY_WR3gSufo',label:'動画②'}]},
+  {name:'アッパー',videos:[{url:'https://youtu.be/wmzNv_7lhA0',label:'動画①'}]},
+  {name:'サンドバックポジション',videos:[{url:'https://youtu.be/88TP05BcvBI',label:'動画①'},{url:'https://youtu.be/JljZti__-WI',label:'動画②'},{url:'https://youtu.be/NDJFsTGVsFg',label:'動画③'}]},
+  {name:'パンチ時のガード',videos:[{url:'https://youtu.be/i-MO11b83CQ',label:'動画①'}]},
+  {name:'同時ステップ',videos:[{url:'https://youtu.be/AY_WR3gSufo',label:'動画①'},{url:'https://youtu.be/M-JKtBUlDos',label:'動画②'}]},
+  {name:'ランダムシャドー',videos:[]},
+  {name:'ボディアッパー',videos:[{url:'https://youtu.be/w9cjTuBFxJ4',label:'動画①'}]},
+  {name:'ロープ Level.1',videos:[{url:'https://youtu.be/WPROg0dUmsU',label:'動画①'},{url:'https://youtu.be/NDJFsTGVsFg',label:'動画②'}]},
+  {name:'ロープ Level.2',videos:[{url:'https://youtu.be/WPROg0dUmsU',label:'動画①'},{url:'https://youtu.be/NDJFsTGVsFg',label:'動画②'}]},
+  {name:'ロープ Level.3',videos:[{url:'https://youtu.be/WPROg0dUmsU',label:'動画①'},{url:'https://youtu.be/NDJFsTGVsFg',label:'動画②'}]},
+  {name:'ロープ Level.4',videos:[{url:'https://youtu.be/WPROg0dUmsU',label:'動画①'},{url:'https://youtu.be/NDJFsTGVsFg',label:'動画②'}]},
+];
 
-function sv(){localStorage.setItem('g4_m',JSON.stringify(M));localStorage.setItem('g4_t',JSON.stringify(T));}
-function age(d){if(!d)return null;const dt=new Date(d),n=new Date();let a=n.getFullYear()-dt.getFullYear();if(n.getMonth()<dt.getMonth()||(n.getMonth()===dt.getMonth()&&n.getDate()<dt.getDate()))a--;return a;}
-function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
-function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
+const YT_COMMON='https://youtube.com/playlist?list=PL-gAc3kb2RX0Hi8o4EbN72ctSgA9n907w';
+const YT_BEGINNER='https://youtube.com/playlist?list=PL-gAc3kb2RX1ZGy_oCGjkpYizMPnBOpPh';
+const YT_MID='https://youtube.com/playlist?list=PL-gAc3kb2RX0NYI76_QWgQga2Xfva9kEE';
+const YT_ADV='https://youtube.com/playlist?list=PL-gAc3kb2RX3hX6n2UibkCHN9b6F_VHZC';
 
-// ============================================================
-// GASからデータ取得
-// ============================================================
-async function fetchGasData(){
+const grades=[
+  {key:'white',cls:'g-white',icon:'⚪',name:'ホワイトメダル',desc:'基本カリキュラム80%合格',
+   yt:[{url:YT_BEGINNER,label:'初級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+  {key:'green',cls:'g-green',icon:'🟢',name:'グリーンメダル',desc:'守る技術',
+   yt:[{url:YT_BEGINNER,label:'初級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+  {key:'blue',cls:'g-blue',icon:'🔵',name:'ブルーメダル',desc:'マスボクシングができること',
+   yt:[{url:YT_MID,label:'中級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+  {key:'orange',cls:'g-orange',icon:'🟠',name:'オレンジメダル',desc:'当てマスボクシングができること',
+   yt:[{url:YT_MID,label:'中級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+  {key:'red',cls:'g-red',icon:'🔴',name:'レッドメダル',desc:'スパーリングができること',
+   yt:[{url:YT_BEGINNER,label:'初級 再生リスト'},{url:YT_MID,label:'中級 再生リスト'},{url:YT_ADV,label:'上級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+  {key:'gold',cls:'g-gold',icon:'🥇',name:'ゴールドメダル',desc:'ボクシングを理解してスパーリングができること',
+   yt:[{url:YT_BEGINNER,label:'初級 再生リスト'},{url:YT_MID,label:'中級 再生リスト'},{url:YT_ADV,label:'上級 再生リスト'},{url:YT_COMMON,label:'全クラス共通'}]},
+];
+
+const gradeOrder=['white','green','blue','orange','red','gold'];
+
+let selHira='',curPin='',currentMember=null,statuses=curItems.map(()=>'none');
+
+const hiraRows=['あいうえお','かきくけこ','さしすせそ','たちつてと','なにぬねの','はひふへほ','まみむめも','やゆよ','らりるれろ','わをん'];
+const grid=document.getElementById('hira-grid');
+hiraRows.forEach(row=>{
+  row.split('').forEach(ch=>{
+    const btn=document.createElement('button');
+    btn.className='hira-key';btn.textContent=ch;
+    btn.onclick=()=>{
+      selHira=ch;
+      document.querySelectorAll('.hira-key').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const d=document.getElementById('hira-display');
+      d.textContent=ch;d.classList.remove('placeholder');
+      document.getElementById('hira-next').disabled=false;
+    };
+    grid.appendChild(btn);
+  });
+});
+
+function goToPin(){document.getElementById('pin-hira-show').textContent=selHira;curPin='';updateDots();document.getElementById('pin-err').textContent='';document.getElementById('loading-msg').textContent='';showScreen('s-pin');}
+function pk(k){if(curPin.length>=4)return;curPin+=k;updateDots();if(curPin.length===4)setTimeout(checkPin,120);}
+function pd(){curPin=curPin.slice(0,-1);updateDots();document.getElementById('pin-err').textContent='';}
+function updateDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('filled',i<curPin.length);}
+
+async function checkPin(){
+  document.getElementById('loading-msg').textContent='確認中...';
   try{
-    const res = await fetch(GAS_URL);
-    gasData = await res.json();
-    return gasData;
-  }catch(e){
-    console.error(e);
-    return [];
-  }
-}
-
-// ============================================================
-// 売上ダッシュボード
-// ============================================================
-async function rSales(){
-  document.getElementById('sales-loading').style.display='block';
-  document.getElementById('sales-content').style.display='none';
-  document.getElementById('sales-error').style.display='none';
-
-  const data = await fetchGasData();
-
-  if(!data || data.length===0){
-    document.getElementById('sales-loading').style.display='none';
-    document.getElementById('sales-error').style.display='block';
-    return;
-  }
-
-  document.getElementById('sales-loading').style.display='none';
-  document.getElementById('sales-content').style.display='block';
-
-  const now = new Date();
-  const thisYear = now.getFullYear();
-  const thisMonth = now.getMonth()+1;
-
-  let monthTotal=0,monthCount=0,yearTotal=0,yearCount=0,allTotal=0,allCount=0;
-  const monthlyData={};
-  const courseData={};
-
-  for(let m=1;m<=12;m++) monthlyData[m]=0;
-
-  data.forEach(row=>{
-    const ts = row['タイムスタンプ'];
-    const actual = parseFloat(row['実際の金額']||0);
-    const course = row['各コース']||'不明';
-    if(!ts||!actual) return;
-
-    const d = new Date(ts);
-    const y = d.getFullYear();
-    const mo = d.getMonth()+1;
-
-    allTotal+=actual;allCount++;
-    if(y===thisYear){
-      yearTotal+=actual;yearCount++;
-      monthlyData[mo]=(monthlyData[mo]||0)+actual;
-      if(mo===thisMonth){monthTotal+=actual;monthCount++;}
+    const res=await fetch(GAS_URL+'?action=getMemberByPin&hira='+encodeURIComponent(selHira)+'&pin='+encodeURIComponent(curPin));
+    const data=await res.json();
+    document.getElementById('loading-msg').textContent='';
+    if(data.success&&data.member){
+      currentMember=data.member;
+      const name=data.member['お名前']||'';
+      const grade=data.member['グレード']||'ホワイトメダル';
+      const gmap={'ホワイトメダル':'⚪','グリーンメダル':'🟢','ブルーメダル':'🔵','オレンジメダル':'🟠','レッドメダル':'🔴','ゴールドメダル':'🥇'};
+      document.getElementById('h-name').textContent=name;
+      document.getElementById('h-av').textContent=name.charAt(0);
+      document.getElementById('h-gicon').textContent=gmap[grade]||'⚪';
+      document.getElementById('h-gname').textContent=grade;
+      curPin='';updateDots();showScreen('s-home');
+    }else{
+      document.getElementById('pin-err').textContent='番号が違います。もう一度お試しください。';
+      setTimeout(()=>{curPin='';updateDots();document.getElementById('pin-err').textContent='';},900);
     }
+  }catch(e){
+    document.getElementById('loading-msg').textContent='';
+    document.getElementById('pin-err').textContent='通信エラーが発生しました。';
+    setTimeout(()=>{curPin='';updateDots();document.getElementById('pin-err').textContent='';},1500);
+  }
+}
 
-    // コース別集計
-    const cname = course.split('¥')[0].trim().replace(/\s+/g,' ');
-    if(!courseData[cname]) courseData[cname]={total:0,count:0};
-    courseData[cname].total+=actual;
-    courseData[cname].count++;
-  });
+function logout(){currentMember=null;selHira='';curPin='';document.querySelectorAll('.hira-key').forEach(b=>b.classList.remove('selected'));const d=document.getElementById('hira-display');d.textContent='未選択';d.classList.add('placeholder');document.getElementById('hira-next').disabled=true;updateDots();showScreen('s-hira');}
 
-  document.getElementById('s-month').textContent=fmtYen(monthTotal);
-  document.getElementById('s-month-count').textContent=monthCount+'件';
-  document.getElementById('s-year').textContent=fmtYen(yearTotal);
-  document.getElementById('s-year-count').textContent=yearCount+'件';
-  document.getElementById('s-total').textContent=fmtYen(allTotal);
-  document.getElementById('s-total-count').textContent=allCount+'件';
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='s-cur')loadCurriculum();
+  if(id==='s-grade')renderGrade();
+}
 
-  // 月別売上グラフ
-  dc('csm');
-  C.csm=new Chart(document.getElementById('cs-month'),{
-    type:'bar',
-    data:{
-      labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
-      datasets:[{data:Object.values(monthlyData),backgroundColor:'#c8a876',borderRadius:4,borderSkipped:false}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'rgba(200,168,118,0.2)'}}}}
-  });
+async function loadCurriculum(){
+  if(!currentMember)return;
+  try{
+    const res=await fetch(GAS_URL+'?action=getCurriculumByMember&name='+encodeURIComponent(currentMember['お名前']));
+    const data=await res.json();
+    if(data.success)statuses=curItems.map((item,i)=>data.items[item.name]||'none');
+  }catch(e){}
+  renderCurriculum();
+}
 
-  // コース別グラフ
-  const courseNames=Object.keys(courseData).slice(0,6);
-  const courseVals=courseNames.map(k=>courseData[k].total);
-  const cols=['#9a7235','#3a7a5a','#9a3050','#2a5a8a','#c8a876','#6b5840'];
-  dc('csc');
-  C.csc=new Chart(document.getElementById('cs-course'),{
-    type:'doughnut',
-    data:{labels:courseNames,datasets:[{data:courseVals,backgroundColor:cols,borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#6b5840',font:{size:10},padding:8,boxWidth:8}}}}
-  });
-
-  // コース別詳細
-  const detail=document.getElementById('course-detail');
-  detail.innerHTML='';
-  Object.entries(courseData).sort((a,b)=>b[1].total-a[1].total).forEach(([name,d])=>{
-    const div=document.createElement('div');div.className='course-item';
-    div.innerHTML=`<div><div class="course-name">${name}</div><div class="course-count">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;
-    detail.appendChild(div);
-  });
-
-  // 申込一覧
-  const fl=document.getElementById('form-list');
-  fl.innerHTML='';
-  [...data].reverse().slice(0,10).forEach(row=>{
-    const div=document.createElement('div');div.className='pi';
-    const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
-    const name=row['お名前（長尾儀弘）']||row['お名前']||'-';
-    const course=(row['各コース']||'-').split('¥')[0].trim();
-    const actual=parseFloat(row['実際の金額']||0);
-    div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600">${fmtYen(actual)}</div>`;
-    fl.appendChild(div);
+function renderCurriculum(){
+  const list=document.getElementById('cur-list');list.innerHTML='';
+  const pc=statuses.filter(s=>s==='ok').length;
+  const pct=Math.round(pc/curItems.length*100);
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent='合格: '+pc+' / '+curItems.length;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('pass-bdg').style.display=pct>=78?'block':'none';
+  curItems.forEach((item,i)=>{
+    const st=statuses[i];
+    const card=document.createElement('div');card.className='cur-item';
+    const main=document.createElement('div');main.className='cur-main';
+    main.innerHTML='<div class="item-nm">'+item.name+'</div><div class="st-group"><button class="st-btn '+(st==='ch'?'ch':'')+'" onclick="setSt('+i+',\'ch\')">挑戦中</button><button class="st-btn '+(st==='ok'?'ok':'')+'" onclick="setSt('+i+',\'ok\')">合格</button></div>';
+    card.appendChild(main);
+    const ytSec=document.createElement('div');ytSec.className='yt-section';
+    if(item.videos.length===0){
+      ytSec.innerHTML='<div class="no-yt">📹 動画は準備中です</div>';
+    }else{
+      item.videos.forEach(v=>{
+        const a=document.createElement('a');a.className='yt-link';a.href=v.url;a.target='_blank';
+        a.innerHTML='<div class="yt-icon"></div><span class="yt-text">'+v.label+'</span>';
+        ytSec.appendChild(a);
+      });
+    }
+    card.appendChild(ytSec);
+    list.appendChild(card);
   });
 }
 
-function setMode(mode,btn){
-  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('tui').style.display=mode==='trainer'?'block':'none';
-  document.getElementById('mui').style.display=mode==='member'?'block':'none';
-  if(mode==='member')pSel();
+async function setSt(i,v){
+  statuses[i]=statuses[i]===v?'none':v;renderCurriculum();
+  if(!currentMember)return;
+  try{await fetch(GAS_URL+'?action=updateCurriculum&name='+encodeURIComponent(currentMember['お名前'])+'&item='+encodeURIComponent(curItems[i].name)+'&status='+encodeURIComponent(statuses[i]));}catch(e){}
 }
 
-function sp(name,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
-  if(name==='dashboard')rDash();
-  if(name==='sales')rSales();
-  if(name==='members')rMem();
-  if(name==='training'){pSel();rRec();}
-  if(name==='calendar'){pSel();rCal();}
-  if(name==='progress')pSel();
-}
-
-function rDash(){
-  const t=M.length,f=M.filter(m=>m.gender==='f').length,ml=t-f;
-  const ages=M.map(m=>age(m.dob)).filter(a=>a!==null);
-  const avg=ages.length?Math.round(ages.reduce((a,b)=>a+b,0)/ages.length):'-';
-  document.getElementById('mt').textContent=t;
-  document.getElementById('mf').textContent=f;document.getElementById('mfp').textContent=t?Math.round(f/t*100)+'%':'-%';
-  document.getElementById('mm').textContent=ml;document.getElementById('mmp').textContent=t?Math.round(ml/t*100)+'%':'-%';
-  document.getElementById('ma').textContent=avg;
-  dc('g');dc('a');
-  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#9a3050','#2a5a8a'],borderWidth:0,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#6b5840',font:{size:11},padding:14,boxWidth:10,boxHeight:10}}}}});
-  const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
-  ages.forEach(a=>{if(a<30)bk['20代']++;else if(a<40)bk['30代']++;else if(a<50)bk['40代']++;else bk['50代+']++;});
-  C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:'#c8a876',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840'}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#6b5840'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-}
-
-function rMem(){
-  const l=document.getElementById('mlist');l.innerHTML=M.length?'':'<p style="font-size:13px;color:var(--text3)">会員がいません</p>';
-  M.forEach(m=>{const a=age(m.dob);const d=document.createElement('div');d.className='mrow';d.innerHTML=`<div class="av ${m.gender==='f'?'av-f':'av-m'}">${m.name.charAt(0)}</div><div style="flex:1"><div class="mname">${m.name}</div><div class="mmeta">${a?a+'歳':''} ${m.weights&&m.weights.length?'/ 体重 '+m.weights[m.weights.length-1]+'kg':''}</div></div><span class="badge ${m.gender==='f'?'badge-f':'badge-m'}">${m.gender==='f'?'女性':'男性'}</span>`;l.appendChild(d);});
-}
-
-function addM(){
-  const n=document.getElementById('in').value.trim();if(!n){alert('氏名を入力してください');return;}
-  const d=document.getElementById('id').value,g=document.getElementById('ig').value,w=parseFloat(document.getElementById('iw').value);
-  M.push({id:'m'+Date.now(),name:n,dob:d,gender:g,weights:w?[w]:[]});sv();rMem();
-  ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
-}
-
-function pSel(){
-  ['str','scal','spro','smv'].forEach(id=>{
-    const s=document.getElementById(id);if(!s)return;
-    const ha=s.options[0]&&s.options[0].value==='';
-    while(s.options.length>(ha?1:0))s.remove(ha?1:0);
-    M.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;s.appendChild(o);});
+function renderGrade(){
+  const memberGrade=currentMember?currentMember['グレード']||'ホワイトメダル':'ホワイトメダル';
+  const currentIdx=grades.findIndex(g=>g.name===memberGrade);
+  const w=document.getElementById('grade-wrap');w.innerHTML='';
+  grades.forEach((g,i)=>{
+    const isCurrent=g.name===memberGrade;
+    const isAchieved=i<=currentIdx;
+    const card=document.createElement('div');
+    card.className='grade-card '+g.cls+(isAchieved?'':' locked');
+    let ytHTML='';
+    g.yt.forEach(y=>{
+      ytHTML+='<a class="grade-yt-btn" href="'+y.url+'" target="_blank"><div class="grade-yt-icon"></div>'+y.label+'</a>';
+    });
+    card.innerHTML='<div class="grade-top"><div class="grade-icon-wrap">'+g.icon+'</div><div><div class="grade-name">'+g.name+(isCurrent?'<span class="current-badge">現在</span>':'')+'</div><div class="grade-desc">'+g.desc+'</div></div></div><div class="grade-status">'+(isAchieved?'✓ 達成済み':'未達成')+'</div>'+ytHTML;
+    w.appendChild(card);
   });
-  const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
 }
-
-function addS(){
-  const c=document.getElementById('sw'),r=document.createElement('div');r.className='set-row';
-  r.innerHTML=`<input placeholder="例：スクワット" style="font-size:12px;padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif"><input type="number" placeholder="40" step="0.5" style="font-size:12px;padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif"><input type="number" placeholder="10" style="font-size:12px;padding:7px 9px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif"><button class="del-btn" onclick="this.parentElement.remove()">×</button>`;
-  c.appendChild(r);
-}
-
-function saveTr(){
-  const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
-  if(!mid||!dt){alert('会員と日付を選んでください');return;}
-  const sets=[];
-  document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value);if(e&&w&&rep)sets.push({exercise:e,weight:w,reps:rep});});
-  if(!sets.length){alert('種目を入力してください');return;}
-  T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets});sv();document.getElementById('sw').innerHTML='';rRec();alert('保存しました');
-}
-
-function rRec(){
-  const mid=document.getElementById('str').value,l=document.getElementById('rl');
-  const rs=T.filter(t=>!mid||t.memberId===mid).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
-  l.innerHTML=rs.length?'':'<p style="font-size:13px;color:var(--text3)">記録なし</p>';
-  rs.forEach(t=>{const m=M.find(x=>x.id===t.memberId);const d=document.createElement('div');d.className='pi';d.innerHTML=`<div><div class="pn">${t.date}${m?' — '+m.name:''}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回').join(' / ')}</div></div>`;l.appendChild(d);});
-}
-
-function rCal(){
-  const mid=document.getElementById('scal').value;
-  document.getElementById('ctitle').textContent=cY+'年 '+(cM2+1)+'月';
-  document.getElementById('chdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>`<div class="cday hdr">${d}</div>`).join('');
-  const first=new Date(cY,cM2,1).getDay(),days=new Date(cY,cM2+1,0).getDate(),today=new Date().toISOString().slice(0,10);
-  let html=Array(first).fill('<div class="cday"></div>').join('');
-  for(let d=1;d<=days;d++){const ds=`${cY}-${String(cM2+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const has=T.some(t=>t.date===ds&&(!mid||t.memberId===mid));const isT=ds===today;html+=`<div class="cday${has?' has':''}${isT?' today':''}">${d}${has?'<div style="font-size:7px;margin-top:1px">◆</div>':''}</div>`;}
-  document.getElementById('cbody').innerHTML=html;
-}
-function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
-function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
-
-function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exercise]||s.weight>pr[s.exercise].weight){pr[s.exercise]={weight:s.weight,date:t.date};}}));return pr;}
-function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps,0))}));}
-function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
-
-function rPro(){
-  const mid=document.getElementById('spro').value;if(!mid)return;
-  const mem=M.find(m=>m.id===mid);if(!mem)return;
-  const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  dc('w');dc('cf');dc('cv');dc('ce');
-  C.w=new Chart(document.getElementById('cw'),{type:'line',data:{labels:(mem.weights||[]).map((_,i)=>'記録'+(i+1)),datasets:[{data:mem.weights||[],borderColor:'#9a7235',backgroundColor:'rgba(154,114,53,0.1)',tension:0.4,pointRadius:5,pointBackgroundColor:'#9a7235',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840'}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const freq=calcFreq(mts);
-  C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#c8a876',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#6b5840'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const vols=calcVolumes(mts);
-  C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#3a7a5a',backgroundColor:'rgba(58,122,90,0.1)',tension:0.4,pointRadius:4,pointBackgroundColor:'#3a7a5a',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const em={};mts.forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]={dates:[],weights:[]};em[s.exercise].dates.push(t.date);em[s.exercise].weights.push(s.weight);}));
-  const cols=['#9a7235','#3a7a5a','#9a3050','#2a5a8a','#c8a876'];
-  C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date))].map(d=>d.slice(5)),datasets:Object.entries(em).slice(0,5).map(([ex,d],i)=>({label:ex,data:d.weights,borderColor:cols[i%5],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#6b5840',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const prs=calcPRs(mts);
-  const pl=document.getElementById('pr-list');pl.innerHTML='';
-  if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--text3)">記録がありません</p>';return;}
-  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex} <span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
-  const cmp=document.getElementById('pcmp');cmp.innerHTML='';
-  if(mts.length<2){cmp.innerHTML='<p style="font-size:13px;color:var(--text3)">2回以上記録すると比較が表示されます</p>';return;}
-  const last=mts[mts.length-1],prev=mts[mts.length-2];
-  last.sets.forEach(s=>{const ps=prev.sets.find(p=>p.exercise===s.exercise);if(!ps)return;const dw=s.weight-ps.weight,dr=s.reps-ps.reps;const div=document.createElement('div');div.className='pi';div.innerHTML=`<div class="pn">${s.exercise}</div><div class="pvs"><span class="pp">${ps.weight}kg×${ps.reps}回</span><span style="color:var(--text3)">→</span><span class="pc">${s.weight}kg×${s.reps}回</span><span class="pu">${dw>0?'+'+dw.toFixed(1)+'kg':''}${dr>0?' +'+dr+'回':''}</span></div>`;cmp.appendChild(div);});
-}
-
-function rMV(){
-  const mid=document.getElementById('smv').value,content=document.getElementById('mvc');
-  if(!mid){content.innerHTML='';return;}
-  const mem=M.find(m=>m.id===mid);
-  const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  const lw=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:'-';
-  const sw2=mem.weights&&mem.weights.length>=2?mem.weights[0]:null;
-  const wd=sw2&&lw!=='-'?(lw-sw2).toFixed(1):null;
-  const prs=calcPRs(mts);
-  const vols=calcVolumes(mts);
-  const latestVol=vols.length?vols[vols.length-1].vol:0;
-  const firstVol=vols.length?vols[0].vol:0;
-  const volDiff=vols.length>=2?Math.round((latestVol-firstVol)/firstVol*100):0;
-  content.innerHTML=`<div class="mv-card">
-    <div class="mv-hero">
-      <div class="mv-av ${mem.gender==='f'?'av-f':'av-m'}">${mem.name.charAt(0)}</div>
-      <div class="mv-name">${mem.name}</div>
-      <div class="mv-lbl">Your Training Record</div>
-    </div>
-    <div class="mv-kpi">
-      <div class="mv-k"><div class="mv-kv">${mts.length}</div><div class="mv-kl">Sessions</div></div>
-      <div class="mv-k"><div class="mv-kv">${lw!=='-'?lw+'kg':'-'}</div><div class="mv-kl">体重</div></div>
-      <div class="mv-k"><div class="mv-kv" style="color:${wd&&parseFloat(wd)<0?'#3a7a5a':'#9a3050'}">${wd?wd+'kg':'-'}</div><div class="mv-kl">体重変化</div></div>
-      <div class="mv-k"><div class="mv-kv" style="color:#3a7a5a">${vols.length>=2?'+'+volDiff+'%':'-'}</div><div class="mv-kl">ボリューム増</div></div>
-    </div>
-    <div class="mv-sec"><div class="mv-st">体重の変化</div><div style="position:relative;height:160px"><canvas id="mvc-w"></canvas></div></div>
-    <div class="mv-sec"><div class="mv-st">総ボリューム推移</div><div style="position:relative;height:160px"><canvas id="mvc-v"></canvas></div></div>
-    <div class="mv-sec"><div class="mv-st">種目別 重量の伸び</div><div style="position:relative;height:160px"><canvas id="mvc-e"></canvas></div></div>
-    <div class="mv-sec"><div class="mv-st">自己ベスト（最高重量）</div><div class="pr-list" id="mvc-pr"></div></div>
-    <div class="mv-sec"><div class="mv-st">最近のトレーニング</div><div id="mvr"></div></div>
-  </div>`;
-  new Chart(document.getElementById('mvc-w'),{type:'line',data:{labels:(mem.weights||[]).map((_,i)=>'記録'+(i+1)),datasets:[{data:mem.weights||[],borderColor:'#9a7235',backgroundColor:'rgba(154,114,53,0.1)',tension:0.4,pointRadius:4,pointBackgroundColor:'#9a7235',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  new Chart(document.getElementById('mvc-v'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#3a7a5a',backgroundColor:'rgba(58,122,90,0.1)',tension:0.4,pointRadius:4,pointBackgroundColor:'#3a7a5a',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const em2={};mts.forEach(t=>t.sets.forEach(s=>{if(!em2[s.exercise])em2[s.exercise]={dates:[],weights:[]};em2[s.exercise].dates.push(t.date);em2[s.exercise].weights.push(s.weight);}));
-  const cols2=['#9a7235','#3a7a5a','#9a3050','#2a5a8a','#c8a876'];
-  new Chart(document.getElementById('mvc-e'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date))].map(d=>d.slice(5)),datasets:Object.entries(em2).slice(0,5).map(([ex,d],i)=>({label:ex,data:d.weights,borderColor:cols2[i%5],tension:0.4,pointRadius:3,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#6b5840',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
-  const prEl=document.getElementById('mvc-pr');
-  Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex} <span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;prEl.appendChild(div);});
-  const rv=document.getElementById('mvr');
-  mts.slice(-3).reverse().forEach(t=>{const div=document.createElement('div');div.className='pi';div.innerHTML=`<div><div class="pn">${t.date}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回').join(' / ')}</div></div>`;rv.appendChild(div);});
-}
-
-rDash();pSel();rCal();
 </script>
 </body>
 </html>
