@@ -25,7 +25,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:16px;border-left:3px solid var(--wood)}
 .ml{font-size:9px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-bottom:7px}
-.mv{font-family:'Playfair Display',serif;font-size:28px;color:var(--text);font-weight:600}
+.mv{font-family:'Playfair Display',serif;font-size:24px;color:var(--text);font-weight:600}
 .ms{font-size:11px;color:var(--gold2);margin-top:2px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:20px;margin-bottom:14px}
 .ctitle{font-size:9px;letter-spacing:4px;color:var(--gold);margin-bottom:16px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
@@ -85,6 +85,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .pr-name{font-size:12px;color:var(--text)}
 .pr-val{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);font-weight:600}
 .pr-date{font-size:10px;color:var(--text3);margin-top:1px}
+.loading{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+.sales-kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.sales-kpi .metric{border-left-color:var(--green)}
+.course-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.course-item:last-child{border:none}
+.course-name{font-size:12px;color:var(--text)}
+.course-val{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600}
+.course-count{font-size:10px;color:var(--text3);margin-top:2px}
 </style>
 </head>
 <body>
@@ -100,6 +108,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div id="tui">
     <div class="nav">
       <button class="nbtn active" onclick="sp('dashboard',this)">ダッシュボード</button>
+      <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
       <button class="nbtn" onclick="sp('members',this)">会員管理</button>
       <button class="nbtn" onclick="sp('training',this)">トレーニング記録</button>
       <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
@@ -117,6 +126,30 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         <div class="card"><div class="ctitle">Gender Ratio</div><div style="position:relative;height:185px"><canvas id="cg"></canvas></div></div>
         <div class="card"><div class="ctitle">Age Group</div><div style="position:relative;height:185px"><canvas id="ca"></canvas></div></div>
       </div>
+    </div>
+
+    <div id="page-sales" class="page">
+      <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
+      <div id="sales-content" style="display:none">
+        <div class="sales-kpi">
+          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">今月の売上</div><div class="mv" id="s-month">¥0</div><div class="ms" id="s-month-count">0件</div></div>
+          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">年間売上（今年）</div><div class="mv" id="s-year">¥0</div><div class="ms" id="s-year-count">0件</div></div>
+          <div class="metric" style="border-left-color:#3a7a5a"><div class="ml">累計売上</div><div class="mv" id="s-total">¥0</div><div class="ms" id="s-total-count">0件</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="card"><div class="ctitle">月別売上推移（今年）</div><div style="position:relative;height:200px"><canvas id="cs-month"></canvas></div></div>
+          <div class="card"><div class="ctitle">コース別売上内訳</div><div style="position:relative;height:200px"><canvas id="cs-course"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">コース別詳細</div>
+          <div id="course-detail"></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">申込一覧（スプレッドシートより）</div>
+          <div id="form-list"></div>
+        </div>
+      </div>
+      <div id="sales-error" style="display:none;padding:20px;color:#9a3050;font-size:13px">データの取得に失敗しました。GAS WebアプリのURLを確認してください。</div>
     </div>
 
     <div id="page-members" class="page">
@@ -175,10 +208,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         <div class="card"><div class="ctitle">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
       </div>
       <div class="charts-row">
-        <div class="card"><div class="ctitle">総ボリューム推移（重量×回数）</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
+        <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
         <div class="card"><div class="ctitle">種目別 重量の伸び</div><div style="position:relative;height:180px"><canvas id="ce"></canvas></div></div>
       </div>
-      <div class="card"><div class="ctitle">最高重量 更新履歴（自己ベスト）</div><div id="pr-list" class="pr-list"></div></div>
+      <div class="card"><div class="ctitle">最高重量 自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
       <div class="card"><div class="ctitle">前回比較</div><div id="pcmp"></div></div>
     </div>
   </div>
@@ -190,13 +223,140 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <script>
+// ============================================================
+// GAS WebアプリURL（スプレッドシートと連動）
+// ============================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzw-z8FjYzdBiJ-9mI8p2S7lfWobRrE99t8t8vVHAUY1FJu1v8WG2pKJhH-UHSO_EZi/exec';
+
 let M=JSON.parse(localStorage.getItem('g4_m')||'[]');
 let T=JSON.parse(localStorage.getItem('g4_t')||'[]');
 let cY=new Date().getFullYear(),cM2=new Date().getMonth();
 let C={};
+let gasData=[];
+
 function sv(){localStorage.setItem('g4_m',JSON.stringify(M));localStorage.setItem('g4_t',JSON.stringify(T));}
 function age(d){if(!d)return null;const dt=new Date(d),n=new Date();let a=n.getFullYear()-dt.getFullYear();if(n.getMonth()<dt.getMonth()||(n.getMonth()===dt.getMonth()&&n.getDate()<dt.getDate()))a--;return a;}
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
+function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
+
+// ============================================================
+// GASからデータ取得
+// ============================================================
+async function fetchGasData(){
+  try{
+    const res = await fetch(GAS_URL);
+    gasData = await res.json();
+    return gasData;
+  }catch(e){
+    console.error(e);
+    return [];
+  }
+}
+
+// ============================================================
+// 売上ダッシュボード
+// ============================================================
+async function rSales(){
+  document.getElementById('sales-loading').style.display='block';
+  document.getElementById('sales-content').style.display='none';
+  document.getElementById('sales-error').style.display='none';
+
+  const data = await fetchGasData();
+
+  if(!data || data.length===0){
+    document.getElementById('sales-loading').style.display='none';
+    document.getElementById('sales-error').style.display='block';
+    return;
+  }
+
+  document.getElementById('sales-loading').style.display='none';
+  document.getElementById('sales-content').style.display='block';
+
+  const now = new Date();
+  const thisYear = now.getFullYear();
+  const thisMonth = now.getMonth()+1;
+
+  let monthTotal=0,monthCount=0,yearTotal=0,yearCount=0,allTotal=0,allCount=0;
+  const monthlyData={};
+  const courseData={};
+
+  for(let m=1;m<=12;m++) monthlyData[m]=0;
+
+  data.forEach(row=>{
+    const ts = row['タイムスタンプ'];
+    const actual = parseFloat(row['実際の金額']||0);
+    const course = row['各コース']||'不明';
+    if(!ts||!actual) return;
+
+    const d = new Date(ts);
+    const y = d.getFullYear();
+    const mo = d.getMonth()+1;
+
+    allTotal+=actual;allCount++;
+    if(y===thisYear){
+      yearTotal+=actual;yearCount++;
+      monthlyData[mo]=(monthlyData[mo]||0)+actual;
+      if(mo===thisMonth){monthTotal+=actual;monthCount++;}
+    }
+
+    // コース別集計
+    const cname = course.split('¥')[0].trim().replace(/\s+/g,' ');
+    if(!courseData[cname]) courseData[cname]={total:0,count:0};
+    courseData[cname].total+=actual;
+    courseData[cname].count++;
+  });
+
+  document.getElementById('s-month').textContent=fmtYen(monthTotal);
+  document.getElementById('s-month-count').textContent=monthCount+'件';
+  document.getElementById('s-year').textContent=fmtYen(yearTotal);
+  document.getElementById('s-year-count').textContent=yearCount+'件';
+  document.getElementById('s-total').textContent=fmtYen(allTotal);
+  document.getElementById('s-total-count').textContent=allCount+'件';
+
+  // 月別売上グラフ
+  dc('csm');
+  C.csm=new Chart(document.getElementById('cs-month'),{
+    type:'bar',
+    data:{
+      labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+      datasets:[{data:Object.values(monthlyData),backgroundColor:'#c8a876',borderRadius:4,borderSkipped:false}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840',font:{size:10}}},y:{ticks:{color:'#6b5840',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'rgba(200,168,118,0.2)'}}}}
+  });
+
+  // コース別グラフ
+  const courseNames=Object.keys(courseData).slice(0,6);
+  const courseVals=courseNames.map(k=>courseData[k].total);
+  const cols=['#9a7235','#3a7a5a','#9a3050','#2a5a8a','#c8a876','#6b5840'];
+  dc('csc');
+  C.csc=new Chart(document.getElementById('cs-course'),{
+    type:'doughnut',
+    data:{labels:courseNames,datasets:[{data:courseVals,backgroundColor:cols,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#6b5840',font:{size:10},padding:8,boxWidth:8}}}}
+  });
+
+  // コース別詳細
+  const detail=document.getElementById('course-detail');
+  detail.innerHTML='';
+  Object.entries(courseData).sort((a,b)=>b[1].total-a[1].total).forEach(([name,d])=>{
+    const div=document.createElement('div');div.className='course-item';
+    div.innerHTML=`<div><div class="course-name">${name}</div><div class="course-count">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;
+    detail.appendChild(div);
+  });
+
+  // 申込一覧
+  const fl=document.getElementById('form-list');
+  fl.innerHTML='';
+  [...data].reverse().slice(0,10).forEach(row=>{
+    const div=document.createElement('div');div.className='pi';
+    const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
+    const name=row['お名前（長尾儀弘）']||row['お名前']||'-';
+    const course=(row['各コース']||'-').split('¥')[0].trim();
+    const actual=parseFloat(row['実際の金額']||0);
+    div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600">${fmtYen(actual)}</div>`;
+    fl.appendChild(div);
+  });
+}
 
 function setMode(mode,btn){
   document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
@@ -210,6 +370,7 @@ function sp(name,btn){
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard')rDash();
+  if(name==='sales')rSales();
   if(name==='members')rMem();
   if(name==='training'){pSel();rRec();}
   if(name==='calendar'){pSel();rCal();}
@@ -360,4 +521,3 @@ rDash();pSel();rCal();
 </script>
 </body>
 </html>
-
