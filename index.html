@@ -12,40 +12,28 @@
 :root{--bg:#f9f6f1;--bg2:#ffffff;--bg3:#f4ede3;--wood:#c8a876;--wood2:#e8d9c0;--gold:#9a7235;--gold2:#c9924a;--text:#2c2018;--text2:#6b5840;--text3:#a89070;--border:#e2d4bc;--border2:#c8a876;--green:#3a7a5a;--pink:#9a3050}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .app{max-width:960px;margin:0 auto}
-
-/* TOPBAR */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-top:3px solid var(--wood)}
 .logo{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);letter-spacing:2px;font-weight:700}
 .logo-sub{font-size:8px;color:var(--text3);letter-spacing:3px;margin-top:2px}
 .mode-wrap{display:flex;gap:6px}
 .mbtn{font-size:10px;padding:6px 12px;border-radius:2px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:1px;font-family:'Noto Sans JP',sans-serif}
 .mbtn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
-
-/* NAV */
 .nav{background:var(--bg3);border-bottom:1px solid var(--border);padding:0 16px;display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nbtn{font-size:11px;padding:11px 14px;border:none;background:transparent;color:var(--text3);cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;border-bottom:2px solid transparent;flex-shrink:0}
 .nbtn.active{color:var(--gold);border-bottom-color:var(--gold)}
-
-/* PAGES */
 .page{display:none;padding:16px}.page.active{display:block}
-
-/* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
 @media(min-width:600px){.metrics{grid-template-columns:repeat(4,1fr)}}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:14px;border-left:3px solid var(--wood)}
 .ml{font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
 .mv{font-family:'Playfair Display',serif;font-size:22px;color:var(--text);font-weight:600}
 .ms{font-size:11px;color:var(--gold2);margin-top:2px}
-
-/* CARDS */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:16px;margin-bottom:12px}
 .ctitle{font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .ctitle::after{content:'';flex:1;height:1px;background:var(--border)}
 .charts-row{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
 @media(min-width:600px){.charts-row{grid-template-columns:1fr 1fr}}
-
-/* MEMBERS */
 .mrow{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:3px;margin-bottom:7px;border:1px solid transparent}
 .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;flex-shrink:0}
 .av-f{background:#fdf0f4;color:var(--pink)}
@@ -55,8 +43,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .badge{font-size:9px;padding:3px 8px;border-radius:2px;letter-spacing:1px;font-weight:500;flex-shrink:0}
 .badge-f{background:#fdf0f4;color:var(--pink)}
 .badge-m{background:#f0f4fd;color:#2a5a8a}
-
-/* FORMS */
 .fg{display:flex;flex-direction:column;gap:5px}
 .fg label{font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase}
 .fg input,.fg select{font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif;width:100%}
@@ -64,20 +50,14 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn-gold{background:var(--gold);color:#fff;border:none;padding:10px 20px;border-radius:3px;font-size:12px;cursor:pointer;letter-spacing:2px;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
 .btn-ghost{background:transparent;border:1px solid var(--border2);padding:7px 14px;border-radius:3px;font-size:11px;cursor:pointer;color:var(--text2);font-family:'Noto Sans JP',sans-serif;letter-spacing:1px}
-
-/* TRAINING */
 .set-row{display:grid;grid-template-columns:2fr 1fr 1fr 30px;gap:6px;align-items:center;margin-bottom:6px}
 .set-row input{font-size:12px;padding:7px 8px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif}
 .del-btn{width:28px;height:28px;border-radius:3px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text3);font-size:14px}
-
-/* PROGRESS */
 .pi{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
 .pi:last-child{border:none}
 .pn{font-size:13px;color:var(--text)}
 .pvs{display:flex;gap:8px;font-size:11px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .pp{color:var(--text3)}.pc{color:var(--text);font-weight:500}.pu{color:var(--green);font-size:11px;font-weight:500}
-
-/* CALENDAR */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .cday{text-align:center;padding:6px 2px;font-size:11px;border-radius:3px;color:var(--text3)}
 .cday.hdr{font-size:9px;color:var(--text3);font-weight:500}
@@ -85,16 +65,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .cday.today{border:1.5px solid var(--gold)}
 .msel{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
 .msel select,.msel input[type=date]{font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:3px;background:var(--bg2);color:var(--text);font-family:'Noto Sans JP',sans-serif}
-
-/* PR */
 .pr-badge{display:inline-block;background:#fdf5e8;color:var(--gold);font-size:9px;padding:2px 6px;border-radius:2px;letter-spacing:1px;font-weight:500;margin-left:6px;border:1px solid var(--wood2)}
 .pr-list{display:flex;flex-direction:column;gap:8px}
 .pr-item{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--bg3);border-radius:3px}
 .pr-name{font-size:12px;color:var(--text)}
 .pr-val{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);font-weight:600}
 .pr-date{font-size:10px;color:var(--text3);margin-top:1px}
-
-/* SALES */
 .loading{text-align:center;padding:32px;color:var(--text3);font-size:13px}
 .sales-kpi{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:16px}
 @media(min-width:480px){.sales-kpi{grid-template-columns:repeat(3,1fr)}}
@@ -103,8 +79,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .course-name{font-size:12px;color:var(--text)}
 .course-val{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);font-weight:600}
 .course-count{font-size:10px;color:var(--text3);margin-top:2px}
-
-/* MEMBER VIEW */
 .mv-card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;overflow:hidden}
 .mv-hero{background:var(--bg3);padding:28px 20px 22px;text-align:center;border-bottom:1px solid var(--border)}
 .mv-av{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:700;border:2px solid var(--wood)}
@@ -113,7 +87,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .mv-kpi{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--border)}
 @media(min-width:480px){.mv-kpi{grid-template-columns:repeat(4,1fr)}}
 .mv-k{padding:14px 8px;text-align:center;border-right:1px solid var(--border)}
-.mv-k:last-child{border-right:none}
 .mv-k:nth-child(2n){border-right:none}
 @media(min-width:480px){.mv-k:nth-child(2n){border-right:1px solid var(--border)}.mv-k:last-child{border-right:none}}
 .mv-kv{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);font-weight:600}
@@ -172,9 +145,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         <div class="card"><div class="ctitle">コース別詳細</div><div id="course-detail"></div></div>
         <div class="card"><div class="ctitle">申込一覧</div><div id="form-list"></div></div>
       </div>
-      <div id="sales-error" style="display:none;padding:20px;color:#9a3050;font-size:13px;text-align:center">
-        データの取得に失敗しました。<br>GASの「アクセスできるユーザー」を「全員」に設定してください。
-      </div>
+      <div id="sales-error" style="display:none;padding:20px;color:#9a3050;font-size:13px;text-align:center">データの取得に失敗しました。<br>GASのデプロイ設定を確認してください。</div>
     </div>
 
     <div id="page-members" class="page">
@@ -188,7 +159,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
         </div>
         <button class="btn-gold" onclick="addM()">登録する</button>
       </div>
-      <div class="card"><div class="ctitle">会員一覧</div><div id="mlist"></div></div>
+      <div class="card">
+        <div class="ctitle">会員一覧（スプレッドシートより自動取得）</div>
+        <div id="mlist"><p style="font-size:13px;color:var(--text3)">読み込み中...</p></div>
+      </div>
     </div>
 
     <div id="page-training" class="page">
@@ -249,10 +223,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzw-z8FjYzdBiJ-9mI8p2S7lfWobRrE99t8t8vVHAUY1FJu1v8WG2pKJhH-UHSO_EZi/exec';
+const NAME_KEY='お名前（長尾儀弘）';
 let M=JSON.parse(localStorage.getItem('g4_m')||'[]');
 let T=JSON.parse(localStorage.getItem('g4_t')||'[]');
+let gasMembers=[];
 let cY=new Date().getFullYear(),cM2=new Date().getMonth();
 let C={};
+
 function sv(){localStorage.setItem('g4_m',JSON.stringify(M));localStorage.setItem('g4_t',JSON.stringify(T));}
 function age(d){if(!d)return null;const dt=new Date(d),n=new Date();let a=n.getFullYear()-dt.getFullYear();if(n.getMonth()<dt.getMonth()||(n.getMonth()===dt.getMonth()&&n.getDate()<dt.getDate()))a--;return a;}
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
@@ -267,6 +244,26 @@ async function fetchGasData(){
     console.error('GAS fetch error:',e);
     return null;
   }
+}
+
+// スプレッドシートから会員名を取得してセレクトボックスに反映
+async function loadGasMembers(){
+  const data=await fetchGasData();
+  if(!data||!Array.isArray(data))return;
+  gasMembers=[];
+  data.forEach((row,i)=>{
+    const name=row[NAME_KEY]||row['お名前']||'';
+    if(name&&!gasMembers.find(m=>m.name===name)){
+      gasMembers.push({id:'gas_'+i,name:name,gender:'f',weights:[],dob:'',fromSheet:true});
+    }
+  });
+  // ローカル会員とマージ
+  const allNames=gasMembers.map(m=>m.name);
+  M.forEach(m=>{if(!allNames.includes(m.name))gasMembers.push(m);});
+  // セレクトボックスに反映
+  pSel();
+  // 会員一覧に反映
+  rMem();
 }
 
 async function rSales(){
@@ -315,7 +312,7 @@ async function rSales(){
   [...data].reverse().slice(0,10).forEach(row=>{
     const div=document.createElement('div');div.className='pi';
     const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
-    const name=row['お名前（長尾儀弘）']||row['お名前']||row['氏名']||'-';
+    const name=row[NAME_KEY]||row['お名前']||'-';
     const course=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
     const actual=parseFloat(row['実際の金額']||0);
     div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);font-weight:600;flex-shrink:0;margin-left:8px">${fmtYen(actual)}</div>`;
@@ -342,9 +339,12 @@ function sp(name,btn){
   if(name==='progress')pSel();
 }
 
+function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
+
 function rDash(){
-  const t=M.length,f=M.filter(m=>m.gender==='f').length,ml=t-f;
-  const ages=M.map(m=>age(m.dob)).filter(a=>a!==null);
+  const all=getAllMembers();
+  const t=all.length,f=all.filter(m=>m.gender==='f').length,ml=t-f;
+  const ages=all.map(m=>age(m.dob)).filter(a=>a!==null);
   const avg=ages.length?Math.round(ages.reduce((a,b)=>a+b,0)/ages.length):'-';
   document.getElementById('mt').textContent=t;
   document.getElementById('mf').textContent=f;document.getElementById('mfp').textContent=t?Math.round(f/t*100)+'%':'-%';
@@ -358,23 +358,33 @@ function rDash(){
 }
 
 function rMem(){
-  const l=document.getElementById('mlist');l.innerHTML=M.length?'':'<p style="font-size:13px;color:var(--text3)">会員がいません</p>';
-  M.forEach(m=>{const a=age(m.dob);const d=document.createElement('div');d.className='mrow';d.innerHTML=`<div class="av ${m.gender==='f'?'av-f':'av-m'}">${m.name.charAt(0)}</div><div style="flex:1;min-width:0"><div class="mname">${m.name}</div><div class="mmeta">${a?a+'歳':''} ${m.weights&&m.weights.length?'/ '+m.weights[m.weights.length-1]+'kg':''}</div></div><span class="badge ${m.gender==='f'?'badge-f':'badge-m'}">${m.gender==='f'?'女性':'男性'}</span>`;l.appendChild(d);});
+  const l=document.getElementById('mlist');
+  const all=getAllMembers();
+  l.innerHTML=all.length?'':'<p style="font-size:13px;color:var(--text3)">会員がいません</p>';
+  all.forEach(m=>{
+    const a=age(m.dob);
+    const d=document.createElement('div');d.className='mrow';
+    const tag=m.fromSheet?'<span style="font-size:9px;background:#e1f5ee;color:#0f6e56;padding:2px 6px;border-radius:2px;margin-left:4px">フォーム</span>':'';
+    d.innerHTML=`<div class="av ${m.gender==='f'?'av-f':'av-m'}">${m.name.charAt(0)}</div><div style="flex:1;min-width:0"><div class="mname">${m.name}${tag}</div><div class="mmeta">${a?a+'歳':''} ${m.weights&&m.weights.length?'/ '+m.weights[m.weights.length-1]+'kg':''}</div></div><span class="badge ${m.gender==='f'?'badge-f':'badge-m'}">${m.gender==='f'?'女性':'男性'}</span>`;
+    l.appendChild(d);
+  });
 }
 
 function addM(){
   const n=document.getElementById('in').value.trim();if(!n){alert('氏名を入力してください');return;}
   const d=document.getElementById('id').value,g=document.getElementById('ig').value,w=parseFloat(document.getElementById('iw').value);
-  M.push({id:'m'+Date.now(),name:n,dob:d,gender:g,weights:w?[w]:[]});sv();rMem();
+  M.push({id:'m'+Date.now(),name:n,dob:d,gender:g,weights:w?[w]:[]});sv();
+  gasMembers=[];loadGasMembers();
   ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
 }
 
 function pSel(){
+  const all=getAllMembers();
   ['str','scal','spro','smv'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
-    M.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;s.appendChild(o);});
+    all.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;s.appendChild(o);});
   });
   const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
 }
@@ -396,9 +406,10 @@ function saveTr(){
 
 function rRec(){
   const mid=document.getElementById('str').value,l=document.getElementById('rl');
+  const all=getAllMembers();
   const rs=T.filter(t=>!mid||t.memberId===mid).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
   l.innerHTML=rs.length?'':'<p style="font-size:13px;color:var(--text3)">記録なし</p>';
-  rs.forEach(t=>{const m=M.find(x=>x.id===t.memberId);const d=document.createElement('div');d.className='pi';d.innerHTML=`<div style="min-width:0"><div class="pn">${t.date}${m?' — '+m.name:''}</div><div style="font-size:11px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回').join(' / ')}</div></div>`;l.appendChild(d);});
+  rs.forEach(t=>{const m=all.find(x=>x.id===t.memberId);const d=document.createElement('div');d.className='pi';d.innerHTML=`<div style="min-width:0"><div class="pn">${t.date}${m?' — '+m.name:''}</div><div style="font-size:11px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回').join(' / ')}</div></div>`;l.appendChild(d);});
 }
 
 function rCal(){
@@ -419,7 +430,8 @@ function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);cons
 
 function rPro(){
   const mid=document.getElementById('spro').value;if(!mid)return;
-  const mem=M.find(m=>m.id===mid);if(!mem)return;
+  const all=getAllMembers();
+  const mem=all.find(m=>m.id===mid);if(!mem)return;
   const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
   dc('w');dc('cf');dc('cv');dc('ce');
   C.w=new Chart(document.getElementById('cw'),{type:'line',data:{labels:(mem.weights||[]).map((_,i)=>'記録'+(i+1)),datasets:[{data:mem.weights||[],borderColor:'#9a7235',backgroundColor:'rgba(154,114,53,0.1)',tension:0.4,pointRadius:5,pointBackgroundColor:'#9a7235',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b5840'}},y:{ticks:{color:'#6b5840',callback:v=>v+'kg'},grid:{color:'rgba(200,168,118,0.2)'}}}}});
@@ -443,7 +455,8 @@ function rPro(){
 function rMV(){
   const mid=document.getElementById('smv').value,content=document.getElementById('mvc');
   if(!mid){content.innerHTML='';return;}
-  const mem=M.find(m=>m.id===mid);
+  const all=getAllMembers();
+  const mem=all.find(m=>m.id===mid);
   const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
   const lw=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:'-';
   const sw2=mem.weights&&mem.weights.length>=2?mem.weights[0]:null;
@@ -482,7 +495,8 @@ function rMV(){
   mts.slice(-3).reverse().forEach(t=>{const div=document.createElement('div');div.className='pi';div.innerHTML=`<div style="min-width:0"><div class="pn">${t.date}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${t.sets.map(s=>s.exercise+' '+s.weight+'kg×'+s.reps+'回').join(' / ')}</div></div>`;rv.appendChild(div);});
 }
 
-rDash();pSel();rCal();
+rDash();rCal();
+loadGasMembers();
 </script>
 </body>
 </html>
