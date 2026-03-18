@@ -253,17 +253,16 @@ async function loadGasMembers(){
   if(!data||!Array.isArray(data))return;
   gasMembers=[];
   data.forEach((row,i)=>{
-    const name=row[NAME_KEY]||row['お名前']||'';
+    // 列名に改行が含まれるためキーを柔軟に検索
+    const nameKey=Object.keys(row).find(k=>k.replace(/[\s\n]/g,'').includes('長尾儀弘')||k.replace(/[\s\n]/g,'').includes('お名前'));
+    const name=nameKey?String(row[nameKey]).trim():'';
     if(name&&!gasMembers.find(m=>m.name===name)){
       gasMembers.push({id:'gas_'+i,name:name,gender:'f',weights:[],dob:'',fromSheet:true});
     }
   });
-  // ローカル会員とマージ
   const allNames=gasMembers.map(m=>m.name);
   M.forEach(m=>{if(!allNames.includes(m.name))gasMembers.push(m);});
-  // セレクトボックスに反映
   pSel();
-  // 会員一覧に反映
   rMem();
 }
 
