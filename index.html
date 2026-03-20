@@ -265,8 +265,7 @@ async function loadGasMembers(){
   const rows=Array.isArray(data)?data:(data.all||[]);
   gasMembers=[];
   rows.forEach((row,i)=>{
-    const nameKey=Object.keys(row).find(k=>k.replace(/[\s
-]/g,'').includes('お名前')||k==='name');
+    const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
     const name=nameKey?String(row[nameKey]).trim():'';
     const isTrial=!!(data.trial&&data.trial.find(t=>t===row));
     if(name&&!gasMembers.find(m=>m.name===name)){
