@@ -43,15 +43,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 .wt-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
 .wt-val{font-family:'Cormorant Garamond',serif;font-size:44px;color:var(--black);font-weight:300;line-height:1}
 .wt-unit{font-size:13px;color:var(--g3)}
-.wt-diff{font-size:13px;color:var(--black);letter-spacing:.04em}
+.wt-diff{font-size:13px;letter-spacing:.04em}
 .wt-diff.down{color:var(--move)}
 .wt-diff.up{color:var(--strength)}
-.ch-wrap{height:180px;position:relative;margin:10px 0 4px}
+.ch-wrap{height:160px;position:relative;margin:10px 0 4px}
+.wt-input-row{display:flex;gap:8px;align-items:center;margin-top:16px;padding-top:16px;border-top:.5px solid var(--g5)}
+.wt-input{font-size:18px;font-weight:300;padding:8px 12px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:120px}
+.wt-input:focus{outline:none;border-color:var(--black)}
+.btn-wt{background:var(--black);color:#fff;border:none;padding:9px 18px;font-size:11px;cursor:pointer;letter-spacing:.1em;font-family:'Noto Sans JP',sans-serif}
 .tr-row{padding:12px 0;border-bottom:.5px solid var(--g6)}
 .tr-row:last-child{border:none}
 .tr-date{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--black);margin-bottom:4px;letter-spacing:.04em}
 .tr-set{font-size:11px;color:var(--g2);font-weight:300;line-height:2}
-.cat-badge{font-size:9px;padding:1px 6px;margin-left:3px;font-weight:500}
+.cat-badge{font-size:9px;padding:1px 5px;margin-left:2px;font-weight:500}
 .cat-badge.s{background:#fdf0f0;color:var(--strength);border:.5px solid var(--strength)}
 .cat-badge.c{background:#f0f7fd;color:var(--core);border:.5px solid var(--core)}
 .cat-badge.m{background:#f0fdf4;color:var(--move);border:.5px solid var(--move)}
@@ -103,6 +107,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
     <div class="st">body weight</div>
     <div id="wt-content"><div class="nodata">体重データがありません</div></div>
     <div class="ch-wrap"><canvas id="cw"></canvas></div>
+    <div class="wt-input-row">
+      <input class="wt-input" type="number" step="0.1" placeholder="55.0" id="wt-in" inputmode="decimal">
+      <span style="font-size:13px;color:var(--g3)">kg</span>
+      <button class="btn-wt" onclick="addWeight()">記録する</button>
+    </div>
   </div>
 
   <div id="pg-training" class="pg">
@@ -128,7 +137,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbzQkuKW3Z7v67ulZDn3LJF3GoHI86YFa98iaBzGPksbdFeWReNbDgnHsLConEOjSklj/exec';
 const urlId=new URLSearchParams(location.search).get('id');
-let mem=null, mts=[];
+let mem=null, mts=[], weights=[];
 let C={};
 const now=new Date();
 const cY=now.getFullYear(), cM=now.getMonth();
@@ -145,17 +154,19 @@ async function gas(params){
 async function init(){
   if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
   try{
-    const [mRes,tRes]=await Promise.all([
+    const [mRes,tRes,wRes]=await Promise.all([
       gas({action:'getMembers'}),
-      gas({action:'getTraining',id:urlId})
+      gas({action:'getTraining',id:urlId}),
+      gas({action:'getWeight',id:urlId})
     ]);
     const members=mRes.success?mRes.members:[];
     mem=members.find(m=>m['会員ID']===urlId);
     if(!mem){showError('会員情報が見つかりません。\nトレーナーにお問い合わせください。');return;}
     mts=tRes.success?tRes.records.map(r=>({
-      id:r['記録ID'], memberId:r['会員ID'], date:r['日付'],
-      sets:(()=>{try{return JSON.parse(r['種目データ']||'[]');}catch(e){return [];}})()
+      id:r['記録ID'],memberId:r['会員ID'],date:r['日付'],
+      sets:(()=>{try{return JSON.parse(r['種目データ']||'[]');}catch(e){return[];}})()
     })).sort((a,b)=>b.date.localeCompare(a.date)):[];
+    weights=wRes.success?wRes.weights:[];
     document.getElementById('member-name').textContent=mem['お名前']+' さん';
     document.title='ONE TRE — '+mem['お名前'];
     renderAttend();
@@ -207,7 +218,7 @@ function renderAttend(){
   const monthVisits=mts.filter(t=>t.date.startsWith(`${cY}-${String(cM+1).padStart(2,'0')}`));
   document.getElementById('cal-count').textContent='今月 '+monthVisits.length+'回';
   document.getElementById('cal-hdr').innerHTML=['日','月','火','水','木','金','土'].map(d=>`<div class="cd dh">${d}</div>`).join('');
-  const first=new Date(cY,cM,1).getDay(), daysInMonth=new Date(cY,cM+1,0).getDate(), todayStr=now.toISOString().slice(0,10);
+  const first=new Date(cY,cM,1).getDay(),daysInMonth=new Date(cY,cM+1,0).getDate(),todayStr=now.toISOString().slice(0,10);
   let html=Array(first).fill('<div class="cd"></div>').join('');
   for(let d=1;d<=daysInMonth;d++){
     const ds=`${cY}-${String(cM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -221,10 +232,11 @@ function renderAttend(){
 }
 
 function renderBody(){
-  let weights=[];
-  try{weights=JSON.parse(mem['体重履歴']||'[]');}catch(e){}
-  if(!weights.length)return;
-  const cur=weights[weights.length-1], first=weights[0];
+  if(!weights.length){
+    document.getElementById('wt-content').innerHTML='<div class="nodata">体重データがありません<br><span style="font-size:11px">下のボックスから記録してください</span></div>';
+    return;
+  }
+  const cur=weights[weights.length-1],first=weights[0];
   const diff=(cur-first).toFixed(1);
   document.getElementById('wt-content').innerHTML=`
     <div class="wt-hero">
@@ -235,6 +247,23 @@ function renderBody(){
     <div style="font-size:10px;color:var(--g3);letter-spacing:.06em">開始時 ${first}kg → 現在 ${cur}kg</div>`;
   dc('cw');
   C.cw=new Chart(document.getElementById('cw'),{type:'line',data:{labels:weights.map((_,i)=>i===0?'開始':'記録'+(i+1)),datasets:[{data:weights,borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:4,pointBackgroundColor:'#111',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+}
+
+async function addWeight(){
+  const val=parseFloat(document.getElementById('wt-in').value);
+  if(!val||val<20||val>300){alert('正しい体重を入力してください');return;}
+  const btn=document.querySelector('.btn-wt');
+  btn.textContent='記録中...';btn.disabled=true;
+  try{
+    const res=await gas({action:'updateWeight',id:urlId,weight:val});
+    if(res.success){
+      weights.push(val);
+      document.getElementById('wt-in').value='';
+      renderBody();
+      alert('体重を記録しました！');
+    }else{alert('記録に失敗しました');}
+  }catch(e){alert('記録に失敗しました');}
+  btn.textContent='記録する';btn.disabled=false;
 }
 
 function renderTraining(){
@@ -256,40 +285,17 @@ function renderTraining(){
 }
 
 function renderGrowth(){
-  let totalS=0, totalC=0, totalM=0;
-  mts.forEach(t=>{
-    t.sets.forEach(s=>{
-      totalS+=(s.strength||0);
-      totalC+=(s.core||0);
-      totalM+=(s.move||0);
-    });
-  });
+  let totalS=0,totalC=0,totalM=0;
+  mts.forEach(t=>{t.sets.forEach(s=>{totalS+=(s.strength||0);totalC+=(s.core||0);totalM+=(s.move||0);});});
   document.getElementById('total-s').textContent=totalS;
   document.getElementById('total-c').textContent=totalC;
   document.getElementById('total-m').textContent=totalM;
-
   dc('cr');
   C.cr=new Chart(document.getElementById('cr'),{
     type:'radar',
-    data:{
-      labels:['筋力','体幹','動く'],
-      datasets:[{
-        data:[totalS,totalC,totalM],
-        backgroundColor:'rgba(17,17,17,0.08)',
-        borderColor:'#111',
-        borderWidth:2,
-        pointBackgroundColor:['#c0392b','#2980b9','#27ae60'],
-        pointRadius:6
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      scales:{r:{beginAtZero:true,ticks:{display:false},grid:{color:'#eee'},pointLabels:{font:{size:14,family:'Noto Sans JP'},color:['#c0392b','#2980b9','#27ae60']}}},
-      plugins:{legend:{display:false}}
-    }
+    data:{labels:['筋力','体幹','動く'],datasets:[{data:[totalS,totalC,totalM],backgroundColor:'rgba(17,17,17,0.08)',borderColor:'#111',borderWidth:2,pointBackgroundColor:['#c0392b','#2980b9','#27ae60'],pointRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,ticks:{display:false},grid:{color:'#eee'},pointLabels:{font:{size:14,family:'Noto Sans JP'},color:['#c0392b','#2980b9','#27ae60']}}},plugins:{legend:{display:false}}}
   });
-
   const prs={};
   mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
   const pbList=document.getElementById('pb-list');
@@ -302,7 +308,6 @@ function renderGrowth(){
       pbList.appendChild(div);
     });
   }
-
   if(mts.length>=2){
     const vols=[...mts].reverse().map(t=>({date:t.date.slice(5),vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps,0))}));
     dc('cv');
