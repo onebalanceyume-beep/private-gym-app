@@ -84,6 +84,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .cat-badge.s{background:#fdf0f0;color:var(--strength);border:.5px solid var(--strength)}
 .cat-badge.c{background:#f0f7fd;color:var(--core);border:.5px solid var(--core)}
 .cat-badge.m{background:#f0fdf4;color:var(--move);border:.5px solid var(--move)}
+.pb-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--g6);margin-bottom:4px}
+.pb-name{font-size:12px;color:var(--black);font-weight:300}
+.pb-val{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--black)}
+.cat-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.cat-sum-box{padding:12px 8px;text-align:center;border:.5px solid var(--g5)}
+.cat-sum-box.s{border-color:var(--strength);background:#fdf0f0}
+.cat-sum-box.c{border-color:var(--core);background:#f0f7fd}
+.cat-sum-box.m{border-color:var(--move);background:#f0fdf4}
+.cat-sum-label{font-size:10px;font-weight:500;margin-bottom:4px}
+.cat-sum-box.s .cat-sum-label{color:var(--strength)}
+.cat-sum-box.c .cat-sum-label{color:var(--core)}
+.cat-sum-box.m .cat-sum-label{color:var(--move)}
+.cat-sum-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--black);font-weight:300}
+.nodata{text-align:center;padding:32px;color:var(--g3);font-size:13px}
 </style>
 </head>
 <body>
@@ -101,6 +115,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <button class="nbtn" onclick="sp('sales',this)">売上管理</button>
     <button class="nbtn" onclick="sp('members',this)">会員管理</button>
     <button class="nbtn" onclick="sp('training',this)">トレーニング</button>
+    <button class="nbtn" onclick="sp('growth',this)">成長グラフ</button>
     <button class="nbtn" onclick="sp('calendar',this)">カレンダー</button>
   </div>
 
@@ -142,7 +157,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       <button class="btn-black" onclick="addM()">登録する → 専用URLを自動発行</button>
     </div>
     <div class="card">
-      <div class="ctitle">会員一覧 — URLをコピーしてLINEで送ってください</div>
+      <div class="ctitle">会員一覧</div>
       <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
     </div>
   </div>
@@ -161,6 +176,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       </div>
     </div>
     <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
+  </div>
+
+  <!-- 成長グラフ -->
+  <div id="page-growth" class="page">
+    <div class="msel">
+      <select id="sgro" onchange="rGrowth()"><option value="">会員を選択</option></select>
+    </div>
+    <div id="growth-content">
+      <div class="nodata">会員を選択してください</div>
+    </div>
   </div>
 
   <div id="page-calendar" class="page">
@@ -216,6 +241,7 @@ function sp(name,btn){
   if(name==='sales')rSales();
   if(name==='members')rMem();
   if(name==='training'){pSel();rRec();if(!document.getElementById('sw').children.length)addS();}
+  if(name==='growth'){pSel2();rGrowth();}
   if(name==='calendar'){pSel();rCal();}
 }
 
@@ -330,6 +356,62 @@ function pSel(){
     gasMembers.forEach(m=>{const o=document.createElement('option');o.value=m['会員ID'];o.textContent=m['お名前'];s.appendChild(o);});
   });
   const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
+}
+
+function pSel2(){
+  const s=document.getElementById('sgro');if(!s)return;
+  const ha=s.options[0]&&s.options[0].value==='';
+  while(s.options.length>(ha?1:0))s.remove(ha?1:0);
+  gasMembers.forEach(m=>{const o=document.createElement('option');o.value=m['会員ID'];o.textContent=m['お名前'];s.appendChild(o);});
+}
+
+function rGrowth(){
+  const mid=document.getElementById('sgro').value;
+  const gc=document.getElementById('growth-content');
+  if(!mid){gc.innerHTML='<div class="nodata">会員を選択してください</div>';return;}
+  const mts=gasTraining.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!mts.length){gc.innerHTML='<div class="nodata">この会員のトレーニング記録がありません</div>';return;}
+
+  let totalS=0,totalC=0,totalM=0;
+  mts.forEach(t=>t.sets.forEach(s=>{totalS+=(s.strength||0);totalC+=(s.core||0);totalM+=(s.move||0);}));
+
+  gc.innerHTML=`
+    <div class="cat-summary">
+      <div class="cat-sum-box s"><div class="cat-sum-label">筋力</div><div class="cat-sum-val">${totalS}</div></div>
+      <div class="cat-sum-box c"><div class="cat-sum-label">体幹</div><div class="cat-sum-val">${totalC}</div></div>
+      <div class="cat-sum-box m"><div class="cat-sum-label">動く</div><div class="cat-sum-val">${totalM}</div></div>
+    </div>
+    <div class="charts-row">
+      <div class="card"><div class="ctitle">カテゴリバランス</div><div style="position:relative;height:200px"><canvas id="cgro-radar"></canvas></div></div>
+      <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:200px"><canvas id="cgro-vol"></canvas></div></div>
+    </div>
+    <div class="card"><div class="ctitle">種目別 重量の伸び</div><div style="position:relative;height:200px"><canvas id="cgro-ex"></canvas></div></div>
+    <div class="card"><div class="ctitle">自己ベスト</div><div id="cgro-pb"></div></div>`;
+
+  dc('cgro-radar');
+  C['cgro-radar']=new Chart(document.getElementById('cgro-radar'),{type:'radar',data:{labels:['筋力','体幹','動く'],datasets:[{data:[totalS,totalC,totalM],backgroundColor:'rgba(17,17,17,0.08)',borderColor:'#111',borderWidth:2,pointBackgroundColor:['#c0392b','#2980b9','#27ae60'],pointRadius:6}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,ticks:{display:false},grid:{color:'#eee'},pointLabels:{font:{size:13},color:['#c0392b','#2980b9','#27ae60']}}},plugins:{legend:{display:false}}}});
+
+  const vols=mts.map(t=>({date:t.date.slice(5),vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps,0))}));
+  dc('cgro-vol');
+  C['cgro-vol']=new Chart(document.getElementById('cgro-vol'),{type:'bar',data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#111',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+
+  const em={};
+  mts.forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]=[];em[s.exercise].push({date:t.date.slice(5),w:s.weight});}));
+  dc('cgro-ex');
+  C['cgro-ex']=new Chart(document.getElementById('cgro-ex'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date.slice(5)))],datasets:Object.entries(em).slice(0,5).map(([ex,arr],i)=>({label:ex,data:arr.map(a=>a.w),borderColor:['#111','#c0392b','#2980b9','#27ae60','#888'][i],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#aaa',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+
+  const prs={};
+  mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
+  const pbEl=document.getElementById('cgro-pb');
+  if(!Object.keys(prs).length){pbEl.innerHTML='<div class="nodata">記録がありません</div>';}
+  else{
+    pbEl.innerHTML='';
+    Object.entries(prs).forEach(([ex,pr])=>{
+      const div=document.createElement('div');div.className='pb-item';
+      div.innerHTML=`<div><div class="pb-name">${ex}</div><div style="font-size:9px;color:var(--g4);margin-top:2px">${pr.date}</div></div><div class="pb-val">${pr.w} kg</div>`;
+      pbEl.appendChild(div);
+    });
+  }
 }
 
 function makeSetCard(){
