@@ -61,7 +61,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .cat-box.strength .cat-label{color:var(--strength)}
 .cat-box.core .cat-label{color:var(--core)}
 .cat-box.move .cat-label{color:var(--move)}
-.cat-input{width:60px;font-size:18px;font-weight:500;text-align:center;padding:4px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;-webkit-appearance:none}
+.cat-input{width:60px;font-size:18px;font-weight:500;text-align:center;padding:4px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
 .cat-total{font-size:11px;color:var(--g3);margin-top:8px;text-align:right}
 .cat-total.ok{color:var(--move);font-weight:500}
 .cat-total.ng{color:var(--strength);font-weight:500}
@@ -84,8 +84,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .cat-badge.s{background:#fdf0f0;color:var(--strength);border:.5px solid var(--strength)}
 .cat-badge.c{background:#f0f7fd;color:var(--core);border:.5px solid var(--core)}
 .cat-badge.m{background:#f0fdf4;color:var(--move);border:.5px solid var(--move)}
-.hdr-row{display:grid;grid-template-columns:2fr 1fr 1fr 28px;gap:6px;margin-bottom:6px}
-.hdr-row span{font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -140,12 +138,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
         <div class="fg"><label>氏名</label><input id="in" placeholder="山田 花子"></div>
         <div class="fg"><label>生年月日</label><input id="id" type="date"></div>
         <div class="fg"><label>性別</label><select id="ig"><option value="f">女性</option><option value="m">男性</option></select></div>
-        <div class="fg"><label>体重 (kg)</label><input id="iw" type="number" step="0.1" placeholder="55.0"></div>
       </div>
       <button class="btn-black" onclick="addM()">登録する → 専用URLを自動発行</button>
     </div>
     <div class="card">
-      <div class="ctitle">会員一覧</div>
+      <div class="ctitle">会員一覧 — URLをコピーしてLINEで送ってください</div>
       <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
     </div>
   </div>
@@ -315,12 +312,12 @@ async function addM(){
   const btn=document.querySelector('#page-members .btn-black');
   btn.textContent='登録中...';btn.disabled=true;
   try{
-    const res=await gas({action:'addMember',name:n,gender:document.getElementById('ig').value,dob:document.getElementById('id').value,weight:document.getElementById('iw').value});
+    const res=await gas({action:'addMember',name:n,gender:document.getElementById('ig').value,dob:document.getElementById('id').value});
     if(res.success){
       alert('登録しました！\n会員URLをコピーしてLINEで送ってください。');
-      ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
+      ['in','id'].forEach(i=>document.getElementById(i).value='');
       await loadAll();
-    }else{alert('登録に失敗しました: '+(res.error||''));}
+    }else{alert('登録に失敗しました');}
   }catch(e){alert('登録に失敗しました');}
   btn.textContent='登録する → 専用URLを自動発行';btn.disabled=false;
 }
@@ -344,28 +341,17 @@ function makeSetCard(){
       <input type="number" placeholder="回数" inputmode="numeric">
       <button class="del-btn" onclick="this.closest('.set-card').remove()">×</button>
     </div>
-    <div style="font-size:10px;color:var(--g3);margin-bottom:8px;letter-spacing:.06em">カテゴリバランス（合計が10になるように入力）</div>
+    <div style="font-size:10px;color:var(--g3);margin-bottom:8px;letter-spacing:.06em">カテゴリバランス（合計10になるように入力）</div>
     <div class="cat-row">
-      <div class="cat-box strength">
-        <div class="cat-label">筋力</div>
-        <input class="cat-input" type="number" value="4" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
-      </div>
-      <div class="cat-box core">
-        <div class="cat-label">体幹</div>
-        <input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
-      </div>
-      <div class="cat-box move">
-        <div class="cat-label">動く</div>
-        <input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
-      </div>
+      <div class="cat-box strength"><div class="cat-label">筋力</div><input class="cat-input" type="number" value="4" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)"></div>
+      <div class="cat-box core"><div class="cat-label">体幹</div><input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)"></div>
+      <div class="cat-box move"><div class="cat-label">動く</div><input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)"></div>
     </div>
     <div class="cat-total ok">合計: 10 / 10</div>`;
   return div;
 }
 
-function addS(){
-  document.getElementById('sw').appendChild(makeSetCard());
-}
+function addS(){document.getElementById('sw').appendChild(makeSetCard());}
 
 function updateTotal(input){
   const card=input.closest('.set-card');
@@ -379,8 +365,7 @@ function updateTotal(input){
 async function saveTr(){
   const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
   if(!mid||!dt){alert('会員と日付を選んでください');return;}
-  const sets=[];
-  let hasError=false;
+  const sets=[];let hasError=false;
   document.querySelectorAll('#sw .set-card').forEach(card=>{
     const ins=card.querySelectorAll('.set-top input');
     const catIns=card.querySelectorAll('.cat-input');
@@ -437,10 +422,7 @@ function rCal(){
 function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
 function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
 
-// 起動時に種目入力欄を1行表示
-loadAll().then(()=>{
-  if(!document.getElementById('sw').children.length) addS();
-});
+loadAll().then(()=>{if(!document.getElementById('sw').children.length)addS();});
 </script>
 </body>
 </html>
