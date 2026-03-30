@@ -61,10 +61,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .cat-box.strength .cat-label{color:var(--strength)}
 .cat-box.core .cat-label{color:var(--core)}
 .cat-box.move .cat-label{color:var(--move)}
-.cat-input{width:60px;font-size:18px;font-weight:500;text-align:center;padding:4px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif}
+.cat-input{width:60px;font-size:18px;font-weight:500;text-align:center;padding:4px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;-webkit-appearance:none}
 .cat-total{font-size:11px;color:var(--g3);margin-top:8px;text-align:right}
-.cat-total.ok{color:var(--move)}
-.cat-total.ng{color:var(--strength)}
+.cat-total.ok{color:var(--move);font-weight:500}
+.cat-total.ng{color:var(--strength);font-weight:500}
 .pi{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
 .pi:last-child{border:none}
 .pn{font-size:13px;color:var(--black);font-weight:300}
@@ -80,10 +80,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .course-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:.5px solid var(--g6)}
 .course-item:last-child{border:none}
 .loading{text-align:center;padding:32px;color:var(--g3);font-size:13px;letter-spacing:.1em}
-.cat-badge{font-size:9px;padding:1px 6px;border-radius:0;margin-left:3px;font-weight:500}
+.cat-badge{font-size:9px;padding:1px 5px;margin-left:2px;font-weight:500}
 .cat-badge.s{background:#fdf0f0;color:var(--strength);border:.5px solid var(--strength)}
 .cat-badge.c{background:#f0f7fd;color:var(--core);border:.5px solid var(--core)}
 .cat-badge.m{background:#f0fdf4;color:var(--move);border:.5px solid var(--move)}
+.hdr-row{display:grid;grid-template-columns:2fr 1fr 1fr 28px;gap:6px;margin-bottom:6px}
+.hdr-row span{font-size:9px;color:var(--g4);letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -152,13 +154,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <div class="card">
       <div class="ctitle">トレーニング記録</div>
       <div class="msel">
-        <select id="str"><option value="">会員を選択</option></select>
+        <select id="str" onchange="rRec()"><option value="">会員を選択</option></select>
         <input id="idate" type="date">
       </div>
       <div id="sw"></div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="addS()">+ 種目追加</button>
-        <button class="btn-black" onclick="saveTr()">記録を保存</button>
+        <button class="btn-black" onclick="saveTr()">記録を保存 → 会員画面に反映</button>
       </div>
     </div>
     <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
@@ -200,10 +202,10 @@ async function loadAll(){
     const [mRes,tRes]=await Promise.all([gas({action:'getMembers'}),gas({action:'getTraining'})]);
     gasMembers=mRes.success?mRes.members:[];
     gasTraining=tRes.success?tRes.records.map(r=>({
-      id:r['記録ID'], memberId:r['会員ID'], date:r['日付'],
-      sets:(()=>{try{return JSON.parse(r['種目データ']||'[]');}catch(e){return [];}})()
+      id:r['記録ID'],memberId:r['会員ID'],date:r['日付'],
+      sets:(()=>{try{return JSON.parse(r['種目データ']||'[]');}catch(e){return[];}})()
     })):[];
-    pSel(); rMem(); rDash(); rRec();
+    pSel();rMem();rDash();rRec();
   }catch(e){console.error(e);}
 }
 
@@ -216,12 +218,12 @@ function sp(name,btn){
   if(name==='dashboard')rDash();
   if(name==='sales')rSales();
   if(name==='members')rMem();
-  if(name==='training'){pSel();rRec();}
+  if(name==='training'){pSel();rRec();if(!document.getElementById('sw').children.length)addS();}
   if(name==='calendar'){pSel();rCal();}
 }
 
 function rDash(){
-  const t=gasMembers.length, f=gasMembers.filter(m=>m['性別']==='f').length, ml=t-f;
+  const t=gasMembers.length,f=gasMembers.filter(m=>m['性別']==='f').length,ml=t-f;
   document.getElementById('mt').textContent=t;
   document.getElementById('mf').textContent=f;
   document.getElementById('mfp').textContent=t?Math.round(f/t*100)+'%':'-%';
@@ -232,18 +234,10 @@ function rDash(){
   document.getElementById('msess').textContent=mSess;
   dc('g');
   C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#111','#888'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:12,boxWidth:10}}}}});
-
-  // 全セッションのカテゴリ合計
-  let totalS=0, totalC=0, totalM=0;
-  gasTraining.forEach(t=>{
-    t.sets.forEach(s=>{
-      totalS+=(s.strength||0);
-      totalC+=(s.core||0);
-      totalM+=(s.move||0);
-    });
-  });
+  let totalS=0,totalC=0,totalM=0;
+  gasTraining.forEach(t=>t.sets.forEach(s=>{totalS+=(s.strength||0);totalC+=(s.core||0);totalM+=(s.move||0);}));
   dc('cr');
-  C.cr=new Chart(document.getElementById('cr'),{type:'radar',data:{labels:['筋力','体幹','動く'],datasets:[{data:[totalS,totalC,totalM],backgroundColor:'rgba(17,17,17,0.1)',borderColor:'#111',borderWidth:2,pointBackgroundColor:'#111'}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,ticks:{display:false},grid:{color:'#eee'},pointLabels:{font:{size:12},color:'#444'}}},plugins:{legend:{display:false}}}});
+  C.cr=new Chart(document.getElementById('cr'),{type:'radar',data:{labels:['筋力','体幹','動く'],datasets:[{data:[totalS,totalC,totalM],backgroundColor:'rgba(17,17,17,0.1)',borderColor:'#111',borderWidth:2,pointBackgroundColor:['#c0392b','#2980b9','#27ae60'],pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,ticks:{display:false},grid:{color:'#eee'},pointLabels:{font:{size:12},color:'#444'}}},plugins:{legend:{display:false}}}});
 }
 
 async function rSales(){
@@ -298,7 +292,7 @@ function rMem(){
   const l=document.getElementById('mlist');
   l.innerHTML=gasMembers.length?'':'<p style="font-size:13px;color:var(--g3)">会員がいません</p>';
   gasMembers.forEach(m=>{
-    const name=m['お名前']||'', id=m['会員ID']||'', url=getMemberUrl(id);
+    const name=m['お名前']||'',id=m['会員ID']||'',url=getMemberUrl(id);
     const d=document.createElement('div');d.className='mrow';
     d.innerHTML=`<div class="av">${name.charAt(0)}</div>
       <div style="flex:1;min-width:0">
@@ -322,7 +316,11 @@ async function addM(){
   btn.textContent='登録中...';btn.disabled=true;
   try{
     const res=await gas({action:'addMember',name:n,gender:document.getElementById('ig').value,dob:document.getElementById('id').value,weight:document.getElementById('iw').value});
-    if(res.success){alert('登録しました！\nID: '+res.id);['in','id','iw'].forEach(i=>document.getElementById(i).value='');await loadAll();}
+    if(res.success){
+      alert('登録しました！\n会員URLをコピーしてLINEで送ってください。');
+      ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
+      await loadAll();
+    }else{alert('登録に失敗しました: '+(res.error||''));}
   }catch(e){alert('登録に失敗しました');}
   btn.textContent='登録する → 専用URLを自動発行';btn.disabled=false;
 }
@@ -337,34 +335,36 @@ function pSel(){
   const td=document.getElementById('idate');if(td&&!td.value)td.value=new Date().toISOString().slice(0,10);
 }
 
-function addS(){
-  const c=document.getElementById('sw');
-  const idx=c.children.length+1;
+function makeSetCard(){
   const div=document.createElement('div');div.className='set-card';
   div.innerHTML=`
     <div class="set-top">
-      <input placeholder="種目名（例：スクワット）">
-      <input type="number" placeholder="重量kg" step="0.5">
-      <input type="number" placeholder="回数">
-      <button class="del-btn" onclick="this.closest('.set-card').remove();updateAllTotals()">×</button>
+      <input placeholder="種目名（例：スクワット）" inputmode="text">
+      <input type="number" placeholder="重量kg" step="0.5" inputmode="decimal">
+      <input type="number" placeholder="回数" inputmode="numeric">
+      <button class="del-btn" onclick="this.closest('.set-card').remove()">×</button>
     </div>
-    <div style="font-size:10px;color:var(--g3);margin-bottom:8px;letter-spacing:.06em">カテゴリバランス（合計10）</div>
+    <div style="font-size:10px;color:var(--g3);margin-bottom:8px;letter-spacing:.06em">カテゴリバランス（合計が10になるように入力）</div>
     <div class="cat-row">
       <div class="cat-box strength">
         <div class="cat-label">筋力</div>
-        <input class="cat-input" type="number" value="4" min="0" max="10" oninput="updateTotal(this)">
+        <input class="cat-input" type="number" value="4" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
       </div>
       <div class="cat-box core">
         <div class="cat-label">体幹</div>
-        <input class="cat-input" type="number" value="3" min="0" max="10" oninput="updateTotal(this)">
+        <input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
       </div>
       <div class="cat-box move">
         <div class="cat-label">動く</div>
-        <input class="cat-input" type="number" value="3" min="0" max="10" oninput="updateTotal(this)">
+        <input class="cat-input" type="number" value="3" min="0" max="10" inputmode="numeric" oninput="updateTotal(this)">
       </div>
     </div>
     <div class="cat-total ok">合計: 10 / 10</div>`;
-  c.appendChild(div);
+  return div;
+}
+
+function addS(){
+  document.getElementById('sw').appendChild(makeSetCard());
 }
 
 function updateTotal(input){
@@ -376,41 +376,34 @@ function updateTotal(input){
   el.className='cat-total '+(total===10?'ok':'ng');
 }
 
-function updateAllTotals(){
-  document.querySelectorAll('.set-card').forEach(card=>{
-    const inputs=card.querySelectorAll('.cat-input');
-    if(inputs.length){
-      const total=Array.from(inputs).reduce((s,i)=>s+(parseInt(i.value)||0),0);
-      const el=card.querySelector('.cat-total');
-      el.textContent='合計: '+total+' / 10';
-      el.className='cat-total '+(total===10?'ok':'ng');
-    }
-  });
-}
-
 async function saveTr(){
-  const mid=document.getElementById('str').value, dt=document.getElementById('idate').value;
+  const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
   if(!mid||!dt){alert('会員と日付を選んでください');return;}
   const sets=[];
   let hasError=false;
   document.querySelectorAll('#sw .set-card').forEach(card=>{
     const ins=card.querySelectorAll('.set-top input');
     const catIns=card.querySelectorAll('.cat-input');
-    const e=ins[0].value.trim(), w=parseFloat(ins[1].value), rep=parseInt(ins[2].value);
-    const s=parseInt(catIns[0].value)||0, co=parseInt(catIns[1].value)||0, mv=parseInt(catIns[2].value)||0;
+    const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value);
+    const s=parseInt(catIns[0].value)||0,co=parseInt(catIns[1].value)||0,mv=parseInt(catIns[2].value)||0;
     if(!e)return;
     if(s+co+mv!==10){hasError=true;return;}
     sets.push({exercise:e,weight:w||0,reps:rep||0,strength:s,core:co,move:mv});
   });
-  if(hasError){alert('カテゴリの合計が10になっていない種目があります。確認してください。');return;}
-  if(!sets.length){alert('種目を入力してください');return;}
-  const btn=document.querySelector('#page-training .btn-black:last-child');
+  if(hasError){alert('カテゴリの合計が10になっていない種目があります。\n確認してください。');return;}
+  if(!sets.length){alert('種目名を入力してください');return;}
+  const btn=document.querySelector('#page-training .btn-black');
   btn.textContent='保存中...';btn.disabled=true;
   try{
     const res=await gas({action:'saveTraining',id:mid,date:dt,sets:JSON.stringify(sets)});
-    if(res.success){document.getElementById('sw').innerHTML='';await loadAll();alert('保存しました！会員の専用画面に反映されました。');}
+    if(res.success){
+      document.getElementById('sw').innerHTML='';
+      addS();
+      await loadAll();
+      alert('保存しました！会員の専用画面に反映されました。');
+    }else{alert('保存に失敗しました');}
   }catch(e){alert('保存に失敗しました');}
-  btn.textContent='記録を保存';btn.disabled=false;
+  btn.textContent='記録を保存 → 会員画面に反映';btn.disabled=false;
 }
 
 function rRec(){
@@ -444,7 +437,10 @@ function rCal(){
 function cPrev(){cM2--;if(cM2<0){cM2=11;cY--;}rCal();}
 function cNext(){cM2++;if(cM2>11){cM2=0;cY++;}rCal();}
 
-loadAll();
+// 起動時に種目入力欄を1行表示
+loadAll().then(()=>{
+  if(!document.getElementById('sw').children.length) addS();
+});
 </script>
 </body>
 </html>
