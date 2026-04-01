@@ -163,6 +163,44 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       </div>
       <button class="btn-black" onclick="addM()">登録する → 専用URLを自動発行</button>
     </div>
+
+    <div class="card">
+      <div class="ctitle">種目マスター設定 — 種目ごとの意識ポイント（一度設定すれば保存されます）</div>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">トレーナーが種目ごとに筋力・体幹・動きの意識ポイントを設定します。合計10になるよう設定してください。成長を感じたら数字を更新するだけでOKです。</div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end">
+        <div class="fg" style="flex:2;min-width:100px">
+          <label>種目名</label>
+          <input id="ex-name" placeholder="スクワット">
+        </div>
+        <div class="fg" style="flex:1;min-width:60px">
+          <label>筋力</label>
+          <select id="r-strength" onchange="checkRadarTotal()">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          </select>
+        </div>
+        <div class="fg" style="flex:1;min-width:60px">
+          <label>体幹</label>
+          <select id="r-core" onchange="checkRadarTotal()">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          </select>
+        </div>
+        <div class="fg" style="flex:1;min-width:60px">
+          <label>動き</label>
+          <select id="r-move" onchange="checkRadarTotal()">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          </select>
+        </div>
+      </div>
+      <div id="radar-total" style="font-size:11px;color:var(--g2);margin-bottom:10px;letter-spacing:.04em">合計: 0 / 10</div>
+      <button class="btn-black" onclick="saveExerciseMaster()">この種目を保存</button>
+
+      <div style="margin-top:16px">
+        <div class="ctitle">設定済み種目一覧</div>
+        <div id="exercise-master-list"><p style="font-size:12px;color:var(--g3)">まだ種目が設定されていません</p></div>
+      </div>
+    </div>
+
     <div class="card">
       <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
       <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
@@ -367,13 +405,90 @@ async function rSales(){
   renderSales();
 }
 
+function checkRadarTotal(){
+  const s=parseInt(document.getElementById('r-strength').value)||0;
+  const c=parseInt(document.getElementById('r-core').value)||0;
+  const m=parseInt(document.getElementById('r-move').value)||0;
+  const total=s+c+m;
+  const el=document.getElementById('radar-total');
+  el.textContent='合計: '+total+' / 10';
+  el.style.color=total===10?'var(--black)':'var(--g2)';
+}
+
+function getExerciseMaster(){
+  return JSON.parse(localStorage.getItem('onetreExMaster')||'{}');
+}
+
+function saveExerciseMaster(){
+  const name=document.getElementById('ex-name').value.trim();
+  if(!name){alert('種目名を入力してください');return;}
+  const s=parseInt(document.getElementById('r-strength').value)||0;
+  const c=parseInt(document.getElementById('r-core').value)||0;
+  const m=parseInt(document.getElementById('r-move').value)||0;
+  if(s+c+m!==10){alert('合計が10になるように設定してください\n現在: '+(s+c+m));return;}
+  const master=getExerciseMaster();
+  master[name]={strength:s,core:c,move:m};
+  localStorage.setItem('onetreExMaster',JSON.stringify(master));
+  // GASにも保存
+  fetch(GAS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveExerciseMaster',exercise:name,strength:s,core:c,move:m})
+  }).catch(()=>{});
+  document.getElementById('ex-name').value='';
+  renderExerciseMasterList();
+  alert('「'+name+'」の意識ポイントを保存しました。');
+}
+
+function renderExerciseMasterList(){
+  const master=getExerciseMaster();
+  const el=document.getElementById('exercise-master-list');
+  if(!Object.keys(master).length){
+    el.innerHTML='<p style="font-size:12px;color:var(--g3)">まだ種目が設定されていません</p>';
+    return;
+  }
+  el.innerHTML='';
+  Object.entries(master).forEach(([name,v])=>{
+    const div=document.createElement('div');
+    div.className='pi';
+    div.innerHTML=`
+      <div class="pn">${name}</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--g2)">筋力 <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.strength}</span></span>
+        <span style="font-size:10px;color:var(--g2)">体幹 <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.core}</span></span>
+        <span style="font-size:10px;color:var(--g2)">動き <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.move}</span></span>
+        <button class="btn-ghost" style="font-size:9px;padding:3px 8px" onclick="editExercise('${name}')">編集</button>
+        <button class="btn-ghost" style="font-size:9px;padding:3px 8px" onclick="deleteExercise('${name}')">削除</button>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function editExercise(name){
+  const master=getExerciseMaster();
+  const v=master[name];if(!v)return;
+  document.getElementById('ex-name').value=name;
+  document.getElementById('r-strength').value=v.strength;
+  document.getElementById('r-core').value=v.core;
+  document.getElementById('r-move').value=v.move;
+  checkRadarTotal();
+}
+
+function deleteExercise(name){
+  if(!confirm('「'+name+'」を削除しますか？'))return;
+  const master=getExerciseMaster();
+  delete master[name];
+  localStorage.setItem('onetreExMaster',JSON.stringify(master));
+  renderExerciseMasterList();
+}
+
 function sp(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard')rDash();
   if(name==='sales')rSales();
-  if(name==='members')rMem();
+  if(name==='members'){rMem();renderExerciseMasterList();}
   if(name==='training'){pSel();rRec();}
   if(name==='calendar'){pSel();rCal();}
   if(name==='progress')pSel();
@@ -452,7 +567,7 @@ function addM(){
 
 function pSel(){
   const all=getAllMembers();
-  ['str','scal','spro'].forEach(id=>{
+  ['str','scal','spro','radar-member'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
