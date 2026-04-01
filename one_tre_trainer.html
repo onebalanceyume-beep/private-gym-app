@@ -221,7 +221,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 </div>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbyKYmPEObNWlmUX3TiYSrDIIZY8EEgGbseDnblUvkzQQil-FDf1KzldYkXg5_UQRMCj/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbyf9zSyb-Ak8L8I7h1P1tsNymnOkRn-FC4onCAFajQmbDxZxSCkqph0tw0XEXAZ5fg-/exec';
 const NAME_KEY='お名前（長尾儀弘）';
 let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
@@ -435,7 +435,16 @@ function cpUrl(url,btn){
 function addM(){
   const n=document.getElementById('in').value.trim();if(!n){alert('氏名を入力してください');return;}
   const d=document.getElementById('id').value,g=document.getElementById('ig').value,w=parseFloat(document.getElementById('iw').value);
-  M.push({id:genId(),name:n,dob:d,gender:g,weights:w?[w]:[]});sv();
+  const newId=genId();
+  M.push({id:newId,name:n,dob:d,gender:g,weights:w?[w]:[]});sv();
+  // 体重をGASにも保存
+  if(w){
+    fetch(GAS_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'saveWeight',memberId:newId,date:new Date().toISOString().slice(0,10),weight:w})
+    }).catch(()=>{});
+  }
   gasMembers=[];loadGasMembers();
   ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
   alert('登録しました！\n会員一覧から専用URLをコピーしてLINEで送ってください。');
@@ -464,9 +473,20 @@ function saveTr(){
   const setsArr=[];
   document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
   if(!setsArr.length){alert('種目を入力してください');return;}
+  // localStorageにも保存（オフライン対応）
   T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
-  document.getElementById('sw').innerHTML='';rRec();
-  alert('保存しました。会員の専用画面に反映されています。');
+  // GASのスプレッドシートにも書き込む（iPad→会員スマホ連動）
+  fetch(GAS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveTraining',memberId:mid,date:dt,sets:setsArr})
+  }).then(()=>{
+    document.getElementById('sw').innerHTML='';rRec();
+    alert('保存しました。会員の専用画面に反映されています。');
+  }).catch(()=>{
+    document.getElementById('sw').innerHTML='';rRec();
+    alert('保存しました（オフラインモード）。');
+  });
 }
 
 function rRec(){
