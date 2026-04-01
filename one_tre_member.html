@@ -149,7 +149,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 
   <!-- 成長 -->
   <div id="pg-growth" class="pg">
-    <div class="st">personal best</div>
+    <div class="st">body balance goal</div>
+    <div id="radar-wrap">
+      <div class="ch-wrap" style="height:220px"><canvas id="cr"></canvas></div>
+      <div style="font-size:10px;color:var(--g4);text-align:center;margin-top:4px;letter-spacing:.04em">あなたの体づくり目標バランス（トレーナー設定）</div>
+    </div>
+    <div id="radar-nodata" style="display:none" class="nodata">目標バランスはまだ設定されていません</div>
+    <div class="st" style="margin-top:20px">personal best</div>
     <div id="pb-list"><div class="nodata">記録がありません</div></div>
     <div class="st" style="margin-top:20px">volume trend</div>
     <div class="ch-wrap" style="height:140px"><canvas id="cv"></canvas></div>
@@ -222,7 +228,10 @@ async function init(){
       mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
     }
 
-  }catch(e){
+    // 種目マスターをGASから取得してlocalStorageに反映
+    if(data.exerciseMaster){
+      localStorage.setItem('onetreExMaster',JSON.stringify(data.exerciseMaster));
+    }
     // GAS取得失敗時はlocalStorageを使用
     mem=M.find(m=>m.id===urlId);
     mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
@@ -321,6 +330,7 @@ function renderBody(){
 function renderTraining(){
   const list=document.getElementById('tr-list');
   if(!mts.length){list.innerHTML='<div class="nodata">トレーニング記録がありません</div>';return;}
+  const master=JSON.parse(localStorage.getItem('onetreExMaster')||'{}');
   list.innerHTML='';
   mts.slice(0,10).forEach((t,i)=>{
     const div=document.createElement('div');div.className='tr-row';
@@ -328,15 +338,55 @@ function renderTraining(){
     const setLines=t.sets.map(s=>{
       let upStr='';
       if(prev){const ps=prev.sets.find(p=>p.exercise===s.exercise);if(ps&&s.weight>ps.weight)upStr=`<span style="color:var(--black);margin-left:4px">▲ +${(s.weight-ps.weight).toFixed(1)}kg</span>`;}
-      return `${s.exercise}　${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}`;
-    }).join('<br>');
+      const pt=master[s.exercise];
+      const ptStr=pt?`<span style="font-size:9px;color:var(--g3);margin-left:6px;letter-spacing:.04em">筋力${pt.strength} 体幹${pt.core} 動き${pt.move}</span>`:'';
+      return `<div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;padding:2px 0">
+        <span>${s.exercise}</span>
+        <span style="color:var(--g2)">${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}</span>
+        ${ptStr}
+      </div>`;
+    }).join('');
     div.innerHTML=`<div class="tr-date">${t.date}${i===0?'<span class="tr-badge">LATEST</span>':''}</div><div class="tr-set">${setLines}</div>`;
     list.appendChild(div);
   });
 }
 
 function renderGrowth(){
-  // ベスト
+  // レーダーチャート（目標バランス）
+  const radar=JSON.parse(localStorage.getItem('onetreRadar_'+urlId)||'null');
+  dc('cr');
+  if(radar&&(radar.strength||radar.core||radar.move)){
+    document.getElementById('radar-wrap').style.display='block';
+    document.getElementById('radar-nodata').style.display='none';
+    C.cr=new Chart(document.getElementById('cr'),{
+      type:'radar',
+      data:{
+        labels:['筋力','体幹','動き'],
+        datasets:[{
+          data:[radar.strength,radar.core,radar.move],
+          backgroundColor:'rgba(17,17,17,0.08)',
+          borderColor:'#111',
+          borderWidth:1.5,
+          pointBackgroundColor:'#111',
+          pointRadius:4
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        scales:{r:{
+          min:0,max:10,
+          ticks:{stepSize:2,color:'#aaa',font:{size:9},backdropColor:'transparent'},
+          grid:{color:'#e8e8e8'},
+          pointLabels:{color:'#111',font:{size:12,family:"'Cormorant Garamond',serif"}}
+        }},
+        plugins:{legend:{display:false}}
+      }
+    });
+  }else{
+    document.getElementById('radar-wrap').style.display='none';
+    document.getElementById('radar-nodata').style.display='block';
+  }
   const prs={};
   mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
   const pbList=document.getElementById('pb-list');
