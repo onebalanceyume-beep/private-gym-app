@@ -153,18 +153,50 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
   </div>
 
   <div id="page-members" class="page">
-    <div class="card">
-      <div class="ctitle">新規会員登録</div>
-      <div class="form-grid">
-        <div class="fg"><label>氏名</label><input id="in" placeholder="山田 花子"></div>
-        <div class="fg"><label>生年月日</label><input id="id" type="date"></div>
-        <div class="fg"><label>性別</label><select id="ig"><option value="f">女性</option><option value="m">男性</option></select></div>
-      </div>
-      <button class="btn-black" onclick="addM()">登録する → 専用URLを自動発行</button>
-    </div>
 
     <div class="card">
-      <div class="ctitle">種目マスター設定 — 種目ごとの意識ポイント（一度設定すれば保存されます）</div>
+      <div class="ctitle">ボディバランス スコア設定 — 成長を感じたら更新するだけでOK</div>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。100点 = その人の理想の姿。</div>
+      <div style="margin-bottom:10px">
+        <div class="fg"><label>会員を選択</label>
+          <select id="score-member" onchange="loadBodyScore()"><option value="">会員を選択してください</option></select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:#fdf0f6;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#c8608a;letter-spacing:.08em;margin-bottom:6px">筋力</div>
+          <select id="sc-strength" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#e8a0bf;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#f3f0fd;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#7060b8;letter-spacing:.08em;margin-bottom:6px">体幹</div>
+          <select id="sc-core" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#b4a0e8;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#f0f9f6;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#3a8a6a;letter-spacing:.08em;margin-bottom:6px">連動性</div>
+          <select id="sc-agility" style="width:100%;border:.5px solid rgba(128,200,170,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#3a8a6a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#80c8aa;margin-top:4px">/ 25点</div>
+        </div>
+        <div style="background:#fdf7f0;border-radius:8px;padding:10px 12px">
+          <div style="font-size:9px;color:#b87830;letter-spacing:.08em;margin-bottom:6px">柔軟性</div>
+          <select id="sc-flex" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#b87830;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+          </select>
+          <div style="font-size:8px;color:#f0b870;margin-top:4px">/ 25点</div>
+        </div>
+      </div>
+      <div id="score-total" style="font-size:12px;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">合計: 0 / 100</div>
+      <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
+    </div>
+
+
       <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">トレーナーが種目ごとに筋力・体幹・動きの意識ポイントを設定します。合計10になるよう設定してください。成長を感じたら数字を更新するだけでOKです。</div>
 
       <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end">
@@ -202,6 +234,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 
     <div class="card">
       <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
       <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
     </div>
   </div>
@@ -400,6 +433,45 @@ async function rSales(){
   renderSales();
 }
 
+function loadBodyScore(){
+  const mid=document.getElementById('score-member').value;
+  if(!mid)return;
+  const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"agility":0,"flex":0}');
+  document.getElementById('sc-strength').value=saved.strength||0;
+  document.getElementById('sc-core').value=saved.core||0;
+  document.getElementById('sc-agility').value=saved.agility||0;
+  document.getElementById('sc-flex').value=saved.flex||0;
+  updateScoreTotal();
+}
+
+function updateScoreTotal(){
+  const s=parseInt(document.getElementById('sc-strength').value)||0;
+  const c=parseInt(document.getElementById('sc-core').value)||0;
+  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const f=parseInt(document.getElementById('sc-flex').value)||0;
+  const total=s+c+a+f;
+  const el=document.getElementById('score-total');
+  el.textContent='合計: '+total+' / 100';
+  el.style.color=total===100?'var(--black)':'var(--g2)';
+}
+
+function saveBodyScore(){
+  const mid=document.getElementById('score-member').value;
+  if(!mid){alert('会員を選択してください');return;}
+  const s=parseInt(document.getElementById('sc-strength').value)||0;
+  const c=parseInt(document.getElementById('sc-core').value)||0;
+  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const f=parseInt(document.getElementById('sc-flex').value)||0;
+  const score={strength:s,core:c,agility:a,flex:f};
+  localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
+  fetch(GAS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveBodyScore',memberId:mid,score})
+  }).catch(()=>{});
+  alert('スコアを保存しました。会員のマイページに反映されます。');
+}
+
 function checkRadarTotal(){
   const s=parseInt(document.getElementById('r-strength').value)||0;
   const c=parseInt(document.getElementById('r-core').value)||0;
@@ -554,7 +626,7 @@ function addM(){
 
 function pSel(){
   const all=getAllMembers();
-  ['str','scal','spro','radar-member'].forEach(id=>{
+  ['str','scal','spro','radar-member','score-member'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
