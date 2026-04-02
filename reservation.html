@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>ONE TRE 予約</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100vh; background: #faf9f7; color: #1a1a1a; font-family: 'Noto Sans JP', sans-serif; }
+    .page { max-width: 480px; margin: 0 auto; padding: 40px 24px 60px; }
+    .header { text-align: center; margin-bottom: 36px; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 300; letter-spacing: 0.3em; }
+    .sub { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 0.25em; color: #999; margin-top: 6px; }
+    .divider { width: 36px; height: 1px; background: #ccc; margin: 14px auto; }
+    .sec-label { font-size: 10px; letter-spacing: 0.15em; color: #999; margin-bottom: 8px; text-transform: uppercase; }
+    .form-group { margin-bottom: 24px; }
+    .menu-buttons { display: flex; gap: 12px; }
+    .menu-btn {
+      flex: 1; padding: 14px 8px; border: 1px solid #ddd; border-radius: 4px;
+      background: #fff; font-family: 'Cormorant Garamond', serif; font-size: 16px;
+      text-align: center; cursor: pointer; transition: all 0.2s; color: #1a1a1a;
+    }
+    .menu-btn .min { display: block; font-family: 'Noto Sans JP', sans-serif; font-size: 10px; color: #bbb; margin-top: 4px; }
+    .menu-btn.selected { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
+    .menu-btn.selected .min { color: rgba(255,255,255,0.6); }
+    input[type="date"], input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%; padding: 12px 0; border: none; border-bottom: 1px solid #ddd;
+      border-radius: 0; font-family: 'Noto Sans JP', sans-serif; font-size: 15px;
+      background: transparent; color: #1a1a1a; outline: none; transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus { border-bottom-color: #1a1a1a; }
+    input::placeholder { color: #bbb; font-size: 13px; }
+    .slots-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .slot-btn {
+      padding: 9px 14px; border: 1px solid #ddd; border-radius: 4px;
+      background: #fff; font-family: 'Cormorant Garamond', serif; font-size: 15px;
+      cursor: pointer; transition: all 0.2s; color: #1a1a1a;
+    }
+    .slot-btn.selected { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
+    .slot-message { font-size: 13px; color: #bbb; padding: 10px 0; letter-spacing: 0.05em; }
+    .loading { font-size: 13px; color: #bbb; padding: 10px 0; }
+    .submit-btn {
+      width: 100%; padding: 17px; background: #1a1a1a; color: #fff; border: none;
+      border-radius: 4px; font-family: 'Cormorant Garamond', serif; font-size: 17px;
+      letter-spacing: 0.15em; cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+    }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .note { font-size: 11px; color: #bbb; text-align: center; margin-top: 12px; letter-spacing: 0.04em; }
+    .result { text-align: center; padding: 48px 0; line-height: 2; }
+    .result-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; letter-spacing: 0.1em; margin-bottom: 12px; }
+    .result-text { font-size: 13px; color: #888; line-height: 2; }
+    .result.error .result-title { color: #c0392b; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="logo">ONE TRE</div>
+    <div class="sub">PERSONAL TRAINING</div>
+    <div class="divider"></div>
+  </div>
+
+  <div id="form-area">
+    <div class="form-group">
+      <div class="sec-label">Menu</div>
+      <div class="menu-buttons">
+        <div class="menu-btn" id="btn-taiken" onclick="selectMenu('体験セッション', 40, this, true)">
+          体験セッション
+          <span class="min">40 min</span>
+        </div>
+        <div class="menu-btn" id="btn-session" onclick="selectMenu('セッション', 50, this, false)">
+          セッション
+          <span class="min">50 min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="sec-label">Date</div>
+      <input type="date" id="date-input" onchange="loadSlots()">
+    </div>
+
+    <div class="form-group">
+      <div class="sec-label">Time</div>
+      <div id="slots-area" class="slot-message">メニューと日付を選んでください</div>
+    </div>
+
+    <div class="form-group">
+      <div class="sec-label">Name</div>
+      <input type="text" id="name-input" placeholder="お名前" oninput="checkSubmit()">
+    </div>
+
+    <div id="taiken-fields" style="display:none;">
+      <div class="form-group">
+        <div class="sec-label">Email</div>
+        <input type="email" id="email-input" placeholder="メールアドレス" oninput="checkSubmit()">
+      </div>
+      <div class="form-group">
+        <div class="sec-label">Tel</div>
+        <input type="tel" id="phone-input" placeholder="電話番号" oninput="checkSubmit()">
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>RESERVE</button>
+    <p class="note">※ 予約は2日前まで　※ 日曜定休</p>
+  </div>
+
+  <div id="result-area" style="display:none;"></div>
+</div>
+
+<script>
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxOcs-NEzH74079Ikb2AYKILruWPMwxtWyDEFNAs7VCZ3pynq781UHhtV6pmMkw5juL/exec';
+
+  let selectedMenu = '';
+  let selectedDuration = 0;
+  let selectedSlot = null;
+  let isTaiken = false;
+
+  window.onload = function() {
+    const input = document.getElementById('date-input');
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    input.min = d.toISOString().split('T')[0];
+  };
+
+  function selectMenu(menu, duration, el, taiken) {
+    selectedMenu = menu;
+    selectedDuration = duration;
+    isTaiken = taiken;
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedSlot = null;
+    document.getElementById('taiken-fields').style.display = taiken ? 'block' : 'none';
+    const date = document.getElementById('date-input').value;
+    if (date) loadSlots();
+    checkSubmit();
+  }
+
+  function loadSlots() {
+    const date = document.getElementById('date-input').value;
+    if (!selectedMenu || !date) return;
+    const slotsArea = document.getElementById('slots-area');
+    slotsArea.innerHTML = '<div class="loading">確認中...</div>';
+    selectedSlot = null;
+    checkSubmit();
+
+    fetch(GAS_URL + '?action=getSlots&date=' + date + '&duration=' + selectedDuration)
+      .then(r => r.json())
+      .then(function(result) {
+        if (result.error) {
+          slotsArea.innerHTML = '<div class="slot-message">' + result.error + '</div>';
+          return;
+        }
+        if (result.slots.length === 0) {
+          slotsArea.innerHTML = '<div class="slot-message">この日は空きがありません</div>';
+          return;
+        }
+        let html = '<div class="slots-container">';
+        result.slots.forEach(function(slot) {
+          html += '<button class="slot-btn" onclick=\'selectSlot(' + JSON.stringify(slot) + ', this)\'>' + slot.label + '</button>';
+        });
+        html += '</div>';
+        slotsArea.innerHTML = html;
+      })
+      .catch(function() {
+        slotsArea.innerHTML = '<div class="slot-message">読み込みエラーが発生しました</div>';
+      });
+  }
+
+  function selectSlot(slot, el) {
+    selectedSlot = slot;
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    checkSubmit();
+  }
+
+  function checkSubmit() {
+    const name = document.getElementById('name-input').value;
+    const email = document.getElementById('email-input') ? document.getElementById('email-input').value : '';
+    const phone = document.getElementById('phone-input') ? document.getElementById('phone-input').value : '';
+    const btn = document.getElementById('submit-btn');
+    if (isTaiken) {
+      btn.disabled = !(selectedMenu && selectedSlot && name && email && phone);
+    } else {
+      btn.disabled = !(selectedMenu && selectedSlot && name);
+    }
+  }
+
+  function submitForm() {
+    const name = document.getElementById('name-input').value.trim();
+    const email = isTaiken ? document.getElementById('email-input').value.trim() : '';
+    const phone = isTaiken ? document.getElementById('phone-input').value.trim() : '';
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = '送信中...';
+
+    const params = new URLSearchParams({
+      action: 'reserve',
+      name: name,
+      email: email,
+      phone: phone,
+      menu: selectedMenu,
+      start: selectedSlot.start,
+      end: selectedSlot.end
+    });
+
+    fetch(GAS_URL, {
+      method: 'POST',
+      body: params
+    })
+      .then(r => r.json())
+      .then(function(result) {
+        document.getElementById('form-area').style.display = 'none';
+        const resultArea = document.getElementById('result-area');
+        resultArea.style.display = 'block';
+        if (result.success) {
+          resultArea.innerHTML = '<div class="result"><div class="result-title">ご予約ありがとうございます</div><div class="result-text">確認メールをお送りしました。<br>当日お待ちしております。<br><br>ONE TRE</div></div>';
+        } else {
+          resultArea.innerHTML = '<div class="result error"><div class="result-title">予約できませんでした</div><div class="result-text">' + result.message + '</div></div>';
+          setTimeout(function() {
+            document.getElementById('form-area').style.display = 'block';
+            resultArea.style.display = 'none';
+            btn.disabled = false;
+            btn.textContent = 'RESERVE';
+          }, 3000);
+        }
+      })
+      .catch(function() {
+        alert('エラーが発生しました。もう一度お試しください。');
+        btn.disabled = false;
+        btn.textContent = 'RESERVE';
+      });
+  }
+</script>
+</body>
+</html>
