@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="google" content="notranslate">
-  <meta http-equiv="Content-Language" content="ja">
   <title>ONE TRE 予約</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
   <style>
@@ -43,16 +42,16 @@
       -webkit-tap-highlight-color: transparent;
     }
     .slot-btn.selected { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
-    .slot-message { font-size: 13px; color: #bbb; padding: 10px 0; letter-spacing: 0.05em; }
+    .slot-message { font-size: 13px; color: #bbb; padding: 10px 0; }
     .loading { font-size: 13px; color: #bbb; padding: 10px 0; }
     .submit-btn {
       width: 100%; padding: 17px; background: #1a1a1a; color: #fff; border: none;
       border-radius: 4px; font-family: 'Cormorant Garamond', serif; font-size: 17px;
-      letter-spacing: 0.15em; cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+      letter-spacing: 0.15em; cursor: pointer; margin-top: 8px;
       -webkit-tap-highlight-color: transparent;
     }
     .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-    .note { font-size: 11px; color: #bbb; text-align: center; margin-top: 12px; letter-spacing: 0.04em; }
+    .note { font-size: 11px; color: #bbb; text-align: center; margin-top: 12px; }
     .result { text-align: center; padding: 48px 0; line-height: 2; }
     .result-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; letter-spacing: 0.1em; margin-bottom: 12px; }
     .result-text { font-size: 13px; color: #888; line-height: 2; }
@@ -71,20 +70,14 @@
     <div class="form-group">
       <div class="sec-label">Menu</div>
       <div class="menu-buttons">
-        <div class="menu-btn" id="btn-taiken" onclick="selectMenu('体験セッション', 40, this, true)">
-          体験セッション
-          <span class="min">40 min</span>
-        </div>
-        <div class="menu-btn" id="btn-session" onclick="selectMenu('セッション', 50, this, false)">
-          セッション
-          <span class="min">50 min</span>
-        </div>
+        <div class="menu-btn" id="btn-taiken">体験セッション<span class="min">40 min</span></div>
+        <div class="menu-btn" id="btn-session">セッション<span class="min">50 min</span></div>
       </div>
     </div>
 
     <div class="form-group">
       <div class="sec-label">Date</div>
-      <input type="date" id="date-input" onchange="loadSlots()">
+      <input type="date" id="date-input">
     </div>
 
     <div class="form-group">
@@ -94,21 +87,21 @@
 
     <div class="form-group">
       <div class="sec-label">Name</div>
-      <input type="text" id="name-input" placeholder="お名前" oninput="checkSubmit()">
+      <input type="text" id="name-input" placeholder="お名前">
     </div>
 
     <div id="taiken-fields" style="display:none;">
       <div class="form-group">
         <div class="sec-label">Email</div>
-        <input type="email" id="email-input" placeholder="メールアドレス" oninput="checkSubmit()">
+        <input type="email" id="email-input" placeholder="メールアドレス">
       </div>
       <div class="form-group">
         <div class="sec-label">Tel</div>
-        <input type="tel" id="phone-input" placeholder="電話番号" oninput="checkSubmit()">
+        <input type="tel" id="phone-input" placeholder="電話番号">
       </div>
     </div>
 
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>RESERVE</button>
+    <button class="submit-btn" id="submit-btn" disabled>RESERVE</button>
     <p class="note">※ 予約は2日前まで　※ 日曜定休</p>
   </div>
 
@@ -121,6 +114,7 @@ var selectedMenu = '';
 var selectedDuration = 0;
 var selectedSlot = null;
 var isTaiken = false;
+var slotsData = [];
 
 window.onload = function() {
   var input = document.getElementById('date-input');
@@ -130,6 +124,18 @@ window.onload = function() {
   var mm = ('0' + (d.getMonth() + 1)).slice(-2);
   var dd = ('0' + d.getDate()).slice(-2);
   input.min = yyyy + '-' + mm + '-' + dd;
+  input.addEventListener('change', loadSlots);
+
+  document.getElementById('btn-taiken').addEventListener('click', function() {
+    selectMenu('体験セッション', 40, this, true);
+  });
+  document.getElementById('btn-session').addEventListener('click', function() {
+    selectMenu('セッション', 50, this, false);
+  });
+  document.getElementById('name-input').addEventListener('input', checkSubmit);
+  document.getElementById('email-input').addEventListener('input', checkSubmit);
+  document.getElementById('phone-input').addEventListener('input', checkSubmit);
+  document.getElementById('submit-btn').addEventListener('click', submitForm);
 };
 
 function selectMenu(menu, duration, el, taiken) {
@@ -152,24 +158,36 @@ function loadSlots() {
   var slotsArea = document.getElementById('slots-area');
   slotsArea.innerHTML = '<div class="loading">確認中...</div>';
   selectedSlot = null;
+  slotsData = [];
   checkSubmit();
 
-  var cbName = 'cb_' + Date.now();
+  var cbName = 'cb' + Date.now();
   window[cbName] = function(result) {
+    delete window[cbName];
     if (result.error) {
       slotsArea.innerHTML = '<div class="slot-message">' + result.error + '</div>';
-    } else if (!result.slots || result.slots.length === 0) {
-      slotsArea.innerHTML = '<div class="slot-message">この日は空きがありません</div>';
-    } else {
-      var html = '<div class="slots-container">';
-      for (var i = 0; i < result.slots.length; i++) {
-        var slot = result.slots[i];
-        html += '<button class="slot-btn" onclick="selectSlot(' + JSON.stringify(slot) + ', this)">' + slot.label + '</button>';
-      }
-      html += '</div>';
-      slotsArea.innerHTML = html;
+      return;
     }
-    delete window[cbName];
+    if (!result.slots || result.slots.length === 0) {
+      slotsArea.innerHTML = '<div class="slot-message">この日は空きがありません</div>';
+      return;
+    }
+    slotsData = result.slots;
+    var container = document.createElement('div');
+    container.className = 'slots-container';
+    for (var i = 0; i < result.slots.length; i++) {
+      (function(slot, idx) {
+        var btn = document.createElement('button');
+        btn.className = 'slot-btn';
+        btn.textContent = slot.label;
+        btn.addEventListener('click', function() {
+          selectSlot(slot, btn);
+        });
+        container.appendChild(btn);
+      })(result.slots[i], i);
+    }
+    slotsArea.innerHTML = '';
+    slotsArea.appendChild(container);
   };
 
   var script = document.createElement('script');
@@ -190,8 +208,8 @@ function selectSlot(slot, el) {
 
 function checkSubmit() {
   var name = document.getElementById('name-input').value;
-  var email = document.getElementById('email-input') ? document.getElementById('email-input').value : '';
-  var phone = document.getElementById('phone-input') ? document.getElementById('phone-input').value : '';
+  var email = document.getElementById('email-input').value;
+  var phone = document.getElementById('phone-input').value;
   var btn = document.getElementById('submit-btn');
   if (isTaiken) {
     btn.disabled = !(selectedMenu && selectedSlot && name && email && phone);
@@ -209,8 +227,9 @@ function submitForm() {
   btn.disabled = true;
   btn.textContent = '送信中...';
 
-  var cbName = 'cb_' + Date.now();
+  var cbName = 'cb' + Date.now();
   window[cbName] = function(result) {
+    delete window[cbName];
     document.getElementById('form-area').style.display = 'none';
     var resultArea = document.getElementById('result-area');
     resultArea.style.display = 'block';
@@ -225,7 +244,6 @@ function submitForm() {
         btn.textContent = 'RESERVE';
       }, 3000);
     }
-    delete window[cbName];
   };
 
   var script = document.createElement('script');
