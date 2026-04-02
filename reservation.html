@@ -22,6 +22,7 @@ html,body{min-height:100vh;background:#faf9f7;color:#1a1a1a;font-family:'Noto Sa
 .menu-btn .min{display:block;font-family:'Noto Sans JP',sans-serif;font-size:10px;color:#bbb;margin-top:4px}
 .menu-btn.selected .min{color:rgba(255,255,255,0.6)}
 input[type=date],input[type=text],input[type=email],input[type=tel]{width:100%;padding:12px 0;border:none;border-bottom:1px solid #ddd;border-radius:0;font-family:'Noto Sans JP',sans-serif;font-size:15px;background:transparent;color:#1a1a1a;outline:none;-webkit-appearance:none;appearance:none}
+input[type=date]{color-scheme:light}
 input:focus{border-bottom-color:#1a1a1a}
 input::placeholder{color:#bbb;font-size:13px}
 .slots-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
@@ -97,12 +98,20 @@ function selectMenu(m,d,el,t){
   document.getElementById('taiken-fields').style.display=t?'block':'none';
   var date=document.getElementById('date-input').value;
   if(date)loadSlots();
+  else document.getElementById('slots-area').innerHTML='<div class="slot-msg">日付を選んでください</div>';
   check();
 }
 
 function loadSlots(){
   var date=document.getElementById('date-input').value;
-  if(!menu||!date)return;
+  if(!date){
+    document.getElementById('slots-area').innerHTML='<div class="slot-msg">日付を選んでください</div>';
+    return;
+  }
+  if(!menu){
+    document.getElementById('slots-area').innerHTML='<div class="slot-msg">メニューを選んでください</div>';
+    return;
+  }
   var area=document.getElementById('slots-area');
   area.innerHTML='<div class="slot-msg">確認中...</div>';
   slot=null;check();
@@ -174,6 +183,7 @@ function submit(){
 setMin();
 document.getElementById('btn-taiken').onclick=function(){selectMenu('体験セッション',40,this,true);};
 document.getElementById('btn-session').onclick=function(){selectMenu('セッション',50,this,false);};
+document.getElementById('date-input').onchange=loadSlots;
 document.getElementById('name-input').oninput=check;
 document.getElementById('email-input').oninput=check;
 document.getElementById('phone-input').oninput=check;
