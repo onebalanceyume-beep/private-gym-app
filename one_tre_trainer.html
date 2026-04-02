@@ -159,7 +159,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
         <div class="fg"><label>氏名</label><input id="in" placeholder="山田 花子"></div>
         <div class="fg"><label>生年月日</label><input id="id" type="date"></div>
         <div class="fg"><label>性別</label><select id="ig"><option value="f">女性</option><option value="m">男性</option></select></div>
-        <div class="fg"><label>体重 (kg)</label><input id="iw" type="number" step="0.1" placeholder="55.0"></div>
       </div>
       <button class="btn-black" onclick="addM()">登録する → 専用URLを自動発行</button>
     </div>
@@ -246,12 +245,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
   <div id="page-progress" class="page">
     <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
     <div class="charts-row">
-      <div class="card"><div class="ctitle">体重推移</div><div style="position:relative;height:180px"><canvas id="cw"></canvas></div></div>
       <div class="card"><div class="ctitle">週トレーニング頻度</div><div style="position:relative;height:180px"><canvas id="cf"></canvas></div></div>
-    </div>
-    <div class="charts-row">
       <div class="card"><div class="ctitle">総ボリューム推移</div><div style="position:relative;height:180px"><canvas id="cv"></canvas></div></div>
-      <div class="card"><div class="ctitle">種目別 重量の伸び</div><div style="position:relative;height:180px"><canvas id="ce"></canvas></div></div>
     </div>
     <div class="card"><div class="ctitle">自己ベスト</div><div id="pr-list" class="pr-list"></div></div>
     <div class="card"><div class="ctitle">前回比較</div><div id="pcmp"></div></div>
@@ -533,7 +528,7 @@ function rMem(){
           <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px;letter-spacing:.06em">フォーム</span>':''}</div>
           <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
         </div>
-        <div class="mmeta">${a?a+'歳':''} ${m.weights&&m.weights.length?'/ 現在'+m.weights[m.weights.length-1]+'kg':''}</div>
+        <div class="mmeta">${a?a+'歳':''}</div>
         <div class="url-box">
           <span class="url-text">${url}</span>
           <button class="copy-btn" onclick="cpUrl('${url}',this)">URLをコピー</button>
@@ -549,19 +544,11 @@ function cpUrl(url,btn){
 
 function addM(){
   const n=document.getElementById('in').value.trim();if(!n){alert('氏名を入力してください');return;}
-  const d=document.getElementById('id').value,g=document.getElementById('ig').value,w=parseFloat(document.getElementById('iw').value);
+  const d=document.getElementById('id').value,g=document.getElementById('ig').value;
   const newId=genId();
-  M.push({id:newId,name:n,dob:d,gender:g,weights:w?[w]:[]});sv();
-  // 体重をGASにも保存
-  if(w){
-    fetch(GAS_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'saveWeight',memberId:newId,date:new Date().toISOString().slice(0,10),weight:w})
-    }).catch(()=>{});
-  }
+  M.push({id:newId,name:n,dob:d,gender:g,weights:[]});sv();
   gasMembers=[];loadGasMembers();
-  ['in','id','iw'].forEach(i=>document.getElementById(i).value='');
+  ['in','id'].forEach(i=>document.getElementById(i).value='');
   alert('登録しました！\n会員一覧から専用URLをコピーしてLINEで送ってください。');
 }
 
