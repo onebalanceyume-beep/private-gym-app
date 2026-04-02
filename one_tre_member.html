@@ -11,27 +11,17 @@
 :root{--bg:#fff;--bg2:#fafafa;--black:#111;--g1:#444;--g2:#777;--g3:#aaa;--g4:#ccc;--g5:#e0e0e0;--g6:#f5f5f5;}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--black);min-height:100vh}
 .app{max-width:480px;margin:0 auto}
-
-/* HEADER */
 .hd{padding:20px 20px 14px;border-bottom:1px solid var(--g5)}
 .logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--black);letter-spacing:.32em}
 .logo-sub{font-size:7px;color:var(--g4);letter-spacing:.22em;margin-top:3px;font-weight:300}
 .logo-catch{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--g3);margin-top:4px;letter-spacing:.06em}
 .member-name{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);margin-top:8px;font-weight:400;letter-spacing:.06em}
-
-/* NAV */
 .nav{display:flex;border-bottom:1px solid var(--g5);background:var(--bg);position:sticky;top:0;z-index:10}
 .nb{flex:1;padding:12px 0;font-size:9px;color:var(--g4);text-align:center;letter-spacing:.1em;font-weight:300;border:none;background:transparent;cursor:pointer;border-bottom:1.5px solid transparent;transition:all .2s}
 .nb.a{color:var(--black);border-bottom-color:var(--black);font-weight:400}
-
-/* PAGE */
 .pg{display:none;padding:20px}.pg.active{display:block}
-
-/* SECTION TITLE */
 .st{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .st::after{content:'';flex:1;height:.5px;background:var(--g5)}
-
-/* ATTENDANCE STATUS */
 .att-box{padding:16px;border:.5px solid var(--black);margin-bottom:16px}
 .att-box.warn{border-color:var(--g4);background:var(--bg2)}
 .att-label{font-size:8px;color:var(--g3);letter-spacing:.16em;text-transform:uppercase;font-weight:300;margin-bottom:4px}
@@ -44,8 +34,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 .dot{width:10px;height:10px;border-radius:50%;background:var(--g5)}
 .dot.on{background:var(--black)}
 .dot.half{background:var(--g4)}
-
-/* CALENDAR */
 .cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cal-month{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);letter-spacing:.1em}
 .cal-count{font-size:9px;color:var(--g3);letter-spacing:.08em}
@@ -54,40 +42,23 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 .cd.dh{font-size:8px;color:var(--g4);letter-spacing:.06em}
 .cd-v{background:var(--black);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:9px}
 .cd-t{border:1px solid var(--black);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:9px;color:var(--black)}
-
-/* WEIGHT */
 .wt-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
 .wt-val{font-family:'Cormorant Garamond',serif;font-size:44px;color:var(--black);font-weight:300;line-height:1}
 .wt-unit{font-size:13px;color:var(--g3)}
 .wt-diff{font-size:13px;color:var(--black);letter-spacing:.04em}
 .wt-diff.down{color:var(--black)}
 .wt-diff.up{color:var(--g2)}
-
-/* CHART */
 .ch-wrap{height:120px;position:relative;margin:10px 0 4px}
-
-/* TRAINING RECORD */
 .tr-row{padding:12px 0;border-bottom:.5px solid var(--g6)}
 .tr-row:last-child{border:none}
 .tr-date{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--black);margin-bottom:4px;letter-spacing:.04em}
 .tr-set{font-size:11px;color:var(--g2);font-weight:300;line-height:1.8}
 .tr-badge{display:inline-block;font-size:8px;padding:1px 6px;border:.5px solid var(--g4);color:var(--g2);letter-spacing:.1em;margin-left:6px;vertical-align:middle}
-
-/* PERSONAL BEST */
 .pb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--g6);margin-bottom:4px}
 .pb-name{font-size:11px;color:var(--black);font-weight:300}
 .pb-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black);font-weight:300}
 .pb-unit{font-size:10px;color:var(--g3);margin-left:2px}
 .pb-up{font-size:10px;color:var(--black);margin-left:6px;font-weight:400}
-
-/* VOLUME BAR */
-.vol-bar-wrap{margin:8px 0}
-.vol-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.vol-bar-label{font-size:9px;color:var(--g3);width:40px;flex-shrink:0;text-align:right;letter-spacing:.04em}
-.vol-bar{height:6px;background:var(--black);border-radius:0;transition:width .6s ease}
-.vol-bar-val{font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--g2);margin-left:4px}
-
-/* NO DATA */
 .nodata{text-align:center;padding:40px 20px;color:var(--g4);font-size:13px;font-weight:300;letter-spacing:.06em}
 </style>
 </head>
@@ -99,15 +70,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
     <div class="logo-catch">私は私</div>
     <div class="member-name" id="member-name">...</div>
   </div>
-
   <div class="nav">
     <button class="nb a" onclick="sw('attend',this)">通う</button>
     <button class="nb" onclick="sw('body',this)">体重</button>
     <button class="nb" onclick="sw('training',this)">記録</button>
     <button class="nb" onclick="sw('growth',this)">成長</button>
   </div>
-
-  <!-- 通う -->
   <div id="pg-attend" class="pg active">
     <div id="att-status"></div>
     <div style="margin:0 0 16px">
@@ -124,8 +92,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
     <div class="cal-grid" id="cal-hdr"></div>
     <div class="cal-grid" style="margin-top:3px" id="cal-body"></div>
   </div>
-
-  <!-- 体重 -->
   <div id="pg-body" class="pg">
     <div class="st">today's weight</div>
     <div style="background:linear-gradient(135deg,#fdf0f6,#f3f0fd);border-radius:10px;padding:14px;margin-bottom:16px">
@@ -157,14 +123,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
       <div style="font-size:10px;color:#d0a0b0;margin-top:8px;line-height:1.6;letter-spacing:.02em;font-family:'Noto Sans JP',sans-serif">この体重はトレーナーには見えません。あなただけが確認できます。</div>
     </div>
   </div>
-
-  <!-- 記録 -->
   <div id="pg-training" class="pg">
     <div class="st">training log</div>
     <div id="tr-list"><div class="nodata">トレーニング記録がありません</div></div>
   </div>
-
-  <!-- 成長 -->
   <div id="pg-growth" class="pg">
     <div class="st">body balance goal</div>
     <div id="radar-wrap">
@@ -183,51 +145,33 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 
 <script>
 const urlId=new URLSearchParams(location.search).get('id');
-const GAS_URL='https://script.google.com/macros/s/AKfycbyf9zSyb-Ak8L8I7h1P1tsNymnOkRn-FC4onCAFajQmbDxZxSCkqph0tw0XEXAZ5fg-/exec';
-let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
-let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
+const GAS_URL='https://script.google.com/macros/s/AKfycbxCGf2x3r46hxFUm3RzroJODrzteYVE5T1zT38CuFU17yuaOqQAdDMKm9HKjjNJ2A1T/exec';
 let mem=null,mts=[];
 let C={};
 const now=new Date();
 const cY=now.getFullYear(),cM=now.getMonth();
 
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
-
 function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
 
 async function init(){
   if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
-
-  // ローディング表示
   document.getElementById('member-name').textContent='データを読み込み中...';
-
-  // GASからデータを取得（iPad入力データを反映）
   try{
     const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
-
-    // 会員情報をGASから取得
     const allMembers=[...(data.members||[]),...(data.trial||[])];
-    const gasIdKey='会員ID';
-    const gasNameKey=Object.keys(allMembers[0]||{}).find(k=>k.includes('お名前'))||'お名前';
-    const gasMem=allMembers.find(row=>row[gasIdKey]===urlId);
-
+    const gasMem=allMembers.find(row=>row['会員ID']===urlId);
     if(gasMem){
       mem={
         id:urlId,
-        name:gasMem[gasNameKey]||gasMem['お名前']||'会員',
+        name:gasMem['name']||gasMem['お名前']||'会員',
         weights:[],
         dob:'',
         gender:'f'
       };
-    }else{
-      // localStorageにフォールバック
-      mem=M.find(m=>m.id===urlId);
     }
-
-    // トレーニングデータをGASから取得
     if(data.training&&data.training.length){
-      // GASデータをローカル形式に変換してグループ化
       const grouped={};
       data.training.forEach(r=>{
         const key=r.date;
@@ -235,27 +179,14 @@ async function init(){
         grouped[key].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
       });
       mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
-    }else{
-      // localStorageにフォールバック
-      mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
     }
-
-    // 体重データをGASから取得
     if(data.weights&&data.weights.length&&mem){
       mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
     }
-
-    // 種目マスターをGASから取得してlocalStorageに反映
-    if(data.exerciseMaster){
-      localStorage.setItem('onetreExMaster',JSON.stringify(data.exerciseMaster));
-    }
-    // GAS取得失敗時はlocalStorageを使用
-    mem=M.find(m=>m.id===urlId);
-    mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+  }catch(err){
+    console.error('GAS取得エラー:',err);
   }
-
   if(!mem){showError('会員情報が見つかりません。\nトレーナーにお問い合わせください。');return;}
-
   document.getElementById('member-name').textContent=mem.name+' さん';
   document.title='ONE TRE — '+mem.name;
   renderAttend();
@@ -281,7 +212,6 @@ function sw(id,btn){
 }
 
 function renderAttend(){
-  // 来店ステータス
   const last=mts.length?mts[0].date:null;
   const days=daysSince(last);
   const box=document.getElementById('att-status');
@@ -293,24 +223,15 @@ function renderAttend(){
     else if(days<=6)msg='次のセッションが近づいています';
     else if(days<=10)msg='そろそろ次のセッションを';
     else msg='お体の調子はいかがですか？';
-    // 8dots: 7日で1周
     const dayMod=Math.min(days,8);
     for(let i=0;i<8;i++){
       const cls=i<(8-dayMod)?'dot on':'dot'+(i===7&&!isWarn?' half':'');
       dotHtml+=`<div class="${cls}"></div>`;
     }
-    box.innerHTML=`
-      <div class="att-box ${isWarn?'warn':''}">
-        <div class="att-label">前回から</div>
-        <div><span class="att-days">${days}</span><span class="att-unit">日</span></div>
-        <div class="att-msg ${isWarn?'warn':'good'}">${msg}</div>
-        <div class="att-dots">${dotHtml}</div>
-      </div>`;
+    box.innerHTML=`<div class="att-box ${isWarn?'warn':''}"><div class="att-label">前回から</div><div><span class="att-days">${days}</span><span class="att-unit">日</span></div><div class="att-msg ${isWarn?'warn':'good'}">${msg}</div><div class="att-dots">${dotHtml}</div></div>`;
   }else{
     box.innerHTML=`<div class="att-box warn"><div class="att-label">来店記録</div><div class="att-msg warn">トレーニング記録がまだありません</div></div>`;
   }
-
-  // カレンダー
   document.getElementById('cal-month').textContent=cY+'年'+(cM+1)+'月';
   const monthVisits=mts.filter(t=>t.date.startsWith(`${cY}-${String(cM+1).padStart(2,'0')}`));
   document.getElementById('cal-count').textContent='今月 '+monthVisits.length+'回';
@@ -333,14 +254,7 @@ function renderBody(){
   if(!weights.length)return;
   const cur=weights[weights.length-1],first=weights[0];
   const diff=(cur-first).toFixed(1);
-  const diffStr=(diff>0?'+':'')+diff+'kg';
-  document.getElementById('wt-content').innerHTML=`
-    <div class="wt-hero">
-      <span class="wt-val">${cur}</span>
-      <span class="wt-unit">kg</span>
-      <span class="wt-diff ${diff<=0?'down':'up'}">${diff<=0?'▼':'▲'} ${Math.abs(diff)}kg</span>
-    </div>
-    <div style="font-size:10px;color:var(--g3);letter-spacing:.06em">開始時 ${first}kg → 現在 ${cur}kg</div>`;
+  document.getElementById('wt-content').innerHTML=`<div class="wt-hero"><span class="wt-val">${cur}</span><span class="wt-unit">kg</span><span class="wt-diff ${diff<=0?'down':'up'}">${diff<=0?'▼':'▲'} ${Math.abs(diff)}kg</span></div><div style="font-size:10px;color:var(--g3);letter-spacing:.06em">開始時 ${first}kg → 現在 ${cur}kg</div>`;
   dc('cw');
   C.cw=new Chart(document.getElementById('cw'),{type:'line',data:{labels:weights.map((_,i)=>i===0?'開始':'記録'+(i+1)),datasets:[{data:weights,borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:4,pointBackgroundColor:'#111',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
 }
@@ -348,7 +262,6 @@ function renderBody(){
 function renderTraining(){
   const list=document.getElementById('tr-list');
   if(!mts.length){list.innerHTML='<div class="nodata">トレーニング記録がありません</div>';return;}
-  const master=JSON.parse(localStorage.getItem('onetreExMaster')||'{}');
   list.innerHTML='';
   mts.slice(0,10).forEach((t,i)=>{
     const div=document.createElement('div');div.className='tr-row';
@@ -356,13 +269,7 @@ function renderTraining(){
     const setLines=t.sets.map(s=>{
       let upStr='';
       if(prev){const ps=prev.sets.find(p=>p.exercise===s.exercise);if(ps&&s.weight>ps.weight)upStr=`<span style="color:var(--black);margin-left:4px">▲ +${(s.weight-ps.weight).toFixed(1)}kg</span>`;}
-      const pt=master[s.exercise];
-      const ptStr=pt?`<span style="font-size:9px;color:var(--g3);margin-left:6px;letter-spacing:.04em">筋力${pt.strength} 体幹${pt.core} 動き${pt.move}</span>`:'';
-      return `<div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;padding:2px 0">
-        <span>${s.exercise}</span>
-        <span style="color:var(--g2)">${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}</span>
-        ${ptStr}
-      </div>`;
+      return `<div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;padding:2px 0"><span>${s.exercise}</span><span style="color:var(--g2)">${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}</span></div>`;
     }).join('');
     div.innerHTML=`<div class="tr-date">${t.date}${i===0?'<span class="tr-badge">LATEST</span>':''}</div><div class="tr-set">${setLines}</div>`;
     list.appendChild(div);
@@ -370,37 +277,12 @@ function renderTraining(){
 }
 
 function renderGrowth(){
-  // レーダーチャート（目標バランス）
   const radar=JSON.parse(localStorage.getItem('onetreRadar_'+urlId)||'null');
   dc('cr');
   if(radar&&(radar.strength||radar.core||radar.move)){
     document.getElementById('radar-wrap').style.display='block';
     document.getElementById('radar-nodata').style.display='none';
-    C.cr=new Chart(document.getElementById('cr'),{
-      type:'radar',
-      data:{
-        labels:['筋力','体幹','動き'],
-        datasets:[{
-          data:[radar.strength,radar.core,radar.move],
-          backgroundColor:'rgba(17,17,17,0.08)',
-          borderColor:'#111',
-          borderWidth:1.5,
-          pointBackgroundColor:'#111',
-          pointRadius:4
-        }]
-      },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        scales:{r:{
-          min:0,max:10,
-          ticks:{stepSize:2,color:'#aaa',font:{size:9},backdropColor:'transparent'},
-          grid:{color:'#e8e8e8'},
-          pointLabels:{color:'#111',font:{size:12,family:"'Cormorant Garamond',serif"}}
-        }},
-        plugins:{legend:{display:false}}
-      }
-    });
+    C.cr=new Chart(document.getElementById('cr'),{type:'radar',data:{labels:['筋力','体幹','動き'],datasets:[{data:[radar.strength,radar.core,radar.move],backgroundColor:'rgba(17,17,17,0.08)',borderColor:'#111',borderWidth:1.5,pointBackgroundColor:'#111',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#aaa',font:{size:9},backdropColor:'transparent'},grid:{color:'#e8e8e8'},pointLabels:{color:'#111',font:{size:12,family:"'Cormorant Garamond',serif"}}}},plugins:{legend:{display:false}}}});
   }else{
     document.getElementById('radar-wrap').style.display='none';
     document.getElementById('radar-nodata').style.display='block';
@@ -412,7 +294,6 @@ function renderGrowth(){
   else{
     pbList.innerHTML='';
     Object.entries(prs).forEach(([ex,pr])=>{
-      // 初回との比較
       let firstW=null;
       for(let i=mts.length-1;i>=0;i--){const s=mts[i].sets.find(s=>s.exercise===ex);if(s){firstW=s.weight;break;}}
       const upStr=firstW&&pr.w>firstW?`<span class="pb-up">▲ +${(pr.w-firstW).toFixed(1)}kg</span>`:'';
@@ -421,15 +302,11 @@ function renderGrowth(){
       pbList.appendChild(div);
     });
   }
-
-  // ボリューム推移
   if(mts.length>=2){
     const vols=[...mts].reverse().map(t=>({date:t.date.slice(5),vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));
     dc('cv');
     C.cv=new Chart(document.getElementById('cv'),{type:'bar',data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#111',borderRadius:0,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   }
-
-  // 種目別推移
   const em={};
   [...mts].reverse().forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]=[];em[s.exercise].push({date:t.date.slice(5),w:s.weight});}));
   if(Object.keys(em).length){
@@ -440,10 +317,7 @@ function renderGrowth(){
 
 function saveWeightEntry(){
   const v=parseFloat(document.getElementById('wt-input').value);
-  if(!v||v<20||v>200){
-    document.getElementById('wt-feedback').textContent='正しい体重を入力してください';
-    return;
-  }
+  if(!v||v<20||v>200){document.getElementById('wt-feedback').textContent='正しい体重を入力してください';return;}
   const today=new Date().toISOString().slice(0,10);
   const key='onetreWeights_'+urlId;
   const entries=JSON.parse(localStorage.getItem(key)||'[]');
@@ -452,22 +326,12 @@ function saveWeightEntry(){
   else entries.push({date:today,weight:v});
   entries.sort((a,b)=>a.date.localeCompare(b.date));
   localStorage.setItem(key,JSON.stringify(entries));
-  // GASにも保存
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveWeight',memberId:urlId,date:today,weight:v})
-  }).catch(()=>{});
+  fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveWeight',memberId:urlId,date:today,weight:v})}).catch(()=>{});
   const prev=entries.length>=2?entries[entries.length-2]:null;
   const diff=prev?(v-prev.weight).toFixed(1):null;
   const fb=document.getElementById('wt-feedback');
-  if(diff!==null){
-    fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');
-    fb.style.color=diff<=0?'#c8608a':'#888';
-  }else{
-    fb.textContent='記録しました！';
-    fb.style.color='#c8608a';
-  }
+  if(diff!==null){fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');fb.style.color=diff<=0?'#c8608a':'#888';}
+  else{fb.textContent='記録しました！';fb.style.color='#c8608a';}
   if(mem)mem.weights=entries.map(e=>e.weight);
   document.getElementById('wt-input').value='';
   renderBody();
@@ -490,21 +354,25 @@ function renderWeightHistory(){
     el.appendChild(div);
   });
 }
+
+function saveGoal(){
   const v=parseFloat(document.getElementById('goal-wt').value);
   if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
   localStorage.setItem('onetreGoal_'+urlId,v);
   renderGoal();
 }
+
 function clearGoal(){
   localStorage.removeItem('onetreGoal_'+urlId);
   document.getElementById('goal-wt').value='';
   renderGoal();
 }
+
 function renderGoal(){
   const goal=parseFloat(localStorage.getItem('onetreGoal_'+urlId));
   const el=document.getElementById('goal-display');
   if(!goal){el.innerHTML='<div style="font-size:11px;color:var(--g4)">目標未設定</div>';return;}
-  const cur=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;
+  const cur=mem&&mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;
   const diff=cur?+(cur-goal).toFixed(1):null;
   const diffStr=diff!==null?(diff===0?'目標達成！':(diff>0?'あと'+diff+'kg':'目標達成！ '+Math.abs(diff)+'kgオーバー')):'';
   el.innerHTML=`<div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--black);font-weight:300">${goal}</span><span style="font-size:11px;color:var(--g3)">kg</span>${diff!==null?`<span style="font-size:11px;color:var(--black);margin-left:4px">${diffStr}</span>`:''}</div>`;
