@@ -95,7 +95,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 <div class="app">
   <div class="hd">
     <div class="logo">ONE TRE</div>
-    <div class="logo-sub">PERSONAL TRAINING · YONAGO</div>
+    <div class="logo-sub">PERSONAL TRAINING GYM</div>
     <div class="logo-catch">私は私</div>
     <div class="member-name" id="member-name">...</div>
   </div>
@@ -110,6 +110,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
   <!-- 通う -->
   <div id="pg-attend" class="pg active">
     <div id="att-status"></div>
+    <div style="margin:0 0 16px">
+      <a href="https://onebalanceyume-beep.github.io/private-gym-app/reservation.html" style="display:block;background:linear-gradient(135deg,#e8a0bf,#b4a0e8);border-radius:10px;padding:14px;text-align:center;text-decoration:none">
+        <div style="font-size:11px;color:#fff;letter-spacing:.12em;font-weight:400;font-family:'Noto Sans JP',sans-serif">次のセッションを予約する</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.75);margin-top:3px;font-weight:300;letter-spacing:.06em;font-family:'Noto Sans JP',sans-serif">タップして予約画面へ</div>
+      </a>
+    </div>
     <div class="st">attendance</div>
     <div class="cal-hd">
       <div class="cal-month" id="cal-month"></div>
@@ -121,23 +127,34 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 
   <!-- 体重 -->
   <div id="pg-body" class="pg">
-    <div class="st">body weight</div>
+    <div class="st">today's weight</div>
+    <div style="background:linear-gradient(135deg,#fdf0f6,#f3f0fd);border-radius:10px;padding:14px;margin-bottom:16px">
+      <div style="font-size:8px;color:#bbb;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-family:'Noto Sans JP',sans-serif">今日の体重を記録する</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <input type="number" id="wt-input" step="0.1" placeholder="56.5" style="flex:1;border:.5px solid rgba(232,160,191,0.5);border-radius:8px;padding:10px 12px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:22px;color:#111;font-weight:300;outline:none">
+        <span style="font-size:12px;color:#bbb;font-family:'Noto Sans JP',sans-serif">kg</span>
+        <button onclick="saveWeightEntry()" style="background:linear-gradient(135deg,#e8a0bf,#b4a0e8);border:none;border-radius:8px;padding:10px 14px;font-size:10px;color:#fff;letter-spacing:.08em;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap">記録する</button>
+      </div>
+      <div id="wt-feedback" style="font-size:10px;color:#c8608a;font-weight:300;min-height:16px;font-family:'Noto Sans JP',sans-serif"></div>
+    </div>
+    <div class="st">weight history</div>
     <div id="wt-content"><div class="nodata">体重データがありません</div></div>
     <div class="ch-wrap"><canvas id="cw"></canvas></div>
-    <div style="display:flex;justify-content:space-between;margin-top:2px">
+    <div style="display:flex;justify-content:space-between;margin-top:2px;margin-bottom:16px">
       <span style="font-size:8px;color:var(--g4)">開始時</span>
       <span style="font-size:8px;color:var(--g4)">現在</span>
     </div>
-    <div style="margin-top:20px;padding:14px 16px;border:.5px solid var(--g5);background:var(--bg2)">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">目標体重（任意）</div>
+    <div id="wt-history-list"></div>
+    <div style="margin-top:20px;padding:14px 16px;background:#fdf0f6;border-radius:10px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:9px;color:#c8608a;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">目標体重（任意）</div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <input type="number" id="goal-wt" step="0.1" placeholder="50.0" style="font-size:15px;padding:8px 10px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);width:100px;font-family:'Cormorant Garamond',serif">
-        <span style="font-size:12px;color:var(--g3)">kg</span>
-        <button onclick="saveGoal()" style="font-size:10px;padding:7px 14px;background:var(--black);color:#fff;border:none;cursor:pointer;letter-spacing:.08em">設定</button>
-        <button onclick="clearGoal()" style="font-size:10px;padding:7px 14px;background:transparent;border:.5px solid var(--g4);color:var(--g2);cursor:pointer;letter-spacing:.08em">クリア</button>
+        <input type="number" id="goal-wt" step="0.1" placeholder="50.0" style="font-size:15px;padding:8px 10px;border:.5px solid rgba(232,160,191,0.4);border-radius:8px;background:#fff;color:#111;width:100px;font-family:'Cormorant Garamond',serif">
+        <span style="font-size:12px;color:#bbb">kg</span>
+        <button onclick="saveGoal()" style="font-size:10px;padding:7px 14px;background:linear-gradient(135deg,#e8a0bf,#b4a0e8);color:#fff;border:none;cursor:pointer;letter-spacing:.08em;border-radius:6px;font-family:'Noto Sans JP',sans-serif">設定</button>
+        <button onclick="clearGoal()" style="font-size:10px;padding:7px 10px;background:transparent;border:.5px solid #e0c0d0;color:#c8a0b8;cursor:pointer;letter-spacing:.06em;border-radius:6px;font-family:'Noto Sans JP',sans-serif">クリア</button>
       </div>
       <div id="goal-display"></div>
-      <div style="font-size:10px;color:var(--g4);margin-top:8px;line-height:1.6;letter-spacing:.02em">この体重はトレーナーには見えません。あなただけが確認できます。</div>
+      <div style="font-size:10px;color:#d0a0b0;margin-top:8px;line-height:1.6;letter-spacing:.02em;font-family:'Noto Sans JP',sans-serif">この体重はトレーナーには見えません。あなただけが確認できます。</div>
     </div>
   </div>
 
@@ -243,6 +260,7 @@ async function init(){
   document.title='ONE TRE — '+mem.name;
   renderAttend();
   renderBody();
+  renderWeightHistory();
   renderGoal();
   renderTraining();
   renderGrowth();
@@ -420,7 +438,58 @@ function renderGrowth(){
   }
 }
 
-function saveGoal(){
+function saveWeightEntry(){
+  const v=parseFloat(document.getElementById('wt-input').value);
+  if(!v||v<20||v>200){
+    document.getElementById('wt-feedback').textContent='正しい体重を入力してください';
+    return;
+  }
+  const today=new Date().toISOString().slice(0,10);
+  const key='onetreWeights_'+urlId;
+  const entries=JSON.parse(localStorage.getItem(key)||'[]');
+  const existing=entries.findIndex(e=>e.date===today);
+  if(existing>=0)entries[existing].weight=v;
+  else entries.push({date:today,weight:v});
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  localStorage.setItem(key,JSON.stringify(entries));
+  // GASにも保存
+  fetch(GAS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveWeight',memberId:urlId,date:today,weight:v})
+  }).catch(()=>{});
+  const prev=entries.length>=2?entries[entries.length-2]:null;
+  const diff=prev?(v-prev.weight).toFixed(1):null;
+  const fb=document.getElementById('wt-feedback');
+  if(diff!==null){
+    fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');
+    fb.style.color=diff<=0?'#c8608a':'#888';
+  }else{
+    fb.textContent='記録しました！';
+    fb.style.color='#c8608a';
+  }
+  if(mem)mem.weights=entries.map(e=>e.weight);
+  document.getElementById('wt-input').value='';
+  renderBody();
+  renderWeightHistory();
+}
+
+function renderWeightHistory(){
+  const key='onetreWeights_'+urlId;
+  const entries=JSON.parse(localStorage.getItem(key)||'[]');
+  const el=document.getElementById('wt-history-list');
+  if(!el)return;
+  if(!entries.length){el.innerHTML='';return;}
+  const colors=['#fdf0f6','#f3f0fd','#f0f9f6','#fdf7f0'];
+  const tcolors=['#c8608a','#7060b8','#3a8a6a','#b87830'];
+  el.innerHTML='';
+  [...entries].reverse().slice(0,6).forEach((e,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText=`display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${colors[i%4]};border-radius:8px;margin-bottom:4px`;
+    div.innerHTML=`<div style="font-size:10px;color:#888;font-weight:300;font-family:'Noto Sans JP',sans-serif">${e.date}</div><div style="display:flex;align-items:baseline;gap:3px"><span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:${tcolors[i%4]};font-weight:300">${e.weight}</span><span style="font-size:9px;color:#ccc;margin-left:2px">kg</span></div>`;
+    el.appendChild(div);
+  });
+}
   const v=parseFloat(document.getElementById('goal-wt').value);
   if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
   localStorage.setItem('onetreGoal_'+urlId,v);
