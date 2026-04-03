@@ -21,15 +21,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .nbtn{font-size:10px;padding:12px 14px;border:none;background:transparent;color:var(--g4);cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;border-bottom:1.5px solid transparent;flex-shrink:0;letter-spacing:.12em;transition:all .2s}
 .nbtn.active{color:var(--black);border-bottom-color:var(--black)}
 .page{display:none;padding:20px}.page.active{display:block}
-.sec{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
-.sec::after{content:'';flex:1;height:.5px;background:var(--g6)}
 .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-bottom:20px;background:var(--g5)}
 @media(min-width:600px){.metrics{grid-template-columns:repeat(4,1fr)}}
 .metric{background:var(--bg);padding:18px 14px}
 .ml{font-size:8px;color:var(--g4);letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px;font-weight:300}
 .mv{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--black);font-weight:300}
-.mv.up{color:#2a9d5c}
-.mv.down{color:var(--red)}
+.mv.up{color:#2a9d5c}.mv.down{color:var(--red)}
 .ms{font-size:10px;color:var(--g2);margin-top:4px}
 .card{background:var(--bg);border:.5px solid var(--g5);padding:18px;margin-bottom:12px}
 .ctitle{font-family:'Cormorant Garamond',serif;font-size:9px;letter-spacing:.2em;color:var(--g4);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
@@ -252,13 +249,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 </div>
 
 <script>
-const GAS_URL='const GAS_URL='https://script.google.com/macros/s/AKfycbyYQPx8SBf9kMsT0BoteGWZ2JL8YsoXbEsGCLSHInJXox3EDN1DXTg_YR1kO3bpxNvQ/exec';Wd8UVwjYNYmE0CPGyExfKl1WNRRIzNq9xSjNS1NFOAgpLEz7-R6NOsqByDiW/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbyYQPx8SBf9kMsT0BoteGWZ2JL8YsoXbEsGCLSHInJXox3EDN1DXTg_YR1kO3bpxNvQ/exec';
 const WB_RED='#DB444C';
 const WB_BLUE='#5BB9CD';
 let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
-let gasMembers=[];
-let gasAllData=null;
+let gasMembers=[],gasAllData=null;
 let cY=new Date().getFullYear(),cM2=new Date().getMonth();
 let C={};
 
@@ -266,35 +262,19 @@ function sv(){localStorage.setItem('onetreM',JSON.stringify(M));localStorage.set
 function age(d){if(!d)return null;const dt=new Date(d),n=new Date();let a=n.getFullYear()-dt.getFullYear();if(n.getMonth()<dt.getMonth()||(n.getMonth()===dt.getMonth()&&n.getDate()<dt.getDate()))a--;return a;}
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
 function fmtYen(n){return '¥'+Math.round(n).toLocaleString();}
-
-function getMemberUrl(id){
-  const base=location.href.split('?')[0];
-  return base.replace('one_tre_trainer.html','one_tre_member.html')+'?id='+id;
-}
-function daysSince(dateStr){
-  if(!dateStr)return null;
-  return Math.floor((new Date()-new Date(dateStr))/(1000*60*60*24));
-}
-function getLastVisit(memberId){
-  const mts=T.filter(t=>t.memberId===memberId).sort((a,b)=>b.date.localeCompare(a.date));
-  return mts.length?mts[0].date:null;
-}
+function getMemberUrl(id){const base=location.href.split('?')[0];return base.replace('one_tre_trainer.html','one_tre_member.html')+'?id='+id;}
+function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
+function getLastVisit(mid){const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>b.date.localeCompare(a.date));return mts.length?mts[0].date:null;}
 
 async function fetchGasData(){
-  try{
-    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
-    if(!res.ok)throw new Error();
-    return await res.json();
-  }catch(e){console.error(e);return null;}
+  try{const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});if(!res.ok)throw new Error();return await res.json();}
+  catch(e){console.error(e);return null;}
 }
 
-// ★ GETリクエストで保存（CORSエラー回避）
 async function gasGet(params){
   const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
-  try{
-    const res=await fetch(GAS_URL+'?'+qs,{method:'GET',mode:'cors'});
-    return await res.json();
-  }catch(e){console.error(e);return null;}
+  try{const res=await fetch(GAS_URL+'?'+qs,{method:'GET',mode:'cors'});return await res.json();}
+  catch(e){console.error(e);return null;}
 }
 
 async function loadGasMembers(){
@@ -303,12 +283,12 @@ async function loadGasMembers(){
   gasAllData=data;
   const rows=Array.isArray(data)?data:(data.all||[]);
   gasMembers=[];
-  rows.forEach((row)=>{
+  rows.forEach(row=>{
     const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
     const name=nameKey?String(row[nameKey]).trim():'';
     const id=row['会員ID']||row['会員Id']||row['会員id']||'';
     if(name&&id&&!gasMembers.find(m=>m.id===id)){
-      gasMembers.push({id,name,gender:'f',weights:[],dob:'',fromSheet:true});
+      gasMembers.push({id,name,gender:row['gender']||'',ageGroup:row['ageGroup']||'',weights:[],dob:'',fromSheet:true});
     }
   });
   M.forEach(m=>{if(!gasMembers.find(g=>g.name===m.name))gasMembers.push(m);});
@@ -319,35 +299,24 @@ function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
 
 function rDash(){
   const all=getAllMembers();
-  const now=new Date();
-  const thisY=now.getFullYear(),thisM=now.getMonth()+1;
+  const now=new Date(),thisY=now.getFullYear(),thisM=now.getMonth()+1;
   document.getElementById('mt').textContent=all.length;
 
   if(gasAllData){
     const members=gasAllData.members||[];
     const trials=gasAllData.trial||[];
-    const newThisMonth=members.filter(row=>{
-      const ts=row['タイムスタンプ']||'';if(!ts)return false;
-      const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
-    }).length;
+    const newThisMonth=members.filter(row=>{const ts=row['タイムスタンプ']||'';if(!ts)return false;const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;}).length;
     const lastM=thisM===1?12:thisM-1,lastY=thisM===1?thisY-1:thisY;
-    const newLastMonth=members.filter(row=>{
-      const ts=row['タイムスタンプ']||'';if(!ts)return false;
-      const d=new Date(ts);return d.getFullYear()===lastY&&d.getMonth()+1===lastM;
-    }).length;
+    const newLastMonth=members.filter(row=>{const ts=row['タイムスタンプ']||'';if(!ts)return false;const d=new Date(ts);return d.getFullYear()===lastY&&d.getMonth()+1===lastM;}).length;
     const newDiff=newThisMonth-newLastMonth;
     const newEl=document.getElementById('m-new');
     newEl.textContent=newThisMonth;
     newEl.className='mv'+(newDiff>0?' up':newDiff<0?' down':'');
     document.getElementById('m-new-sub').innerHTML=newDiff!==0?`前月比 <span style="color:${newDiff>0?'#2a9d5c':WB_RED}">${newDiff>0?'+':''}${newDiff}名</span>`:'前月比 ±0名';
-    const trialThisMonth=trials.filter(row=>{
-      const ts=row['タイムスタンプ']||'';if(!ts)return false;
-      const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
-    }).length;
+    const trialThisMonth=trials.filter(row=>{const ts=row['タイムスタンプ']||'';if(!ts)return false;const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;}).length;
     document.getElementById('m-trial').textContent=trialThisMonth;
     const convRate=trials.length>0?Math.round(members.length/trials.length*100):0;
     document.getElementById('m-conv').textContent=convRate;
-
     const labels=[],newData=[],trialData=[];
     for(let i=11;i>=0;i--){
       const d=new Date(now.getFullYear(),now.getMonth()-i,1);
@@ -364,19 +333,32 @@ function rDash(){
 
   const followList=all.filter(m=>{const last=getLastVisit(m.id);return last&&daysSince(last)>=7;});
   const fbox=document.getElementById('follow-alert');
-  if(followList.length>0){
-    fbox.style.display='block';
-    document.getElementById('follow-count').innerHTML=followList.length+'<span style="font-size:14px;color:var(--red);margin-left:4px">名</span>';
-    document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');
-  }else{fbox.style.display='none';}
+  if(followList.length>0){fbox.style.display='block';document.getElementById('follow-count').innerHTML=followList.length+'<span style="font-size:14px;color:var(--red);margin-left:4px">名</span>';document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');}
+  else{fbox.style.display='none';}
 
-  const f=all.filter(m=>m.gender==='f').length,ml=all.length-f;
+  // ★ gender キーで男女比を計算
+  const f=all.filter(m=>m.gender==='女性').length;
+  const ml=all.filter(m=>m.gender==='男性').length;
+  const other=all.length-f-ml;
   dc('g');
-  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:[WB_RED,WB_BLUE],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:16,boxWidth:12}}}}});
+  C.g=new Chart(document.getElementById('cg'),{
+    type:'doughnut',
+    data:{
+      labels:other>0?['女性','男性','その他']:['女性','男性'],
+      datasets:[{data:other>0?[f,ml,other]:[f,ml],backgroundColor:other>0?[WB_RED,WB_BLUE,'#ccc']:[WB_RED,WB_BLUE],borderWidth:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:16,boxWidth:12}}}}
+  });
 
-  const ages=all.map(m=>age(m.dob)).filter(a=>a!==null);
-  const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
-  ages.forEach(a=>{if(a<30)bk['20代']++;else if(a<40)bk['30代']++;else if(a<50)bk['40代']++;else bk['50代+']++;});
+  // ★ ageGroup キーで年齢層を計算
+  const bk={'20代':0,'30代':0,'40代':0,'50代以上':0};
+  all.forEach(m=>{
+    const ag=m.ageGroup||'';
+    if(ag.includes('20'))bk['20代']++;
+    else if(ag.includes('30'))bk['30代']++;
+    else if(ag.includes('40'))bk['40代']++;
+    else if(ag.includes('50'))bk['50代以上']++;
+  });
   dc('a');
   C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:[WB_RED,'#e8888c','#f0a0a4','#f8c8ca'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa'}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}});
 }
@@ -469,7 +451,6 @@ function updateScoreTotal(){
   el.style.color=total===100?'var(--black)':'var(--g2)';
 }
 
-// ★ GETリクエストでボディバランスを保存
 async function saveBodyScore(){
   const mid=document.getElementById('score-member').value;
   if(!mid){alert('会員を選択してください');return;}
@@ -480,11 +461,8 @@ async function saveBodyScore(){
   const score={strength:s,core:c,move:mv,flex:f};
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
   const result=await gasGet({action:'saveBodyScore',memberId:mid,strength:s,core:c,move:mv,flex:f});
-  if(result&&result.status==='ok'){
-    alert('スコアを保存しました！会員のマイページに反映されます。');
-  }else{
-    alert('スコアをローカルに保存しました。（ネットワークエラー）');
-  }
+  if(result&&result.status==='ok'){alert('スコアを保存しました！会員のマイページに反映されます。');}
+  else{alert('スコアをローカルに保存しました。');}
 }
 
 function rMem(){
@@ -501,7 +479,7 @@ function rMem(){
           <div class="mname">${m.name}</div>
           <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
         </div>
-        <div style="font-size:10px;color:var(--g3);margin-top:2px">会員ID: ${m.id}</div>
+        <div style="font-size:10px;color:var(--g3);margin-top:2px">会員ID: ${m.id}${m.gender?' | '+m.gender:''}${m.ageGroup?' | '+m.ageGroup:''}</div>
         <div class="url-box">
           <span class="url-text">${url}</span>
           <button class="copy-btn" onclick="cpUrl('${url}',this)">URLをコピー</button>
@@ -511,9 +489,7 @@ function rMem(){
   });
 }
 
-function cpUrl(url,btn){
-  navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ コピー済';setTimeout(()=>btn.textContent='URLをコピー',2000);});
-}
+function cpUrl(url,btn){navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ コピー済';setTimeout(()=>btn.textContent='URLをコピー',2000);});}
 
 function pSel(){
   const all=getAllMembers();
@@ -532,7 +508,6 @@ function addS(){
   c.appendChild(r);
 }
 
-// ★ GETリクエストでトレーニングを保存（1セットずつ）
 async function saveTr(){
   const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
   if(!mid||!dt){alert('会員と日付を選んでください');return;}
