@@ -580,7 +580,7 @@ function rDash(){
     document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');
   }else{fbox.style.display='none';}
   dc('g');dc('a');
-  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#111','#888'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:12,boxWidth:10}}}}});
+  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:['#DB444C','#5BB9CD'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:12,boxWidth:10}}}}});
   const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
   ages.forEach(a=>{if(a<30)bk['20代']++;else if(a<40)bk['30代']++;else if(a<50)bk['40代']++;else bk['50代+']++;});
   C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:'#111',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa'}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f0f0f0'}}}}});
@@ -593,8 +593,9 @@ function rMem(){
   all.forEach(m=>{
     const a=age(m.dob),last=getLastVisit(m.id),days=last?daysSince(last):null,isWarn=days!==null&&days>=7;
     const url=getMemberUrl(m.id);
+    const avColor=m.gender==='m'?'background:#5BB9CD':'background:#DB444C';
     const d=document.createElement('div');d.className='mrow';
-    d.innerHTML=`<div class="av ${isWarn?'av-warn':''}">${m.name.charAt(0)}</div>
+    d.innerHTML=`<div class="av ${isWarn?'av-warn':''}" style="${avColor}">${m.name.charAt(0)}</div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
           <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px;letter-spacing:.06em">フォーム</span>':''}</div>
