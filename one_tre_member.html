@@ -2,114 +2,97 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ONE TRE — My Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#fff;--bg2:#fafafa;--black:#111;--g2:#777;--g3:#aaa;--g4:#ccc;--g5:#e0e0e0;--g6:#f5f5f5;--pink:#b03878;}
-html{font-size:16px}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--black);min-height:100vh;-webkit-text-size-adjust:100%}
-.app{max-width:520px;margin:0 auto;padding-bottom:60px}
+:root{--bg:#fff;--bg2:#fafafa;--black:#111;--g1:#444;--g2:#777;--g3:#aaa;--g4:#ccc;--g5:#e0e0e0;--g6:#f5f5f5;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--black);min-height:100vh}
+.app{max-width:480px;margin:0 auto}
 
-.hd{padding:28px 24px 18px;border-bottom:1px solid var(--g5)}
-.logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--black);letter-spacing:.32em}
-.logo-sub{font-size:9px;color:var(--g4);letter-spacing:.22em;margin-top:4px;font-weight:300}
-.logo-catch{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--g3);margin-top:5px}
-.member-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--black);margin-top:10px;font-weight:400}
+/* HEADER */
+.hd{padding:20px 20px 14px;border-bottom:1px solid var(--g5)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--black);letter-spacing:.32em}
+.logo-sub{font-size:7px;color:var(--g4);letter-spacing:.22em;margin-top:3px;font-weight:300}
+.logo-catch{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--g3);margin-top:4px;letter-spacing:.06em}
+.member-name{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);margin-top:8px;font-weight:400;letter-spacing:.06em}
 
-.rsv-btn{display:block;background:#b03878;border-radius:14px;padding:18px;text-align:center;text-decoration:none;margin:24px 24px 0}
-.rsv-btn .t1{font-size:15px;color:#fff;letter-spacing:.1em;font-weight:500}
-.rsv-btn .t2{font-size:11px;color:rgba(255,255,255,.85);margin-top:5px}
+/* NAV */
+.nav{display:flex;border-bottom:1px solid var(--g5);background:var(--bg);position:sticky;top:0;z-index:10}
+.nb{flex:1;padding:12px 0;font-size:9px;color:var(--g4);text-align:center;letter-spacing:.1em;font-weight:300;border:none;background:transparent;cursor:pointer;border-bottom:1.5px solid transparent;transition:all .2s}
+.nb.a{color:var(--black);border-bottom-color:var(--black);font-weight:400}
 
-.sec{padding:28px 24px 0}
-.st{font-family:'Cormorant Garamond',serif;font-size:10px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+/* PAGE */
+.pg{display:none;padding:20px}.pg.active{display:block}
+
+/* SECTION TITLE */
+.st{font-family:'Cormorant Garamond',serif;font-size:9px;color:var(--g4);letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .st::after{content:'';flex:1;height:.5px;background:var(--g5)}
 
-.att-box{padding:20px;border:.5px solid var(--black);margin-bottom:16px}
+/* ATTENDANCE STATUS */
+.att-box{padding:16px;border:.5px solid var(--black);margin-bottom:16px}
 .att-box.warn{border-color:var(--g4);background:var(--bg2)}
-.att-label{font-size:10px;color:var(--g3);letter-spacing:.16em;text-transform:uppercase;font-weight:300;margin-bottom:6px}
-.att-days{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--black);font-weight:300;line-height:1}
-.att-unit{font-size:18px;color:var(--g3);margin-left:5px}
-.att-msg{font-size:14px;color:var(--black);margin-top:8px;font-weight:300}
-.att-dots{display:flex;gap:6px;margin-top:14px}
-.dot{width:13px;height:13px;border-radius:50%;background:var(--g5)}
+.att-label{font-size:8px;color:var(--g3);letter-spacing:.16em;text-transform:uppercase;font-weight:300;margin-bottom:4px}
+.att-days{font-family:'Cormorant Garamond',serif;font-size:40px;color:var(--black);font-weight:300;line-height:1}
+.att-unit{font-size:12px;color:var(--g3);margin-left:4px}
+.att-msg{font-size:12px;color:var(--black);margin-top:6px;font-weight:300;letter-spacing:.04em}
+.att-msg.good{color:var(--black)}
+.att-msg.warn{color:var(--g2)}
+.att-dots{display:flex;gap:5px;margin-top:12px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--g5)}
 .dot.on{background:var(--black)}
+.dot.half{background:var(--g4)}
 
-.cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.cal-month{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black);letter-spacing:.1em}
-.cal-count{font-size:12px;color:var(--g3)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cd{text-align:center;font-size:13px;color:var(--g4);padding:5px 0;font-weight:300}
-.cd.dh{font-size:10px;color:var(--g4);letter-spacing:.06em}
-.cd-v{background:var(--black);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:12px}
-.cd-t{border:1px solid var(--black);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:12px;color:var(--black)}
+/* CALENDAR */
+.cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-month{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--black);letter-spacing:.1em}
+.cal-count{font-size:9px;color:var(--g3);letter-spacing:.08em}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cd{text-align:center;font-size:10px;color:var(--g4);padding:4px 0;font-weight:300}
+.cd.dh{font-size:8px;color:var(--g4);letter-spacing:.06em}
+.cd-v{background:var(--black);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:9px}
+.cd-t{border:1px solid var(--black);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:9px;color:var(--black)}
 
-.wt-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
-.wt-val{font-family:'Cormorant Garamond',serif;font-size:56px;color:var(--black);font-weight:300;line-height:1}
-.wt-unit{font-size:16px;color:var(--g3)}
-.wt-diff{font-size:16px;color:var(--pink)}
-.ch-wrap{position:relative;margin:14px 0}
+/* WEIGHT */
+.wt-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.wt-val{font-family:'Cormorant Garamond',serif;font-size:44px;color:var(--black);font-weight:300;line-height:1}
+.wt-unit{font-size:13px;color:var(--g3)}
+.wt-diff{font-size:13px;color:var(--black);letter-spacing:.04em}
+.wt-diff.down{color:var(--black)}
+.wt-diff.up{color:var(--g2)}
 
-.wt-input-wrap{margin-bottom:10px}
-.wt-input-wrap input{width:100%;border:.5px solid var(--g5);border-radius:12px;padding:14px 16px;font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--black);outline:none;background:#fff;margin-bottom:10px}
-.wt-btn{width:100%;background:#b03878;border:none;border-radius:12px;padding:14px;font-size:14px;color:#fff;letter-spacing:.08em;cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:500}
-.wt-feedback{font-size:12px;color:#b03878;font-weight:300;min-height:18px;margin-top:6px}
+/* CHART */
+.ch-wrap{height:120px;position:relative;margin:10px 0 4px}
 
-.privacy-note{display:flex;align-items:flex-start;gap:8px;padding:12px 14px;background:#fdf0f6;border-radius:12px;margin-top:10px}
-.privacy-note p{font-size:12px;color:#b03878;line-height:1.6}
-
-.wt-hist-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:12px;margin-bottom:6px}
-.wt-hist-date{font-size:12px;color:#888;font-weight:300}
-.wt-hist-val{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300}
-
-.goal-wrap{margin-top:24px;padding:18px 20px;background:#fdf0f6;border-radius:14px}
-.goal-title{font-family:'Cormorant Garamond',serif;font-size:10px;color:#b03878;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px}
-.goal-input-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.goal-input-row input{font-size:20px;padding:10px 14px;border:.5px solid rgba(232,160,191,0.4);border-radius:10px;background:#fff;color:#111;width:130px;font-family:'Cormorant Garamond',serif;outline:none}
-.goal-input-row span{font-size:14px;color:#bbb}
-.goal-btn{font-size:12px;padding:10px 18px;background:#b03878;color:#fff;border:none;cursor:pointer;border-radius:10px;font-family:'Noto Sans JP',sans-serif;font-weight:500}
-.goal-clr{font-size:12px;padding:10px 14px;background:transparent;border:.5px solid #e0c0d0;color:#c8a0b8;cursor:pointer;border-radius:10px;font-family:'Noto Sans JP',sans-serif}
-.goal-privacy{font-size:11px;color:#d0a0b0;margin-top:10px;line-height:1.7}
-
-.tr-row{padding:16px 0;border-bottom:.5px solid var(--g6)}
+/* TRAINING RECORD */
+.tr-row{padding:12px 0;border-bottom:.5px solid var(--g6)}
 .tr-row:last-child{border:none}
-.tr-date{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--black);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.tr-badge{font-size:9px;padding:2px 8px;border:.5px solid var(--g4);color:var(--g2);letter-spacing:.1em}
-.tr-set{font-size:13px;color:var(--g2);font-weight:300;line-height:2.2}
+.tr-date{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--black);margin-bottom:4px;letter-spacing:.04em}
+.tr-set{font-size:11px;color:var(--g2);font-weight:300;line-height:1.8}
+.tr-badge{display:inline-block;font-size:8px;padding:1px 6px;border:.5px solid var(--g4);color:var(--g2);letter-spacing:.1em;margin-left:6px;vertical-align:middle}
 
-.pb-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--g6);margin-bottom:6px;border-radius:10px}
-.pb-name{font-size:14px;color:var(--black);font-weight:300}
-.pb-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--black);font-weight:300}
-.pb-unit{font-size:12px;color:var(--g3);margin-left:2px}
-.pb-up{font-size:12px;color:var(--pink);margin-left:8px;font-weight:500}
+/* PERSONAL BEST */
+.pb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--g6);margin-bottom:4px}
+.pb-name{font-size:11px;color:var(--black);font-weight:300}
+.pb-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black);font-weight:300}
+.pb-unit{font-size:10px;color:var(--g3);margin-left:2px}
+.pb-up{font-size:10px;color:var(--black);margin-left:6px;font-weight:400}
 
-.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.score-card{border-radius:14px;padding:18px;text-align:center}
-.score-label{font-size:13px;font-weight:500;letter-spacing:.06em;margin-bottom:8px}
-.score-val{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;line-height:1.1}
-.score-max{font-size:11px;margin-top:4px}
-.score-pink{background:#fce4f0}.score-pink .score-label{color:#b03070}.score-pink .score-val{color:#c05090}.score-pink .score-max{color:#d080b0}
-.score-purple{background:#ece8fc}.score-purple .score-label{color:#5040a0}.score-purple .score-val{color:#6050b8}.score-purple .score-max{color:#9080d0}
-.score-blue{background:#e0f4f8}.score-blue .score-label{color:#1a6080}.score-blue .score-val{color:#2080a8}.score-blue .score-max{color:#60a8c8}
-.score-amber{background:#fef4e4}.score-amber .score-label{color:#906020}.score-amber .score-val{color:#b07828}.score-amber .score-max{color:#c89848}
+/* VOLUME BAR */
+.vol-bar-wrap{margin:8px 0}
+.vol-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vol-bar-label{font-size:9px;color:var(--g3);width:40px;flex-shrink:0;text-align:right;letter-spacing:.04em}
+.vol-bar{height:6px;background:var(--black);border-radius:0;transition:width .6s ease}
+.vol-bar-val{font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--g2);margin-left:4px}
 
-.total-wrap{background:linear-gradient(135deg,#fce4f0,#ece8fc);border-radius:18px;padding:26px;text-align:center}
-.total-label{font-size:10px;color:#8060a0;letter-spacing:.15em;margin-bottom:12px;font-weight:500}
-.total-num{font-family:'Cormorant Garamond',serif;font-size:68px;font-weight:300;color:#b03878;line-height:1}
-.total-denom{font-size:20px;color:#c070a0;margin-left:4px}
-.total-bar-bg{background:rgba(255,255,255,.6);border-radius:99px;height:10px;margin:12px 12px 16px;overflow:hidden}
-.total-bar{height:100%;background:linear-gradient(90deg,#c05090,#7060c0);border-radius:99px;transition:width .8s ease}
-.total-msg{font-size:13px;color:#9060a0;line-height:2}
-.total-msg strong{color:#b03878}
-
-.nodata{text-align:center;padding:40px 20px;color:var(--g4);font-size:14px;font-weight:300;letter-spacing:.06em}
+/* NO DATA */
+.nodata{text-align:center;padding:40px 20px;color:var(--g4);font-size:13px;font-weight:300;letter-spacing:.06em}
 </style>
 </head>
 <body>
 <div class="app">
-
   <div class="hd">
     <div class="logo">ONE TRE</div>
     <div class="logo-sub">PERSONAL TRAINING GYM</div>
@@ -117,117 +100,197 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
     <div class="member-name" id="member-name">...</div>
   </div>
 
-  <a href="https://onebalanceyume-beep.github.io/private-gym-app/reservation.html" class="rsv-btn">
-    <div class="t1">次のセッションを予約する</div>
-    <div class="t2">タップして予約画面へ</div>
-  </a>
+  <div class="nav">
+    <button class="nb a" onclick="sw('attend',this)">通う</button>
+    <button class="nb" onclick="sw('body',this)">体重</button>
+    <button class="nb" onclick="sw('training',this)">記録</button>
+    <button class="nb" onclick="sw('growth',this)">成長</button>
+  </div>
 
-  <div class="sec">
-    <div class="st">attendance</div>
+  <!-- 通う -->
+  <div id="pg-attend" class="pg active">
     <div id="att-status"></div>
+    <div style="margin:0 0 16px">
+      <a href="https://onebalanceyume-beep.github.io/private-gym-app/reservation.html" style="display:block;background:linear-gradient(135deg,#e8a0bf,#b4a0e8);border-radius:10px;padding:14px;text-align:center;text-decoration:none">
+        <div style="font-size:11px;color:#fff;letter-spacing:.12em;font-weight:400;font-family:'Noto Sans JP',sans-serif">次のセッションを予約する</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.75);margin-top:3px;font-weight:300;letter-spacing:.06em;font-family:'Noto Sans JP',sans-serif">タップして予約画面へ</div>
+      </a>
+    </div>
+    <div class="st">attendance</div>
     <div class="cal-hd">
       <div class="cal-month" id="cal-month"></div>
       <div class="cal-count" id="cal-count"></div>
     </div>
     <div class="cal-grid" id="cal-hdr"></div>
-    <div class="cal-grid" style="margin-top:4px" id="cal-body"></div>
+    <div class="cal-grid" style="margin-top:3px" id="cal-body"></div>
   </div>
 
-  <div class="sec" style="margin-top:32px">
-    <div class="st">weight</div>
-    <div id="wt-content"><div class="nodata">体重データがありません</div></div>
-    <div class="ch-wrap" style="height:120px"><canvas id="cw"></canvas></div>
-    <div style="display:flex;justify-content:space-between;margin-bottom:20px">
-      <span style="font-size:10px;color:var(--g4)">開始時</span>
-      <span style="font-size:10px;color:var(--g4)">現在</span>
-    </div>
+  <!-- 体重 -->
+  <div id="pg-body" class="pg">
     <div class="st">today's weight</div>
-    <div class="wt-input-wrap">
-      <input type="number" id="wt-input" step="0.1" placeholder="56.5">
-      <button class="wt-btn" onclick="saveWeightEntry()">記録する</button>
+    <div style="background:linear-gradient(135deg,#fdf0f6,#f3f0fd);border-radius:10px;padding:14px;margin-bottom:16px">
+      <div style="font-size:8px;color:#bbb;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-family:'Noto Sans JP',sans-serif">今日の体重を記録する</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <input type="number" id="wt-input" step="0.1" placeholder="56.5" style="flex:1;border:.5px solid rgba(232,160,191,0.5);border-radius:8px;padding:10px 12px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:22px;color:#111;font-weight:300;outline:none">
+        <span style="font-size:12px;color:#bbb;font-family:'Noto Sans JP',sans-serif">kg</span>
+        <button onclick="saveWeightEntry()" style="background:linear-gradient(135deg,#e8a0bf,#b4a0e8);border:none;border-radius:8px;padding:10px 14px;font-size:10px;color:#fff;letter-spacing:.08em;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap">記録する</button>
+      </div>
+      <div id="wt-feedback" style="font-size:10px;color:#c8608a;font-weight:300;min-height:16px;font-family:'Noto Sans JP',sans-serif"></div>
     </div>
-    <div class="wt-feedback" id="wt-feedback"></div>
-    <div class="privacy-note">
-      <svg width="16" height="16" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><rect x="2" y="6" width="10" height="7" rx="1.5" stroke="#b03878" stroke-width="1"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="#b03878" stroke-width="1" stroke-linecap="round"/></svg>
-      <p>この体重はあなただけが確認できます。トレーナーには表示されません。</p>
+    <div class="st">weight history</div>
+    <div id="wt-content"><div class="nodata">体重データがありません</div></div>
+    <div class="ch-wrap"><canvas id="cw"></canvas></div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;margin-bottom:16px">
+      <span style="font-size:8px;color:var(--g4)">開始時</span>
+      <span style="font-size:8px;color:var(--g4)">現在</span>
     </div>
-    <div style="margin-top:20px" id="wt-history-list"></div>
-    <div class="goal-wrap">
-      <div class="goal-title">目標体重（任意）</div>
-      <div class="goal-input-row">
-        <input type="number" id="goal-wt" step="0.1" placeholder="50.0">
-        <span>kg</span>
-        <button class="goal-btn" onclick="saveGoal()">設定</button>
-        <button class="goal-clr" onclick="clearGoal()">クリア</button>
+    <div id="wt-history-list"></div>
+    <div style="margin-top:20px;padding:14px 16px;background:#fdf0f6;border-radius:10px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:9px;color:#c8608a;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">目標体重（任意）</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <input type="number" id="goal-wt" step="0.1" placeholder="50.0" style="font-size:15px;padding:8px 10px;border:.5px solid rgba(232,160,191,0.4);border-radius:8px;background:#fff;color:#111;width:100px;font-family:'Cormorant Garamond',serif">
+        <span style="font-size:12px;color:#bbb">kg</span>
+        <button onclick="saveGoal()" style="font-size:10px;padding:7px 14px;background:linear-gradient(135deg,#e8a0bf,#b4a0e8);color:#fff;border:none;cursor:pointer;letter-spacing:.08em;border-radius:6px;font-family:'Noto Sans JP',sans-serif">設定</button>
+        <button onclick="clearGoal()" style="font-size:10px;padding:7px 10px;background:transparent;border:.5px solid #e0c0d0;color:#c8a0b8;cursor:pointer;letter-spacing:.06em;border-radius:6px;font-family:'Noto Sans JP',sans-serif">クリア</button>
       </div>
       <div id="goal-display"></div>
-      <div class="goal-privacy">この体重はトレーナーには見えません。あなただけが確認できます。</div>
+      <div style="font-size:10px;color:#d0a0b0;margin-top:8px;line-height:1.6;letter-spacing:.02em;font-family:'Noto Sans JP',sans-serif">この体重はトレーナーには見えません。あなただけが確認できます。</div>
     </div>
   </div>
 
-  <div class="sec" style="margin-top:32px">
+  <!-- 記録 -->
+  <div id="pg-training" class="pg">
     <div class="st">training log</div>
     <div id="tr-list"><div class="nodata">トレーニング記録がありません</div></div>
   </div>
 
-  <div class="sec" style="margin-top:32px">
-    <div class="st">personal best</div>
-    <div id="pb-list"><div class="nodata">記録がありません</div></div>
-  </div>
+  <!-- 成長 -->
+  <div id="pg-growth" class="pg">
 
-  <div class="sec" style="margin-top:32px">
-    <div class="st">volume trend</div>
-    <div class="ch-wrap" style="height:160px"><canvas id="cv"></canvas></div>
-  </div>
-
-  <div class="sec" style="margin-top:32px">
     <div class="st">body balance</div>
-    <div id="radar-wrap">
-      <div class="ch-wrap" style="height:280px"><canvas id="cr"></canvas></div>
-      <div style="font-size:12px;color:var(--g4);text-align:center;margin-top:8px;margin-bottom:24px">あなたの体づくりバランス（トレーナー設定）</div>
+    <div id="radar-wrap" style="margin-bottom:16px">
+      <div style="position:relative;height:240px;margin-bottom:8px">
+        <canvas id="cr"></canvas>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#888;font-family:'Noto Sans JP',sans-serif">
+          <div style="width:14px;height:2.5px;background:linear-gradient(90deg,#e8a0bf,#b4a0e8);border-radius:1px"></div>現在
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#bbb;font-family:'Noto Sans JP',sans-serif">
+          <div style="width:14px;border-top:1.5px dashed #ccc"></div>理想
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div style="background:#fdf0f6;border-radius:10px;padding:10px 12px">
+          <div style="font-size:8px;color:#c8608a;letter-spacing:.08em;margin-bottom:4px;font-family:'Noto Sans JP',sans-serif">筋力</div>
+          <div style="display:flex;align-items:baseline;gap:3px">
+            <span id="score-strength-val" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#c8608a;font-weight:300">0</span>
+            <span style="font-size:10px;color:#e8a0bf">/ 25</span>
+          </div>
+          <div style="height:3px;background:rgba(232,160,191,0.2);border-radius:2px;margin-top:6px;overflow:hidden">
+            <div id="bar-strength" style="height:100%;background:#e8a0bf;border-radius:2px;width:0%;transition:width .6s ease"></div>
+          </div>
+        </div>
+        <div style="background:#f3f0fd;border-radius:10px;padding:10px 12px">
+          <div style="font-size:8px;color:#7060b8;letter-spacing:.08em;margin-bottom:4px;font-family:'Noto Sans JP',sans-serif">体幹</div>
+          <div style="display:flex;align-items:baseline;gap:3px">
+            <span id="score-core-val" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#7060b8;font-weight:300">0</span>
+            <span style="font-size:10px;color:#b4a0e8">/ 25</span>
+          </div>
+          <div style="height:3px;background:rgba(180,160,232,0.2);border-radius:2px;margin-top:6px;overflow:hidden">
+            <div id="bar-core" style="height:100%;background:#b4a0e8;border-radius:2px;width:0%;transition:width .6s ease"></div>
+          </div>
+        </div>
+        <div style="background:#f0f9f6;border-radius:10px;padding:10px 12px">
+          <div style="font-size:8px;color:#3a8a6a;letter-spacing:.08em;margin-bottom:4px;font-family:'Noto Sans JP',sans-serif">連動性</div>
+          <div style="display:flex;align-items:baseline;gap:3px">
+            <span id="score-agility-val" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#3a8a6a;font-weight:300">0</span>
+            <span style="font-size:10px;color:#80c8aa">/ 25</span>
+          </div>
+          <div style="height:3px;background:rgba(128,200,170,0.2);border-radius:2px;margin-top:6px;overflow:hidden">
+            <div id="bar-agility" style="height:100%;background:#80c8aa;border-radius:2px;width:0%;transition:width .6s ease"></div>
+          </div>
+        </div>
+        <div style="background:#fdf7f0;border-radius:10px;padding:10px 12px">
+          <div style="font-size:8px;color:#b87830;letter-spacing:.08em;margin-bottom:4px;font-family:'Noto Sans JP',sans-serif">柔軟性</div>
+          <div style="display:flex;align-items:baseline;gap:3px">
+            <span id="score-flex-val" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#b87830;font-weight:300">0</span>
+            <span style="font-size:10px;color:#f0b870">/ 25</span>
+          </div>
+          <div style="height:3px;background:rgba(240,184,112,0.2);border-radius:2px;margin-top:6px;overflow:hidden">
+            <div id="bar-flex" style="height:100%;background:#f0b870;border-radius:2px;width:0%;transition:width .6s ease"></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#fdf0f6,#f3f0fd);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;color:#888;font-weight:300;font-family:'Noto Sans JP',sans-serif">トータルスコア</div>
+          <div style="font-size:9px;color:#bbb;margin-top:2px;font-weight:300;font-family:'Noto Sans JP',sans-serif">あなたの理想に向かっています</div>
+        </div>
+        <div>
+          <span id="score-total-val" style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#111;font-weight:300">0</span>
+          <span style="font-size:11px;color:#ccc;margin-left:2px">/ 100</span>
+        </div>
+      </div>
     </div>
-    <div id="radar-nodata" style="display:none" class="nodata">目標バランスはまだ設定されていません</div>
-    <div class="score-grid" id="score-grid" style="display:none">
-      <div class="score-card score-pink"><div class="score-label">筋力</div><div class="score-val" id="sc-strength">—</div><div class="score-max">/ 25</div></div>
-      <div class="score-card score-purple"><div class="score-label">体幹</div><div class="score-val" id="sc-core">—</div><div class="score-max">/ 25</div></div>
-      <div class="score-card score-blue"><div class="score-label">連動性</div><div class="score-val" id="sc-move">—</div><div class="score-max">/ 25</div></div>
-      <div class="score-card score-amber"><div class="score-label">柔軟性</div><div class="score-val" id="sc-flex">—</div><div class="score-max">/ 25</div></div>
-    </div>
-    <div class="total-wrap" id="total-wrap" style="display:none">
-      <div class="total-label">TOTAL SCORE</div>
-      <div><span class="total-num" id="total-num">—</span><span class="total-denom">/ 100</span></div>
-      <div class="total-bar-bg"><div class="total-bar" id="total-bar" style="width:0%"></div></div>
-      <div class="total-msg">100点があなたの理想の姿。<br>今の成長具合は <strong id="total-msg-num">—</strong> 点です。<br>引き続き一緒に頑張りましょう！</div>
-    </div>
-  </div>
+    <div id="radar-nodata" style="display:none" class="nodata">スコアはまだ設定されていません</div>
 
-  <div class="sec" style="margin-top:32px;padding-bottom:20px">
-    <div class="st">exercise progress</div>
-    <div class="ch-wrap" style="height:200px"><canvas id="ce"></canvas></div>
+    <div class="st" style="margin-top:20px">personal best</div>
+    <div id="pb-list"><div class="nodata">記録がありません</div></div>
+    <div class="st" style="margin-top:20px">volume trend</div>
+    <div class="ch-wrap" style="height:140px"><canvas id="cv"></canvas></div>
+    <div class="st" style="margin-top:20px">exercise progress</div>
+    <div class="ch-wrap" style="height:160px"><canvas id="ce"></canvas></div>
   </div>
-
 </div>
+
 <script>
 const urlId=new URLSearchParams(location.search).get('id');
-const GAS_URL='https://script.google.com/macros/s/AKfycbyYQPx8SBf9kMsT0BoteGWZ2JL8YsoXbEsGCLSHInJXox3EDN1DXTg_YR1kO3bpxNvQWd8UVwjYNYmE0CPGyExfKl1WNRRIzNq9xSjNS1NFOAgpLEz7-R6NOsqByDiW/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbwPVsC5n_ToF_MMEd88pe_-R_Bcaoxw_HWpdPwiE1fMUd6U1Qhj8mztjkCaZdt0YKg/exec';
+let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
+let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
 let mem=null,mts=[];
 let C={};
 const now=new Date();
 const cY=now.getFullYear(),cM=now.getMonth();
 
 function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
+
 function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
 
 async function init(){
   if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
+
+  // ローディング表示
   document.getElementById('member-name').textContent='データを読み込み中...';
+
+  // GASからデータを取得（iPad入力データを反映）
   try{
     const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
+
+    // 会員情報をGASから取得
     const allMembers=[...(data.members||[]),...(data.trial||[])];
-    const gasMem=allMembers.find(row=>row['会員ID']===urlId);
-    if(gasMem){mem={id:urlId,name:gasMem['name']||gasMem['お名前']||'会員',weights:[],dob:'',gender:'f'};}
+    const gasIdKey='会員ID';
+    const gasNameKey=Object.keys(allMembers[0]||{}).find(k=>k.includes('お名前'))||'お名前';
+    const gasMem=allMembers.find(row=>row[gasIdKey]===urlId);
+
+    if(gasMem){
+      mem={
+        id:urlId,
+        name:gasMem[gasNameKey]||gasMem['お名前']||'会員',
+        weights:[],
+        dob:'',
+        gender:'f'
+      };
+    }else{
+      // localStorageにフォールバック
+      mem=M.find(m=>m.id===urlId);
+    }
+
+    // トレーニングデータをGASから取得
     if(data.training&&data.training.length){
+      // GASデータをローカル形式に変換してグループ化
       const grouped={};
       data.training.forEach(r=>{
         const key=r.date;
@@ -235,44 +298,82 @@ async function init(){
         grouped[key].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
       });
       mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
+    }else{
+      // localStorageにフォールバック
+      mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
     }
-    if(data.weights&&data.weights.length&&mem){mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);}
-    // ★ GASからボディバランススコアを取得
-    if(data.radar){
-      const r=data.radar;
-      localStorage.setItem('onetreRadar_'+urlId,JSON.stringify(r));
+
+    // 体重データをGASから取得
+    if(data.weights&&data.weights.length&&mem){
+      mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
     }
-  }catch(err){console.error('GAS取得エラー:',err);}
+
+    // ボディバランススコアをGASから取得
+    if(data.bodyScore){
+      localStorage.setItem('onetreScore_'+urlId,JSON.stringify(data.bodyScore));
+    }
+    // GAS取得失敗時はlocalStorageを使用
+    mem=M.find(m=>m.id===urlId);
+    mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+  }
+
   if(!mem){showError('会員情報が見つかりません。\nトレーナーにお問い合わせください。');return;}
+
   document.getElementById('member-name').textContent=mem.name+' さん';
   document.title='ONE TRE — '+mem.name;
-  renderAttend();renderBody();renderWeightHistory();renderGoal();renderTraining();renderGrowth();
+  renderAttend();
+  renderBody();
+  renderWeightHistory();
+  renderGoal();
+  renderTraining();
+  renderGrowth();
 }
 
 function showError(msg){
   document.getElementById('member-name').textContent='';
-  document.querySelector('.app').innerHTML=`<div class="nodata" style="padding:80px 20px">${msg.replace(/\n/g,'<br>')}</div>`;
+  document.querySelector('.nav').style.display='none';
+  document.getElementById('pg-attend').innerHTML=`<div class="nodata" style="padding:60px 20px">${msg.replace(/\n/g,'<br>')}</div>`;
+  document.getElementById('pg-attend').classList.add('active');
+}
+
+function sw(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('a'));
+  document.getElementById('pg-'+id).classList.add('active');
+  btn.classList.add('a');
 }
 
 function renderAttend(){
+  // 来店ステータス
   const last=mts.length?mts[0].date:null;
   const days=daysSince(last);
   const box=document.getElementById('att-status');
   if(last){
     const isWarn=days>=7;
-    let msg='';
+    let msg='',dotHtml='';
     if(days===0)msg='今日もお疲れさまでした';
     else if(days<=3)msg='いいペースです。この調子で。';
     else if(days<=6)msg='次のセッションが近づいています';
     else if(days<=10)msg='そろそろ次のセッションを';
     else msg='お体の調子はいかがですか？';
-    let dotHtml='';
+    // 8dots: 7日で1周
     const dayMod=Math.min(days,8);
-    for(let i=0;i<8;i++){dotHtml+=`<div class="dot${i<(8-dayMod)?' on':''}"></div>`;}
-    box.innerHTML=`<div class="att-box ${isWarn?'warn':''}"><div class="att-label">前回から</div><div><span class="att-days">${days}</span><span class="att-unit">日</span></div><div class="att-msg">${msg}</div><div class="att-dots">${dotHtml}</div></div>`;
+    for(let i=0;i<8;i++){
+      const cls=i<(8-dayMod)?'dot on':'dot'+(i===7&&!isWarn?' half':'');
+      dotHtml+=`<div class="${cls}"></div>`;
+    }
+    box.innerHTML=`
+      <div class="att-box ${isWarn?'warn':''}">
+        <div class="att-label">前回から</div>
+        <div><span class="att-days">${days}</span><span class="att-unit">日</span></div>
+        <div class="att-msg ${isWarn?'warn':'good'}">${msg}</div>
+        <div class="att-dots">${dotHtml}</div>
+      </div>`;
   }else{
-    box.innerHTML=`<div class="att-box warn"><div class="att-label">来店記録</div><div class="att-msg">トレーニング記録がまだありません</div></div>`;
+    box.innerHTML=`<div class="att-box warn"><div class="att-label">来店記録</div><div class="att-msg warn">トレーニング記録がまだありません</div></div>`;
   }
+
+  // カレンダー
   document.getElementById('cal-month').textContent=cY+'年'+(cM+1)+'月';
   const monthVisits=mts.filter(t=>t.date.startsWith(`${cY}-${String(cM+1).padStart(2,'0')}`));
   document.getElementById('cal-count').textContent='今月 '+monthVisits.length+'回';
@@ -291,29 +392,40 @@ function renderAttend(){
 }
 
 function renderBody(){
-  const key='onetreWeights_'+urlId;
-  const localEntries=JSON.parse(localStorage.getItem(key)||'[]');
-  const gasWeights=mem.weights||[];
-  const allWeights=gasWeights.length?gasWeights:localEntries.map(e=>e.weight);
-  if(!allWeights.length)return;
-  const cur=allWeights[allWeights.length-1],first=allWeights[0];
+  const weights=mem.weights||[];
+  if(!weights.length)return;
+  const cur=weights[weights.length-1],first=weights[0];
   const diff=(cur-first).toFixed(1);
-  document.getElementById('wt-content').innerHTML=`<div class="wt-hero"><span class="wt-val">${cur}</span><span class="wt-unit">kg</span><span class="wt-diff">${diff<=0?'▼':'▲'} ${Math.abs(diff)}kg</span></div><div style="font-size:12px;color:var(--g3);margin-bottom:4px">開始時 ${first}kg → 現在 ${cur}kg</div>`;
+  const diffStr=(diff>0?'+':'')+diff+'kg';
+  document.getElementById('wt-content').innerHTML=`
+    <div class="wt-hero">
+      <span class="wt-val">${cur}</span>
+      <span class="wt-unit">kg</span>
+      <span class="wt-diff ${diff<=0?'down':'up'}">${diff<=0?'▼':'▲'} ${Math.abs(diff)}kg</span>
+    </div>
+    <div style="font-size:10px;color:var(--g3);letter-spacing:.06em">開始時 ${first}kg → 現在 ${cur}kg</div>`;
   dc('cw');
-  C.cw=new Chart(document.getElementById('cw'),{type:'line',data:{labels:allWeights.map((_,i)=>i===0?'開始':''),datasets:[{data:allWeights,borderColor:'#b03878',backgroundColor:'rgba(176,56,120,0.07)',tension:0.4,pointRadius:4,pointBackgroundColor:'#b03878',fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:10}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg',font:{size:10}},grid:{color:'#f5f5f5'}}}}});
+  C.cw=new Chart(document.getElementById('cw'),{type:'line',data:{labels:weights.map((_,i)=>i===0?'開始':'記録'+(i+1)),datasets:[{data:weights,borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:4,pointBackgroundColor:'#111',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
 }
 
 function renderTraining(){
   const list=document.getElementById('tr-list');
   if(!mts.length){list.innerHTML='<div class="nodata">トレーニング記録がありません</div>';return;}
+  const master=JSON.parse(localStorage.getItem('onetreExMaster')||'{}');
   list.innerHTML='';
-  mts.slice(0,6).forEach((t,i)=>{
+  mts.slice(0,10).forEach((t,i)=>{
     const div=document.createElement('div');div.className='tr-row';
     const prev=mts[i+1];
     const setLines=t.sets.map(s=>{
       let upStr='';
-      if(prev){const ps=prev.sets.find(p=>p.exercise===s.exercise);if(ps&&s.weight>ps.weight)upStr=`<span style="color:#b03878;margin-left:4px">▲ +${(s.weight-ps.weight).toFixed(1)}kg</span>`;}
-      return `<div style="padding:2px 0">${s.exercise} <span style="color:var(--g2)">${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}</span></div>`;
+      if(prev){const ps=prev.sets.find(p=>p.exercise===s.exercise);if(ps&&s.weight>ps.weight)upStr=`<span style="color:var(--black);margin-left:4px">▲ +${(s.weight-ps.weight).toFixed(1)}kg</span>`;}
+      const pt=master[s.exercise];
+      const ptStr=pt?`<span style="font-size:9px;color:var(--g3);margin-left:6px;letter-spacing:.04em">筋力${pt.strength} 体幹${pt.core} 動き${pt.move}</span>`:'';
+      return `<div style="display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;padding:2px 0">
+        <span>${s.exercise}</span>
+        <span style="color:var(--g2)">${s.weight}kg × ${s.reps}回 × ${s.sets||1}セット${upStr}</span>
+        ${ptStr}
+      </div>`;
     }).join('');
     div.innerHTML=`<div class="tr-date">${t.date}${i===0?'<span class="tr-badge">LATEST</span>':''}</div><div class="tr-set">${setLines}</div>`;
     list.appendChild(div);
@@ -321,6 +433,60 @@ function renderTraining(){
 }
 
 function renderGrowth(){
+  // ボディバランス（トレーナー設定スコア）
+  const score=JSON.parse(localStorage.getItem('onetreScore_'+urlId)||'null');
+  dc('cr');
+  if(score&&(score.strength||score.core||score.agility||score.flex)){
+    document.getElementById('radar-wrap').style.display='block';
+    document.getElementById('radar-nodata').style.display='none';
+    const s=score.strength||0,c=score.core||0,a=score.agility||0,f=score.flex||0;
+    const total=s+c+a+f;
+    document.getElementById('score-strength-val').textContent=s;
+    document.getElementById('score-core-val').textContent=c;
+    document.getElementById('score-agility-val').textContent=a;
+    document.getElementById('score-flex-val').textContent=f;
+    document.getElementById('score-total-val').textContent=total;
+    document.getElementById('bar-strength').style.width=(s/25*100)+'%';
+    document.getElementById('bar-core').style.width=(c/25*100)+'%';
+    document.getElementById('bar-agility').style.width=(a/25*100)+'%';
+    document.getElementById('bar-flex').style.width=(f/25*100)+'%';
+    C.cr=new Chart(document.getElementById('cr'),{
+      type:'radar',
+      data:{
+        labels:['筋力','体幹','連動性','柔軟性'],
+        datasets:[
+          {label:'現在',data:[s,c,a,f],
+           backgroundColor:'rgba(220,160,200,0.15)',
+           borderColor:'rgba(200,100,160,0.7)',
+           borderWidth:2,
+           pointBackgroundColor:['#e8a0bf','#b4a0e8','#80c8aa','#f0b870'],
+           pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:5},
+          {label:'理想',data:[25,25,25,25],
+           backgroundColor:'rgba(0,0,0,0)',
+           borderColor:'rgba(180,180,180,0.4)',
+           borderWidth:1.5,borderDash:[5,4],
+           pointBackgroundColor:'rgba(180,180,180,0.3)',
+           pointRadius:3,pointBorderWidth:0}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        scales:{r:{min:0,max:25,
+          ticks:{stepSize:5,color:'#ccc',font:{size:9},backdropColor:'transparent'},
+          grid:{color:'rgba(220,180,220,0.15)'},
+          angleLines:{color:'rgba(220,180,220,0.2)'},
+          pointLabels:{
+            color:['#c8608a','#7060b8','#3a8a6a','#b87830'],
+            font:{size:13,family:"'Cormorant Garamond',serif"}
+          }
+        }},
+        plugins:{legend:{display:false}}
+      }
+    });
+  }else{
+    document.getElementById('radar-wrap').style.display='none';
+    document.getElementById('radar-nodata').style.display='block';
+  }
   const prs={};
   mts.forEach(t=>t.sets.forEach(s=>{if(!prs[s.exercise]||s.weight>prs[s.exercise].w){prs[s.exercise]={w:s.weight,date:t.date};}}));
   const pbList=document.getElementById('pb-list');
@@ -328,51 +494,38 @@ function renderGrowth(){
   else{
     pbList.innerHTML='';
     Object.entries(prs).forEach(([ex,pr])=>{
+      // 初回との比較
       let firstW=null;
       for(let i=mts.length-1;i>=0;i--){const s=mts[i].sets.find(s=>s.exercise===ex);if(s){firstW=s.weight;break;}}
       const upStr=firstW&&pr.w>firstW?`<span class="pb-up">▲ +${(pr.w-firstW).toFixed(1)}kg</span>`:'';
       const div=document.createElement('div');div.className='pb-row';
-      div.innerHTML=`<div><div class="pb-name">${ex}</div><div style="font-size:11px;color:var(--g4);margin-top:2px">${pr.date}</div></div><div><span class="pb-val">${pr.w}</span><span class="pb-unit">kg</span>${upStr}</div>`;
+      div.innerHTML=`<div><div class="pb-name">${ex}</div><div style="font-size:9px;color:var(--g4);margin-top:2px">${pr.date}</div></div><div><span class="pb-val">${pr.w}</span><span class="pb-unit">kg</span>${upStr}</div>`;
       pbList.appendChild(div);
     });
   }
+
+  // ボリューム推移
   if(mts.length>=2){
     const vols=[...mts].reverse().map(t=>({date:t.date.slice(5),vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));
     dc('cv');
-    C.cv=new Chart(document.getElementById('cv'),{type:'bar',data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#b03878',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:11}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg',font:{size:11}},grid:{color:'#f5f5f5'}}}}});
+    C.cv=new Chart(document.getElementById('cv'),{type:'bar',data:{labels:vols.map(v=>v.date),datasets:[{data:vols.map(v=>v.vol),backgroundColor:'#111',borderRadius:0,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   }
+
+  // 種目別推移
   const em={};
   [...mts].reverse().forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]=[];em[s.exercise].push({date:t.date.slice(5),w:s.weight});}));
   if(Object.keys(em).length){
     dc('ce');
-    C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set([...mts].reverse().map(t=>t.date.slice(5)))],datasets:Object.entries(em).slice(0,4).map(([ex,arr],i)=>({label:ex,data:arr.map(a=>a.w),borderColor:['#b03878','#6050b8','#2080a8','#b07828'][i],tension:0.4,pointRadius:4,fill:false,borderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:12,boxWidth:12}}},scales:{x:{ticks:{color:'#aaa',font:{size:11}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg',font:{size:11}},grid:{color:'#f5f5f5'}}}}});
-  }
-  const radar=JSON.parse(localStorage.getItem('onetreRadar_'+urlId)||'null');
-  dc('cr');
-  if(radar&&(radar.strength||radar.core||radar.move||radar.flex)){
-    document.getElementById('radar-wrap').style.display='block';
-    document.getElementById('radar-nodata').style.display='none';
-    const s=radar.strength||0,co=radar.core||0,mv=radar.move||0,fl=radar.flex||0;
-    const total=Math.round((s+co+mv+fl)/100*100);
-    document.getElementById('score-grid').style.display='grid';
-    document.getElementById('total-wrap').style.display='block';
-    document.getElementById('sc-strength').textContent=s;
-    document.getElementById('sc-core').textContent=co;
-    document.getElementById('sc-move').textContent=mv;
-    document.getElementById('sc-flex').textContent=fl;
-    document.getElementById('total-num').textContent=total;
-    document.getElementById('total-msg-num').textContent=total;
-    setTimeout(()=>{document.getElementById('total-bar').style.width=total+'%';},100);
-    C.cr=new Chart(document.getElementById('cr'),{type:'radar',data:{labels:['筋力','体幹','連動性','柔軟性'],datasets:[{data:[s,co,mv,fl],backgroundColor:'rgba(176,56,120,0.12)',borderColor:'#b03878',borderWidth:2,pointBackgroundColor:['#c05090','#6050b8','#2080a8','#b07828'],pointRadius:6},{data:[25,25,25,25],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(0,0,0,0.1)',borderDash:[4,4],borderWidth:1,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:25,ticks:{stepSize:5,color:'#bbb',font:{size:11},backdropColor:'transparent'},grid:{color:'rgba(0,0,0,0.07)'},pointLabels:{color:'#555',font:{size:14}}}},plugins:{legend:{display:false}}}});
-  }else{
-    document.getElementById('radar-wrap').style.display='none';
-    document.getElementById('radar-nodata').style.display='block';
+    C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set([...mts].reverse().map(t=>t.date.slice(5)))],datasets:Object.entries(em).slice(0,4).map(([ex,arr],i)=>({label:ex,data:arr.map(a=>a.w),borderColor:['#111','#555','#888','#bbb'][i],tension:0.4,pointRadius:3,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   }
 }
 
 function saveWeightEntry(){
   const v=parseFloat(document.getElementById('wt-input').value);
-  if(!v||v<20||v>200){document.getElementById('wt-feedback').textContent='正しい体重を入力してください';return;}
+  if(!v||v<20||v>200){
+    document.getElementById('wt-feedback').textContent='正しい体重を入力してください';
+    return;
+  }
   const today=new Date().toISOString().slice(0,10);
   const key='onetreWeights_'+urlId;
   const entries=JSON.parse(localStorage.getItem(key)||'[]');
@@ -381,35 +534,44 @@ function saveWeightEntry(){
   else entries.push({date:today,weight:v});
   entries.sort((a,b)=>a.date.localeCompare(b.date));
   localStorage.setItem(key,JSON.stringify(entries));
-  fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveWeight',memberId:urlId,date:today,weight:v})}).catch(()=>{});
+  // GASにも保存
+  fetch(GAS_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveWeight',memberId:urlId,date:today,weight:v})
+  }).catch(()=>{});
   const prev=entries.length>=2?entries[entries.length-2]:null;
   const diff=prev?(v-prev.weight).toFixed(1):null;
   const fb=document.getElementById('wt-feedback');
-  if(diff!==null){fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');fb.style.color=diff<=0?'#b03878':'#888';}
-  else{fb.textContent='記録しました！';fb.style.color='#b03878';}
+  if(diff!==null){
+    fb.textContent='記録しました！前回より '+(diff<=0?'▼ '+Math.abs(diff)+'kg 減りました':'▲ '+diff+'kg 増えました');
+    fb.style.color=diff<=0?'#c8608a':'#888';
+  }else{
+    fb.textContent='記録しました！';
+    fb.style.color='#c8608a';
+  }
   if(mem)mem.weights=entries.map(e=>e.weight);
   document.getElementById('wt-input').value='';
-  renderBody();renderWeightHistory();
+  renderBody();
+  renderWeightHistory();
 }
 
 function renderWeightHistory(){
   const key='onetreWeights_'+urlId;
   const entries=JSON.parse(localStorage.getItem(key)||'[]');
   const el=document.getElementById('wt-history-list');
-  if(!el||!entries.length){if(el)el.innerHTML='';return;}
+  if(!el)return;
+  if(!entries.length){el.innerHTML='';return;}
   const colors=['#fdf0f6','#f3f0fd','#f0f9f6','#fdf7f0'];
-  const tcolors=['#c05090','#6050b8','#2080a8','#b07828'];
-  el.innerHTML='<div class="st" style="margin-bottom:12px">weight history</div>';
+  const tcolors=['#c8608a','#7060b8','#3a8a6a','#b87830'];
+  el.innerHTML='';
   [...entries].reverse().slice(0,6).forEach((e,i)=>{
     const div=document.createElement('div');
-    div.className='wt-hist-item';
-    div.style.background=colors[i%4];
-    div.innerHTML=`<div class="wt-hist-date">${e.date}</div><div style="display:flex;align-items:baseline;gap:3px"><span class="wt-hist-val" style="color:${tcolors[i%4]}">${e.weight}</span><span style="font-size:11px;color:#ccc;margin-left:2px">kg</span></div>`;
+    div.style.cssText=`display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${colors[i%4]};border-radius:8px;margin-bottom:4px`;
+    div.innerHTML=`<div style="font-size:10px;color:#888;font-weight:300;font-family:'Noto Sans JP',sans-serif">${e.date}</div><div style="display:flex;align-items:baseline;gap:3px"><span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:${tcolors[i%4]};font-weight:300">${e.weight}</span><span style="font-size:9px;color:#ccc;margin-left:2px">kg</span></div>`;
     el.appendChild(div);
   });
 }
-
-function saveGoal(){
   const v=parseFloat(document.getElementById('goal-wt').value);
   if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
   localStorage.setItem('onetreGoal_'+urlId,v);
@@ -423,11 +585,11 @@ function clearGoal(){
 function renderGoal(){
   const goal=parseFloat(localStorage.getItem('onetreGoal_'+urlId));
   const el=document.getElementById('goal-display');
-  if(!goal){el.innerHTML='<div style="font-size:13px;color:var(--g4)">目標未設定</div>';return;}
-  const cur=mem&&mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;
+  if(!goal){el.innerHTML='<div style="font-size:11px;color:var(--g4)">目標未設定</div>';return;}
+  const cur=mem.weights&&mem.weights.length?mem.weights[mem.weights.length-1]:null;
   const diff=cur?+(cur-goal).toFixed(1):null;
-  const diffStr=diff!==null?(diff===0?'目標達成！':(diff>0?'あと '+diff+'kg':'目標達成！ '+Math.abs(diff)+'kgオーバー')):'';
-  el.innerHTML=`<div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--black);font-weight:300">${goal}</span><span style="font-size:14px;color:var(--g3)">kg</span>${diff!==null?`<span style="font-size:14px;color:var(--black);margin-left:4px">${diffStr}</span>`:''}</div>`;
+  const diffStr=diff!==null?(diff===0?'目標達成！':(diff>0?'あと'+diff+'kg':'目標達成！ '+Math.abs(diff)+'kgオーバー')):'';
+  el.innerHTML=`<div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--black);font-weight:300">${goal}</span><span style="font-size:11px;color:var(--g3)">kg</span>${diff!==null?`<span style="font-size:11px;color:var(--black);margin-left:4px">${diffStr}</span>`:''}</div>`;
   document.getElementById('goal-wt').value=goal;
 }
 
