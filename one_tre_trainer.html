@@ -42,7 +42,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .fg label{font-size:8px;color:var(--g4);letter-spacing:.16em;text-transform:uppercase;font-weight:300}
 .fg input,.fg select{font-size:13px;padding:9px 12px;border:.5px solid var(--g5);border-radius:0;background:var(--bg);color:var(--black);font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .2s}
 .fg input:focus,.fg select:focus{outline:none;border-color:var(--black)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .btn-black{background:var(--black);color:#fff;border:1px solid var(--black);padding:10px 22px;border-radius:0;font-size:11px;cursor:pointer;letter-spacing:.14em;margin-top:12px;font-family:'Noto Sans JP',sans-serif}
 .btn-ghost{background:transparent;border:.5px solid var(--g4);padding:7px 14px;border-radius:0;font-size:11px;cursor:pointer;color:var(--g1);font-family:'Noto Sans JP',sans-serif;letter-spacing:.06em}
 .btn-ghost:hover{border-color:var(--black);color:var(--black)}
@@ -132,7 +131,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
         <button class="btn-ghost" onclick="cPrevYear()" style="padding:5px 12px">&#8249;</button>
         <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--black)" id="sales-year-label"></span>
         <button class="btn-ghost" onclick="cNextYear()" style="padding:5px 12px">&#8250;</button>
-        <span style="font-size:10px;color:var(--g3);margin-left:4px">年を切り替えて比較できます</span>
       </div>
       <div class="sales-kpi">
         <div class="metric"><div class="ml">今月の売上</div><div class="mv" id="s-month">¥0</div><div class="ms" id="s-month-count">0件</div></div>
@@ -149,89 +147,55 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
       </div>
       <div class="card"><div class="ctitle">申込一覧</div><div id="form-list"></div></div>
     </div>
-    <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。GASのデプロイ設定を確認してください。</div>
+    <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。</div>
   </div>
 
   <div id="page-members" class="page">
-
+    <!-- ボディバランス スコア設定（4軸のみ） -->
     <div class="card">
       <div class="ctitle">ボディバランス スコア設定 — 成長を感じたら更新するだけでOK</div>
-      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。100点 = その人の理想の姿。</div>
-      <div style="margin-bottom:10px">
-        <div class="fg"><label>会員を選択</label>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:16px;font-weight:300;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。100点 = その人の理想の姿。</div>
+      <div style="margin-bottom:14px">
+        <div class="fg">
+          <label>会員を選択</label>
           <select id="score-member" onchange="loadBodyScore()"><option value="">会員を選択してください</option></select>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div style="background:#fdf0f6;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#c8608a;letter-spacing:.08em;margin-bottom:6px">筋力</div>
-          <select id="sc-strength" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:#fdf0f6;border-radius:8px;padding:12px">
+          <div style="font-size:10px;color:#c8608a;letter-spacing:.08em;margin-bottom:8px;font-weight:500">筋力</div>
+          <select id="sc-strength" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
-          <div style="font-size:8px;color:#e8a0bf;margin-top:4px">/ 25点</div>
+          <div style="font-size:9px;color:#e8a0bf;margin-top:5px">/ 25点</div>
         </div>
-        <div style="background:#f3f0fd;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#7060b8;letter-spacing:.08em;margin-bottom:6px">体幹</div>
-          <select id="sc-core" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+        <div style="background:#f3f0fd;border-radius:8px;padding:12px">
+          <div style="font-size:10px;color:#7060b8;letter-spacing:.08em;margin-bottom:8px;font-weight:500">体幹</div>
+          <select id="sc-core" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
-          <div style="font-size:8px;color:#b4a0e8;margin-top:4px">/ 25点</div>
+          <div style="font-size:9px;color:#b4a0e8;margin-top:5px">/ 25点</div>
         </div>
-        <div style="background:#f0f9f6;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#3a8a6a;letter-spacing:.08em;margin-bottom:6px">連動性</div>
-          <select id="sc-agility" style="width:100%;border:.5px solid rgba(128,200,170,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#3a8a6a;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+        <div style="background:#e0f4f8;border-radius:8px;padding:12px">
+          <div style="font-size:10px;color:#2080a8;letter-spacing:.08em;margin-bottom:8px;font-weight:500">連動性</div>
+          <select id="sc-move" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(100,180,220,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#2080a8;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
-          <div style="font-size:8px;color:#80c8aa;margin-top:4px">/ 25点</div>
+          <div style="font-size:9px;color:#80c8e0;margin-top:5px">/ 25点</div>
         </div>
-        <div style="background:#fdf7f0;border-radius:8px;padding:10px 12px">
-          <div style="font-size:9px;color:#b87830;letter-spacing:.08em;margin-bottom:6px">柔軟性</div>
-          <select id="sc-flex" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:7px 10px;background:#fff;color:#b87830;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300">
+        <div style="background:#fef4e4;border-radius:8px;padding:12px">
+          <div style="font-size:10px;color:#b07828;letter-spacing:.08em;margin-bottom:8px;font-weight:500">柔軟性</div>
+          <select id="sc-flex" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#b07828;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
-          <div style="font-size:8px;color:#f0b870;margin-top:4px">/ 25点</div>
+          <div style="font-size:9px;color:#f0b870;margin-top:5px">/ 25点</div>
         </div>
       </div>
-      <div id="score-total" style="font-size:12px;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">合計: 0 / 100</div>
+      <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:14px;letter-spacing:.04em">合計: 0 / 100</div>
       <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
     </div>
 
-
-      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">トレーナーが種目ごとに筋力・体幹・動きの意識ポイントを設定します。合計10になるよう設定してください。成長を感じたら数字を更新するだけでOKです。</div>
-
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end">
-        <div class="fg" style="flex:2;min-width:100px">
-          <label>種目名</label>
-          <input id="ex-name" placeholder="スクワット">
-        </div>
-        <div class="fg" style="flex:1;min-width:60px">
-          <label>筋力</label>
-          <select id="r-strength" onchange="checkRadarTotal()">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-          </select>
-        </div>
-        <div class="fg" style="flex:1;min-width:60px">
-          <label>体幹</label>
-          <select id="r-core" onchange="checkRadarTotal()">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-          </select>
-        </div>
-        <div class="fg" style="flex:1;min-width:60px">
-          <label>動き</label>
-          <select id="r-move" onchange="checkRadarTotal()">
-            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-          </select>
-        </div>
-      </div>
-      <div id="radar-total" style="font-size:11px;color:var(--g2);margin-bottom:10px;letter-spacing:.04em">合計: 0 / 10</div>
-      <button class="btn-black" onclick="saveExerciseMaster()">この種目を保存</button>
-
-      <div style="margin-top:16px">
-        <div class="ctitle">設定済み種目一覧</div>
-        <div id="exercise-master-list"><p style="font-size:12px;color:var(--g3)">まだ種目が設定されていません</p></div>
-      </div>
-    </div>
-
+    <!-- 会員一覧 -->
     <div class="card">
       <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
       <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
@@ -287,7 +251,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 </div>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbyf9zSyb-Ak8L8I7h1P1tsNymnOkRn-FC4onCAFajQmbDxZxSCkqph0tw0XEXAZ5fg-/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbxCGf2x3r46hxFUm3RzroJODrzteYVE5T1zT38CuFU17yuaOqQAdDMKm9HKjjNJ2A1T/exec';
 const NAME_KEY='お名前（長尾儀弘）';
 let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
@@ -327,7 +291,8 @@ async function loadGasMembers(){
   rows.forEach((row,i)=>{
     const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
     const name=nameKey?String(row[nameKey]).trim():'';
-    if(name&&!gasMembers.find(m=>m.name===name))gasMembers.push({id:'gas_'+i,name,gender:'f',weights:[],dob:'',fromSheet:true});
+    const id=row['会員ID']||('gas_'+i);
+    if(name&&!gasMembers.find(m=>m.name===name))gasMembers.push({id,name,gender:'f',weights:[],dob:'',fromSheet:true});
   });
   M.forEach(m=>{if(!gasMembers.find(g=>g.name===m.name))gasMembers.push(m);});
   pSel();rMem();
@@ -363,52 +328,27 @@ function renderSales(){
   document.getElementById('sales-year-label').textContent=ty+'年';
   document.getElementById('s-year-label').textContent=ty+'年 売上';
   document.getElementById('cs-month-title').textContent=ty+'年 月別売上';
-
   const cur=calcYearData(data,ty);
   const prev=calcYearData(data,ty-1);
-
   let mT=0,mC=0;
-  if(isCurrentYear){
-    data.forEach(row=>{
-      const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0);
-      if(!ts||!actual)return;
-      const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}
-    });
-  }
-
+  if(isCurrentYear){data.forEach(row=>{const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0);if(!ts||!actual)return;const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}});}
   document.getElementById('s-month').textContent=isCurrentYear?fmtYen(mT):'-';
   document.getElementById('s-month-count').textContent=isCurrentYear?mC+'件':'-';
   document.getElementById('s-year').textContent=fmtYen(cur.yT);
   document.getElementById('s-year-count').textContent=cur.yC+'件';
-
-  const yoyEl=document.getElementById('s-yoy');
-  const yoySub=document.getElementById('s-yoy-sub');
-  if(prev.yT>0){
-    const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);
-    yoyEl.textContent=(pct>=0?'+':'')+pct+'%';
-    yoyEl.style.color=pct>=0?'var(--black)':'var(--g2)';
-    yoySub.textContent='前年 '+fmtYen(prev.yT);
-  }else{
-    yoyEl.textContent='-';yoySub.textContent='前年データなし';
-  }
-
+  const yoyEl=document.getElementById('s-yoy'),yoySub=document.getElementById('s-yoy-sub');
+  if(prev.yT>0){const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);yoyEl.textContent=(pct>=0?'+':'')+pct+'%';yoyEl.style.color=pct>=0?'var(--black)':'var(--g2)';yoySub.textContent='前年 '+fmtYen(prev.yT);}
+  else{yoyEl.textContent='-';yoySub.textContent='前年データなし';}
   dc('csm');
   C.csm=new Chart(document.getElementById('cs-month'),{type:'bar',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),backgroundColor:'#111',borderRadius:0,borderSkipped:false},{label:(ty-1)+'年',data:Object.values(prev.mD),backgroundColor:'#ccc',borderRadius:0,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-
   dc('csyoy');
-  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:months,datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:'#ccc',backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-
+  C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:'#ccc',backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
   dc('csc');
   C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:Object.keys(cur.cD).slice(0,6),datasets:[{data:Object.keys(cur.cD).slice(0,6).map(k=>cur.cD[k].total),backgroundColor:['#111','#444','#777','#aaa','#ccc','#e0e0e0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:6,boxWidth:8}}}}});
-
   const det=document.getElementById('course-detail');det.innerHTML='';
   Object.entries(cur.cD).sort((a,b)=>b[1].total-a[1].total).forEach(([n,d])=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name">${n}</div><div class="course-count">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
   const fl=document.getElementById('form-list');fl.innerHTML='';
-  [...data].filter(row=>{
-    const ts=row['タイムスタンプ'];if(!ts)return false;
-    return new Date(ts).getFullYear()===salesViewYear;
-  }).reverse().slice(0,10).forEach(row=>{
+  [...data].filter(row=>{const ts=row['タイムスタンプ'];if(!ts)return false;return new Date(ts).getFullYear()===salesViewYear;}).reverse().slice(0,10).forEach(row=>{
     const div=document.createElement('div');div.className='pi';
     const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
     const name=row[NAME_KEY]||row['お名前']||'-';
@@ -426,8 +366,7 @@ async function rSales(){
   const rawData=await fetchGasData();
   const data=rawData&&!Array.isArray(rawData)?(rawData.all||[]):rawData;
   if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
-  salesCache=data;
-  salesViewYear=new Date().getFullYear();
+  salesCache=data;salesViewYear=new Date().getFullYear();
   document.getElementById('sales-loading').style.display='none';
   document.getElementById('sales-content').style.display='block';
   renderSales();
@@ -436,10 +375,10 @@ async function rSales(){
 function loadBodyScore(){
   const mid=document.getElementById('score-member').value;
   if(!mid)return;
-  const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"agility":0,"flex":0}');
+  const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"move":0,"flex":0}');
   document.getElementById('sc-strength').value=saved.strength||0;
   document.getElementById('sc-core').value=saved.core||0;
-  document.getElementById('sc-agility').value=saved.agility||0;
+  document.getElementById('sc-move').value=saved.move||0;
   document.getElementById('sc-flex').value=saved.flex||0;
   updateScoreTotal();
 }
@@ -447,9 +386,9 @@ function loadBodyScore(){
 function updateScoreTotal(){
   const s=parseInt(document.getElementById('sc-strength').value)||0;
   const c=parseInt(document.getElementById('sc-core').value)||0;
-  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const mv=parseInt(document.getElementById('sc-move').value)||0;
   const f=parseInt(document.getElementById('sc-flex').value)||0;
-  const total=s+c+a+f;
+  const total=s+c+mv+f;
   const el=document.getElementById('score-total');
   el.textContent='合計: '+total+' / 100';
   el.style.color=total===100?'var(--black)':'var(--g2)';
@@ -460,105 +399,20 @@ function saveBodyScore(){
   if(!mid){alert('会員を選択してください');return;}
   const s=parseInt(document.getElementById('sc-strength').value)||0;
   const c=parseInt(document.getElementById('sc-core').value)||0;
-  const a=parseInt(document.getElementById('sc-agility').value)||0;
+  const mv=parseInt(document.getElementById('sc-move').value)||0;
   const f=parseInt(document.getElementById('sc-flex').value)||0;
-  const score={strength:s,core:c,agility:a,flex:f};
+  const score={strength:s,core:c,move:mv,flex:f};
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
+  // GASに保存（会員マイページがGASから取得できるように）
   fetch(GAS_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action:'saveBodyScore',memberId:mid,score})
-  }).catch(()=>{});
-  alert('スコアを保存しました。会員のマイページに反映されます。');
-}
-
-function checkRadarTotal(){
-  const s=parseInt(document.getElementById('r-strength').value)||0;
-  const c=parseInt(document.getElementById('r-core').value)||0;
-  const m=parseInt(document.getElementById('r-move').value)||0;
-  const total=s+c+m;
-  const el=document.getElementById('radar-total');
-  el.textContent='合計: '+total+' / 10';
-  el.style.color=total===10?'var(--black)':'var(--g2)';
-}
-
-function getExerciseMaster(){
-  return JSON.parse(localStorage.getItem('onetreExMaster')||'{}');
-}
-
-function saveExerciseMaster(){
-  const name=document.getElementById('ex-name').value.trim();
-  if(!name){alert('種目名を入力してください');return;}
-  const s=parseInt(document.getElementById('r-strength').value)||0;
-  const c=parseInt(document.getElementById('r-core').value)||0;
-  const m=parseInt(document.getElementById('r-move').value)||0;
-  if(s+c+m!==10){alert('合計が10になるように設定してください\n現在: '+(s+c+m));return;}
-  const master=getExerciseMaster();
-  master[name]={strength:s,core:c,move:m};
-  localStorage.setItem('onetreExMaster',JSON.stringify(master));
-  // GASにも保存
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveExerciseMaster',exercise:name,strength:s,core:c,move:m})
-  }).catch(()=>{});
-  document.getElementById('ex-name').value='';
-  renderExerciseMasterList();
-  alert('「'+name+'」の意識ポイントを保存しました。');
-}
-
-function renderExerciseMasterList(){
-  const master=getExerciseMaster();
-  const el=document.getElementById('exercise-master-list');
-  if(!Object.keys(master).length){
-    el.innerHTML='<p style="font-size:12px;color:var(--g3)">まだ種目が設定されていません</p>';
-    return;
-  }
-  el.innerHTML='';
-  Object.entries(master).forEach(([name,v])=>{
-    const div=document.createElement('div');
-    div.className='pi';
-    div.innerHTML=`
-      <div class="pn">${name}</div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <span style="font-size:10px;color:var(--g2)">筋力 <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.strength}</span></span>
-        <span style="font-size:10px;color:var(--g2)">体幹 <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.core}</span></span>
-        <span style="font-size:10px;color:var(--g2)">動き <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${v.move}</span></span>
-        <button class="btn-ghost" style="font-size:9px;padding:3px 8px" onclick="editExercise('${name}')">編集</button>
-        <button class="btn-ghost" style="font-size:9px;padding:3px 8px" onclick="deleteExercise('${name}')">削除</button>
-      </div>`;
-    el.appendChild(div);
+  }).then(()=>{
+    alert('スコアを保存しました。会員のマイページに反映されます。');
+  }).catch(()=>{
+    alert('スコアを保存しました（オフラインモード）。');
   });
-}
-
-function editExercise(name){
-  const master=getExerciseMaster();
-  const v=master[name];if(!v)return;
-  document.getElementById('ex-name').value=name;
-  document.getElementById('r-strength').value=v.strength;
-  document.getElementById('r-core').value=v.core;
-  document.getElementById('r-move').value=v.move;
-  checkRadarTotal();
-}
-
-function deleteExercise(name){
-  if(!confirm('「'+name+'」を削除しますか？'))return;
-  const master=getExerciseMaster();
-  delete master[name];
-  localStorage.setItem('onetreExMaster',JSON.stringify(master));
-  renderExerciseMasterList();
-}
-
-function sp(name,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
-  if(name==='dashboard')rDash();
-  if(name==='sales')rSales();
-  if(name==='members'){rMem();renderExerciseMasterList();}
-  if(name==='training'){pSel();rRec();}
-  if(name==='calendar'){pSel();rCal();}
-  if(name==='progress')pSel();
 }
 
 function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
@@ -600,7 +454,6 @@ function rMem(){
           <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px;letter-spacing:.06em">フォーム</span>':''}</div>
           <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
         </div>
-        <div class="mmeta">${a?a+'歳':''}</div>
         <div class="url-box">
           <span class="url-text">${url}</span>
           <button class="copy-btn" onclick="cpUrl('${url}',this)">URLをコピー</button>
@@ -614,19 +467,9 @@ function cpUrl(url,btn){
   navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ コピー済';setTimeout(()=>btn.textContent='URLをコピー',2000);});
 }
 
-function addM(){
-  const n=document.getElementById('in').value.trim();if(!n){alert('氏名を入力してください');return;}
-  const d=document.getElementById('id').value,g=document.getElementById('ig').value;
-  const newId=genId();
-  M.push({id:newId,name:n,dob:d,gender:g,weights:[]});sv();
-  gasMembers=[];loadGasMembers();
-  ['in','id'].forEach(i=>document.getElementById(i).value='');
-  alert('登録しました！\n会員一覧から専用URLをコピーしてLINEで送ってください。');
-}
-
 function pSel(){
   const all=getAllMembers();
-  ['str','scal','spro','radar-member','score-member'].forEach(id=>{
+  ['str','scal','spro','score-member'].forEach(id=>{
     const s=document.getElementById(id);if(!s)return;
     const ha=s.options[0]&&s.options[0].value==='';
     while(s.options.length>(ha?1:0))s.remove(ha?1:0);
@@ -647,14 +490,8 @@ function saveTr(){
   const setsArr=[];
   document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
   if(!setsArr.length){alert('種目を入力してください');return;}
-  // localStorageにも保存（オフライン対応）
   T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
-  // GASのスプレッドシートにも書き込む（iPad→会員スマホ連動）
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveTraining',memberId:mid,date:dt,sets:setsArr})
-  }).then(()=>{
+  fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveTraining',memberId:mid,date:dt,sets:setsArr})}).then(()=>{
     document.getElementById('sw').innerHTML='';rRec();
     alert('保存しました。会員の専用画面に反映されています。');
   }).catch(()=>{
@@ -687,18 +524,27 @@ function calcPRs(mts){const pr={};mts.forEach(t=>t.sets.forEach(s=>{if(!pr[s.exe
 function calcVolumes(mts){return mts.map(t=>({date:t.date,vol:Math.round(t.sets.reduce((a,s)=>a+s.weight*s.reps*(s.sets||1),0))}));}
 function calcFreq(mts){const wk={};mts.forEach(t=>{const d=new Date(t.date);const mon=new Date(d);mon.setDate(d.getDate()-d.getDay()+1);const k=mon.toISOString().slice(0,10);wk[k]=(wk[k]||0)+1;});return Object.entries(wk).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8);}
 
+function sp(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
+  if(name==='dashboard')rDash();
+  if(name==='sales')rSales();
+  if(name==='members'){rMem();}
+  if(name==='training'){pSel();rRec();}
+  if(name==='calendar'){pSel();rCal();}
+  if(name==='progress')pSel();
+}
+
 function rPro(){
   const mid=document.getElementById('spro').value;if(!mid)return;
   const all=getAllMembers(),mem=all.find(m=>m.id===mid);if(!mem)return;
   const mts=T.filter(t=>t.memberId===mid).sort((a,b)=>a.date.localeCompare(b.date));
-  dc('w');dc('cf');dc('cv');dc('ce');
-  C.w=new Chart(document.getElementById('cw'),{type:'line',data:{labels:(mem.weights||[]).map((_,i)=>'記録'+(i+1)),datasets:[{data:mem.weights||[],borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:5,pointBackgroundColor:'#111',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa'}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
+  dc('cf');dc('cv');
   const freq=calcFreq(mts);
   C.cf=new Chart(document.getElementById('cf'),{type:'bar',data:{labels:freq.map(f=>f[0].slice(5)),datasets:[{data:freq.map(f=>f[1]),backgroundColor:'#111',borderRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f0f0f0'}}}}});
   const vols=calcVolumes(mts);
   C.cv=new Chart(document.getElementById('cv'),{type:'line',data:{labels:vols.map(v=>v.date.slice(5)),datasets:[{data:vols.map(v=>v.vol),borderColor:'#555',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:4,pointBackgroundColor:'#555',fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
-  const em={};mts.forEach(t=>t.sets.forEach(s=>{if(!em[s.exercise])em[s.exercise]={dates:[],weights:[]};em[s.exercise].dates.push(t.date);em[s.exercise].weights.push(s.weight);}));
-  C.ce=new Chart(document.getElementById('ce'),{type:'line',data:{labels:[...new Set(mts.map(t=>t.date))].map(d=>d.slice(5)),datasets:Object.entries(em).slice(0,5).map(([ex,d],i)=>({label:ex,data:d.weights,borderColor:['#111','#444','#777','#aaa','#ccc'][i],tension:0.4,pointRadius:4,fill:false}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#aaa',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>v+'kg'},grid:{color:'#f0f0f0'}}}}});
   const prs=calcPRs(mts),pl=document.getElementById('pr-list');pl.innerHTML='';
   if(!Object.keys(prs).length){pl.innerHTML='<p style="font-size:13px;color:var(--g3)">記録がありません</p>';return;}
   Object.entries(prs).forEach(([ex,pr])=>{const div=document.createElement('div');div.className='pr-item';div.innerHTML=`<div><div class="pr-name">${ex}<span class="pr-badge">BEST</span></div><div class="pr-date">${pr.date}</div></div><div class="pr-val">${pr.weight} kg</div>`;pl.appendChild(div);});
