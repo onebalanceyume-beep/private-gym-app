@@ -260,37 +260,24 @@ function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d
 
 async function init(){
   if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
-
-  // ローディング表示
   document.getElementById('member-name').textContent='データを読み込み中...';
 
-  // GASからデータを取得（iPad入力データを反映）
   try{
     const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
     const data=await res.json();
 
-    // 会員情報をGASから取得
-    const allMembers=[...(data.members||[]),...(data.trial||[])];
-    const gasIdKey='会員ID';
-    const gasNameKey=Object.keys(allMembers[0]||{}).find(k=>k.includes('お名前'))||'お名前';
-    const gasMem=allMembers.find(row=>row[gasIdKey]===urlId);
+    // 会員情報をGASから取得（B列を直接使用）
+    const allMembers=[...(data.members||[])];
+    const gasMem=allMembers.find(row=>String(row.id)===urlId);
 
     if(gasMem){
-      mem={
-        id:urlId,
-        name:gasMem[gasNameKey]||gasMem['お名前']||'会員',
-        weights:[],
-        dob:'',
-        gender:'f'
-      };
+      mem={id:urlId,name:gasMem.name||'会員',weights:[],dob:'',gender:'f'};
     }else{
-      // localStorageにフォールバック
-      mem=M.find(m=>m.id===urlId);
+      mem={id:urlId,name:'会員',weights:[],dob:'',gender:'f'};
     }
 
     // トレーニングデータをGASから取得
     if(data.training&&data.training.length){
-      // GASデータをローカル形式に変換してグループ化
       const grouped={};
       data.training.forEach(r=>{
         const key=r.date;
@@ -299,21 +286,25 @@ async function init(){
       });
       mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
     }else{
-      // localStorageにフォールバック
       mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
     }
 
     // 体重データをGASから取得
-    if(data.weights&&data.weights.length&&mem){
+    if(data.weights&&data.weights.length){
       mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
+      // localStorageにも保存
+      const entries=data.weights.map(w=>({date:w.date,weight:w.weight}));
+      localStorage.setItem('onetreWeights_'+urlId,JSON.stringify(entries));
     }
 
     // ボディバランススコアをGASから取得
     if(data.bodyScore){
       localStorage.setItem('onetreScore_'+urlId,JSON.stringify(data.bodyScore));
     }
-    // GAS取得失敗時はlocalStorageを使用
-    mem=M.find(m=>m.id===urlId);
+
+  }catch(e){
+    console.log('GAS取得失敗、localStorageを使用:', e);
+    mem=M.find(m=>m.id===urlId)||{id:urlId,name:'会員',weights:[],dob:'',gender:'f'};
     mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
   }
 
