@@ -52,7 +52,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;flex-shrink:0;background:var(--red);color:#fff}
 .av-warn{background:var(--g5);color:var(--g3)}
 .mname{font-size:13px;color:var(--black);font-weight:300;letter-spacing:.04em}
-.mmeta{font-size:10px;color:var(--g3);margin-top:2px}
 .mbadge{font-size:8px;padding:2px 8px;border:.5px solid var(--g4);letter-spacing:.1em;color:var(--g2);white-space:nowrap;flex-shrink:0;margin-top:2px}
 .mbadge-warn{border-color:var(--red);color:var(--red)}
 .url-box{display:flex;align-items:center;gap:6px;margin-top:8px;background:var(--g6);padding:8px 10px}
@@ -87,9 +86,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 .course-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)}
 .course-count{font-size:10px;color:var(--g3);margin-top:2px}
 .loading{text-align:center;padding:32px;color:var(--g3);font-size:13px;letter-spacing:.1em}
-.kpi-badge{display:inline-block;font-size:9px;padding:2px 8px;border-radius:99px;margin-left:6px;font-weight:500;vertical-align:middle}
-.kpi-up{background:#e8f5ee;color:#2a9d5c}
-.kpi-down{background:#fde8e8;color:var(--red)}
 </style>
 </head>
 <body>
@@ -111,9 +107,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <button class="nbtn" onclick="sp('progress',this)">成長グラフ</button>
   </div>
 
-  <!-- ダッシュボード -->
   <div id="page-dashboard" class="page active">
-    <div class="metrics" id="dash-metrics">
+    <div class="metrics">
       <div class="metric"><div class="ml">総会員数</div><div class="mv" id="mt">-</div><div class="ms">名</div></div>
       <div class="metric"><div class="ml">今月 新規会員</div><div class="mv" id="m-new">-</div><div class="ms" id="m-new-sub"></div></div>
       <div class="metric"><div class="ml">今月 体験者数</div><div class="mv" id="m-trial">-</div><div class="ms">名</div></div>
@@ -134,9 +129,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     </div>
   </div>
 
-  <!-- 売上管理 -->
   <div id="page-sales" class="page">
-    <div id="sales-loading" class="loading">スプレッドシートからデータを取得中...</div>
+    <div id="sales-loading" class="loading">データを取得中...</div>
     <div id="sales-content" style="display:none">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="cPrevYear()" style="padding:5px 12px">&#8249;</button>
@@ -161,59 +155,55 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <div id="sales-error" style="display:none;padding:20px;color:var(--g3);font-size:13px;text-align:center">データの取得に失敗しました。</div>
   </div>
 
-  <!-- 会員管理 -->
   <div id="page-members" class="page">
     <div class="card">
-      <div class="ctitle">ボディバランス スコア設定 — 成長を感じたら更新するだけでOK</div>
-      <div style="font-size:10px;color:var(--g3);margin-bottom:16px;font-weight:300;line-height:1.6">会員ごとに4軸のスコアを設定します。各軸0〜25点・合計100点満点。100点 = その人の理想の姿。</div>
+      <div class="ctitle">ボディバランス スコア設定</div>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:16px;font-weight:300;line-height:1.6">各軸0〜25点・合計100点満点。100点 = その人の理想の姿。</div>
       <div style="margin-bottom:14px">
-        <div class="fg">
-          <label>会員を選択</label>
+        <div class="fg"><label>会員を選択</label>
           <select id="score-member" onchange="loadBodyScore()"><option value="">会員を選択してください</option></select>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
         <div style="background:#fdf0f6;border-radius:8px;padding:12px">
-          <div style="font-size:10px;color:#c8608a;letter-spacing:.08em;margin-bottom:8px;font-weight:500">筋力</div>
-          <select id="sc-strength" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
+          <div style="font-size:10px;color:#c8608a;font-weight:500;margin-bottom:8px">筋力</div>
+          <select id="sc-strength" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(232,160,191,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#c8608a;font-family:'Cormorant Garamond',serif;font-size:18px">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
           <div style="font-size:9px;color:#e8a0bf;margin-top:5px">/ 25点</div>
         </div>
         <div style="background:#f3f0fd;border-radius:8px;padding:12px">
-          <div style="font-size:10px;color:#7060b8;letter-spacing:.08em;margin-bottom:8px;font-weight:500">体幹</div>
-          <select id="sc-core" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
+          <div style="font-size:10px;color:#7060b8;font-weight:500;margin-bottom:8px">体幹</div>
+          <select id="sc-core" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(180,160,232,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#7060b8;font-family:'Cormorant Garamond',serif;font-size:18px">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
           <div style="font-size:9px;color:#b4a0e8;margin-top:5px">/ 25点</div>
         </div>
         <div style="background:#e0f4f8;border-radius:8px;padding:12px">
-          <div style="font-size:10px;color:#2080a8;letter-spacing:.08em;margin-bottom:8px;font-weight:500">連動性</div>
-          <select id="sc-move" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(100,180,220,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#2080a8;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
+          <div style="font-size:10px;color:#2080a8;font-weight:500;margin-bottom:8px">連動性</div>
+          <select id="sc-move" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(100,180,220,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#2080a8;font-family:'Cormorant Garamond',serif;font-size:18px">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
           <div style="font-size:9px;color:#80c8e0;margin-top:5px">/ 25点</div>
         </div>
         <div style="background:#fef4e4;border-radius:8px;padding:12px">
-          <div style="font-size:10px;color:#b07828;letter-spacing:.08em;margin-bottom:8px;font-weight:500">柔軟性</div>
-          <select id="sc-flex" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#b07828;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">
+          <div style="font-size:10px;color:#b07828;font-weight:500;margin-bottom:8px">柔軟性</div>
+          <select id="sc-flex" onchange="updateScoreTotal()" style="width:100%;border:.5px solid rgba(240,184,112,0.5);border-radius:6px;padding:8px 10px;background:#fff;color:#b07828;font-family:'Cormorant Garamond',serif;font-size:18px">
             <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
           </select>
           <div style="font-size:9px;color:#f0b870;margin-top:5px">/ 25点</div>
         </div>
       </div>
-      <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:14px;letter-spacing:.04em">合計: 0 / 100</div>
+      <div id="score-total" style="font-size:13px;color:var(--g2);margin-bottom:14px">合計: 0 / 100</div>
       <button class="btn-black" onclick="saveBodyScore()">スコアを保存 → 会員マイページに反映</button>
     </div>
-
     <div class="card">
-      <div class="ctitle">会員一覧 — 専用URLをコピーしてLINEで送ってください</div>
-      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">Googleフォームから申し込まれた会員が自動で表示されます。URLをコピーしてLINEで送ってください。</div>
+      <div class="ctitle">会員一覧</div>
+      <div style="font-size:10px;color:var(--g3);margin-bottom:12px;font-weight:300;line-height:1.6">URLをコピーしてLINEで送ってください。</div>
       <div id="mlist"><p style="font-size:13px;color:var(--g3)">読み込み中...</p></div>
     </div>
   </div>
 
-  <!-- トレーニング -->
   <div id="page-training" class="page">
     <div class="card">
       <div class="ctitle">トレーニング記録</div>
@@ -237,7 +227,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     <div class="card"><div class="ctitle">直近の記録</div><div id="rl"></div></div>
   </div>
 
-  <!-- カレンダー -->
   <div id="page-calendar" class="page">
     <div class="card">
       <div class="msel">
@@ -251,7 +240,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
     </div>
   </div>
 
-  <!-- 成長グラフ -->
   <div id="page-progress" class="page">
     <div class="msel"><select id="spro" onchange="rPro()"><option value="">会員を選択</option></select></div>
     <div class="charts-row">
@@ -264,8 +252,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg3);color:var(--bla
 </div>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbxCGf2x3r46hxFUm3RzroJODrzteYVE5T1zT38CuFU17yuaOqQAdDMKm9HKjjNJ2A1T/exec';
-const NAME_KEY='お名前（長尾儀弘）';
+const GAS_URL='https://script.google.com/macros/s/AKfycbySvt27Wd8UVwjYNYmE0CPGyExfKl1WNRRIzNq9xSjNS1NFOAgpLEz7-R6NOsqByDiW/exec';
 const WB_RED='#DB444C';
 const WB_BLUE='#5BB9CD';
 let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
@@ -301,7 +288,15 @@ async function fetchGasData(){
   }catch(e){console.error(e);return null;}
 }
 
-// ★ 会員IDを正しく取得するloadGasMembers
+// ★ GETリクエストで保存（CORSエラー回避）
+async function gasGet(params){
+  const qs=Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+  try{
+    const res=await fetch(GAS_URL+'?'+qs,{method:'GET',mode:'cors'});
+    return await res.json();
+  }catch(e){console.error(e);return null;}
+}
+
 async function loadGasMembers(){
   const data=await fetchGasData();
   if(!data)return;
@@ -311,113 +306,62 @@ async function loadGasMembers(){
   rows.forEach((row)=>{
     const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
     const name=nameKey?String(row[nameKey]).trim():'';
-    // ★ 会員IDをスプレッドシートから正しく取得
     const id=row['会員ID']||row['会員Id']||row['会員id']||'';
     if(name&&id&&!gasMembers.find(m=>m.id===id)){
       gasMembers.push({id,name,gender:'f',weights:[],dob:'',fromSheet:true});
     }
   });
   M.forEach(m=>{if(!gasMembers.find(g=>g.name===m.name))gasMembers.push(m);});
-  pSel();rMem();
-  rDash();
+  pSel();rMem();rDash();
 }
 
 function getAllMembers(){return gasMembers.length>0?gasMembers:M;}
 
-// ★ ダッシュボード（強化版）
 function rDash(){
   const all=getAllMembers();
   const now=new Date();
   const thisY=now.getFullYear(),thisM=now.getMonth()+1;
-
-  // 総会員数
   document.getElementById('mt').textContent=all.length;
 
-  // GASデータから今月の新規会員数・体験者数・入会率を計算
   if(gasAllData){
     const members=gasAllData.members||[];
     const trials=gasAllData.trial||[];
-
-    // 今月の新規会員（会員シートのタイムスタンプで判定）
     const newThisMonth=members.filter(row=>{
-      const ts=row['タイムスタンプ']||row['タイムスタンプ ']||'';
-      if(!ts)return false;
-      const d=new Date(ts);
-      return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
+      const ts=row['タイムスタンプ']||'';if(!ts)return false;
+      const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
     }).length;
-
-    // 先月の新規会員
-    const lastM=thisM===1?12:thisM-1;
-    const lastY=thisM===1?thisY-1:thisY;
+    const lastM=thisM===1?12:thisM-1,lastY=thisM===1?thisY-1:thisY;
     const newLastMonth=members.filter(row=>{
-      const ts=row['タイムスタンプ']||'';
-      if(!ts)return false;
-      const d=new Date(ts);
-      return d.getFullYear()===lastY&&d.getMonth()+1===lastM;
+      const ts=row['タイムスタンプ']||'';if(!ts)return false;
+      const d=new Date(ts);return d.getFullYear()===lastY&&d.getMonth()+1===lastM;
     }).length;
-
     const newDiff=newThisMonth-newLastMonth;
     const newEl=document.getElementById('m-new');
     newEl.textContent=newThisMonth;
     newEl.className='mv'+(newDiff>0?' up':newDiff<0?' down':'');
     document.getElementById('m-new-sub').innerHTML=newDiff!==0?`前月比 <span style="color:${newDiff>0?'#2a9d5c':WB_RED}">${newDiff>0?'+':''}${newDiff}名</span>`:'前月比 ±0名';
-
-    // 今月の体験者数
     const trialThisMonth=trials.filter(row=>{
-      const ts=row['タイムスタンプ']||'';
-      if(!ts)return false;
-      const d=new Date(ts);
-      return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
+      const ts=row['タイムスタンプ']||'';if(!ts)return false;
+      const d=new Date(ts);return d.getFullYear()===thisY&&d.getMonth()+1===thisM;
     }).length;
     document.getElementById('m-trial').textContent=trialThisMonth;
-
-    // 体験→入会率（全期間）
     const convRate=trials.length>0?Math.round(members.length/trials.length*100):0;
     document.getElementById('m-conv').textContent=convRate;
 
-    // 月別新規会員グラフ（過去12ヶ月）
-    const labels=[],newData=[];
+    const labels=[],newData=[],trialData=[];
     for(let i=11;i>=0;i--){
       const d=new Date(now.getFullYear(),now.getMonth()-i,1);
       const y=d.getFullYear(),m=d.getMonth()+1;
       labels.push(m+'月');
-      const cnt=members.filter(row=>{
-        const ts=row['タイムスタンプ']||'';
-        if(!ts)return false;
-        const rd=new Date(ts);
-        return rd.getFullYear()===y&&rd.getMonth()+1===m;
-      }).length;
-      newData.push(cnt);
+      newData.push(members.filter(row=>{const ts=row['タイムスタンプ']||'';if(!ts)return false;const rd=new Date(ts);return rd.getFullYear()===y&&rd.getMonth()+1===m;}).length);
+      trialData.push(trials.filter(row=>{const ts=row['タイムスタンプ']||'';if(!ts)return false;const rd=new Date(ts);return rd.getFullYear()===y&&rd.getMonth()+1===m;}).length);
     }
     dc('cnm');
-    C.cnm=new Chart(document.getElementById('c-newm'),{
-      type:'bar',
-      data:{labels,datasets:[{data:newData,backgroundColor:WB_RED,borderRadius:3,label:'新規会員'}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}
-    });
-
-    // 月別体験者グラフ（過去12ヶ月）
-    const trialData=[];
-    for(let i=11;i>=0;i--){
-      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-      const y=d.getFullYear(),m=d.getMonth()+1;
-      const cnt=trials.filter(row=>{
-        const ts=row['タイムスタンプ']||'';
-        if(!ts)return false;
-        const rd=new Date(ts);
-        return rd.getFullYear()===y&&rd.getMonth()+1===m;
-      }).length;
-      trialData.push(cnt);
-    }
+    C.cnm=new Chart(document.getElementById('c-newm'),{type:'bar',data:{labels,datasets:[{data:newData,backgroundColor:WB_RED,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}});
     dc('ctrial');
-    C.ctrial=new Chart(document.getElementById('c-trial'),{
-      type:'bar',
-      data:{labels,datasets:[{data:trialData,backgroundColor:WB_BLUE,borderRadius:3,label:'体験者'}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}
-    });
+    C.ctrial=new Chart(document.getElementById('c-trial'),{type:'bar',data:{labels,datasets:[{data:trialData,backgroundColor:WB_BLUE,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}});
   }
 
-  // 要フォロー
   const followList=all.filter(m=>{const last=getLastVisit(m.id);return last&&daysSince(last)>=7;});
   const fbox=document.getElementById('follow-alert');
   if(followList.length>0){
@@ -426,33 +370,18 @@ function rDash(){
     document.getElementById('follow-names').textContent=followList.map(m=>m.name+'（'+daysSince(getLastVisit(m.id))+'日前）').join(' · ');
   }else{fbox.style.display='none';}
 
-  // 男女比グラフ（ワンバランスカラー）
   const f=all.filter(m=>m.gender==='f').length,ml=all.length-f;
   dc('g');
-  C.g=new Chart(document.getElementById('cg'),{
-    type:'doughnut',
-    data:{
-      labels:['女性','男性'],
-      datasets:[{data:[f,ml],backgroundColor:[WB_RED,WB_BLUE],borderWidth:0}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:16,boxWidth:12}}}}
-  });
+  C.g=new Chart(document.getElementById('cg'),{type:'doughnut',data:{labels:['女性','男性'],datasets:[{data:[f,ml],backgroundColor:[WB_RED,WB_BLUE],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:12},padding:16,boxWidth:12}}}}});
 
-  // 年齢層グラフ
   const ages=all.map(m=>age(m.dob)).filter(a=>a!==null);
   const bk={'20代':0,'30代':0,'40代':0,'50代+':0};
   ages.forEach(a=>{if(a<30)bk['20代']++;else if(a<40)bk['30代']++;else if(a<50)bk['40代']++;else bk['50代+']++;});
   dc('a');
-  C.a=new Chart(document.getElementById('ca'),{
-    type:'bar',
-    data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:[WB_RED,'#e8888c','#f0a0a4','#f8c8ca'],borderRadius:3}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa'}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}
-  });
+  C.a=new Chart(document.getElementById('ca'),{type:'bar',data:{labels:Object.keys(bk),datasets:[{data:Object.values(bk),backgroundColor:[WB_RED,'#e8888c','#f0a0a4','#f8c8ca'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#aaa'}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#aaa'},grid:{color:'#f5f5f5'}}}}});
 }
 
-let salesCache=null;
-let salesViewYear=new Date().getFullYear();
-
+let salesCache=null,salesViewYear=new Date().getFullYear();
 function cPrevYear(){salesViewYear--;renderSales();}
 function cNextYear(){if(salesViewYear<new Date().getFullYear())salesViewYear++;renderSales();}
 
@@ -463,25 +392,20 @@ function calcYearData(data,year){
     const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0),course=row['各コース']||'不明';
     if(!ts||!actual)return;
     const d=new Date(ts);if(d.getFullYear()!==year)return;
-    const mo=d.getMonth()+1;
-    yT+=actual;yC++;mD[mo]=(mD[mo]||0)+actual;
+    const mo=d.getMonth()+1;yT+=actual;yC++;mD[mo]=(mD[mo]||0)+actual;
     const cn=course.split('¥')[0].trim().substring(0,20);
-    if(!cD[cn])cD[cn]={total:0,count:0};
-    cD[cn].total+=actual;cD[cn].count++;
+    if(!cD[cn])cD[cn]={total:0,count:0};cD[cn].total+=actual;cD[cn].count++;
   });
   return{mD,cD,yT,yC};
 }
 
 function renderSales(){
   if(!salesCache)return;
-  const data=salesCache;
-  const now=new Date(),ty=salesViewYear,tm=now.getMonth()+1;
-  const isCurrentYear=ty===now.getFullYear();
+  const data=salesCache,now=new Date(),ty=salesViewYear,tm=now.getMonth()+1,isCurrentYear=ty===now.getFullYear();
   document.getElementById('sales-year-label').textContent=ty+'年';
   document.getElementById('s-year-label').textContent=ty+'年 売上';
   document.getElementById('cs-month-title').textContent=ty+'年 月別売上';
-  const cur=calcYearData(data,ty);
-  const prev=calcYearData(data,ty-1);
+  const cur=calcYearData(data,ty),prev=calcYearData(data,ty-1);
   let mT=0,mC=0;
   if(isCurrentYear){data.forEach(row=>{const ts=row['タイムスタンプ'],actual=parseFloat(row['実際の金額']||row['定価']||0);if(!ts||!actual)return;const d=new Date(ts);if(d.getFullYear()===ty&&d.getMonth()+1===tm){mT+=actual;mC++;}});}
   document.getElementById('s-month').textContent=isCurrentYear?fmtYen(mT):'-';
@@ -489,30 +413,21 @@ function renderSales(){
   document.getElementById('s-year').textContent=fmtYen(cur.yT);
   document.getElementById('s-year-count').textContent=cur.yC+'件';
   const yoyEl=document.getElementById('s-yoy'),yoySub=document.getElementById('s-yoy-sub');
-  if(prev.yT>0){
-    const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);
-    yoyEl.textContent=(pct>=0?'+':'')+pct+'%';
-    yoyEl.style.color=pct>=0?'#2a9d5c':WB_RED;
-    yoySub.textContent='前年 '+fmtYen(prev.yT);
-  }else{yoyEl.textContent='-';yoySub.textContent='前年データなし';}
-
+  if(prev.yT>0){const pct=Math.round((cur.yT-prev.yT)/prev.yT*100);yoyEl.textContent=(pct>=0?'+':'')+pct+'%';yoyEl.style.color=pct>=0?'#2a9d5c':WB_RED;yoySub.textContent='前年 '+fmtYen(prev.yT);}
+  else{yoyEl.textContent='-';yoySub.textContent='前年データなし';}
   dc('csm');
-  C.csm=new Chart(document.getElementById('cs-month'),{type:'bar',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),backgroundColor:WB_RED,borderRadius:2,borderSkipped:false},{label:(ty-1)+'年',data:Object.values(prev.mD),backgroundColor:'#f0b0b4',borderRadius:2,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-
+  C.csm=new Chart(document.getElementById('cs-month'),{type:'bar',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),backgroundColor:WB_RED,borderRadius:2},{label:(ty-1)+'年',data:Object.values(prev.mD),backgroundColor:'#f0b0b4',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
   dc('csyoy');
   C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:WB_RED,backgroundColor:'rgba(219,68,76,0.08)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:WB_BLUE,backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
-
   dc('csc');
   C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:Object.keys(cur.cD).slice(0,6),datasets:[{data:Object.keys(cur.cD).slice(0,6).map(k=>cur.cD[k].total),backgroundColor:[WB_RED,WB_BLUE,'#e8888c','#80c8d8','#f0a0a4','#a0d8e4'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#555',font:{size:10},padding:6,boxWidth:8}}}}});
-
   const det=document.getElementById('course-detail');det.innerHTML='';
   Object.entries(cur.cD).sort((a,b)=>b[1].total-a[1].total).forEach(([n,d])=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name">${n}</div><div class="course-count">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
-
   const fl=document.getElementById('form-list');fl.innerHTML='';
   [...data].filter(row=>{const ts=row['タイムスタンプ'];if(!ts)return false;return new Date(ts).getFullYear()===salesViewYear;}).reverse().slice(0,10).forEach(row=>{
     const div=document.createElement('div');div.className='pi';
     const ts=row['タイムスタンプ']?new Date(row['タイムスタンプ']).toLocaleDateString('ja-JP'):'';
-    const name=row[NAME_KEY]||row['name']||'-';
+    const name=row['name']||'-';
     const course=(row['各コース']||'-').split('¥')[0].trim().substring(0,15);
     const actual=parseFloat(row['実際の金額']||0);
     div.innerHTML=`<div><div class="pn">${name}</div><div style="font-size:11px;color:var(--g3);margin-top:2px">${ts} / ${course}</div></div><div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--black)">${fmtYen(actual)}</div>`;
@@ -534,8 +449,7 @@ async function rSales(){
 }
 
 function loadBodyScore(){
-  const mid=document.getElementById('score-member').value;
-  if(!mid)return;
+  const mid=document.getElementById('score-member').value;if(!mid)return;
   const saved=JSON.parse(localStorage.getItem('onetreScore_'+mid)||'{"strength":0,"core":0,"move":0,"flex":0}');
   document.getElementById('sc-strength').value=saved.strength||0;
   document.getElementById('sc-core').value=saved.core||0;
@@ -555,7 +469,8 @@ function updateScoreTotal(){
   el.style.color=total===100?'var(--black)':'var(--g2)';
 }
 
-function saveBodyScore(){
+// ★ GETリクエストでボディバランスを保存
+async function saveBodyScore(){
   const mid=document.getElementById('score-member').value;
   if(!mid){alert('会員を選択してください');return;}
   const s=parseInt(document.getElementById('sc-strength').value)||0;
@@ -564,15 +479,12 @@ function saveBodyScore(){
   const f=parseInt(document.getElementById('sc-flex').value)||0;
   const score={strength:s,core:c,move:mv,flex:f};
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveBodyScore',memberId:mid,score})
-  }).then(()=>{
+  const result=await gasGet({action:'saveBodyScore',memberId:mid,strength:s,core:c,move:mv,flex:f});
+  if(result&&result.status==='ok'){
     alert('スコアを保存しました！会員のマイページに反映されます。');
-  }).catch(()=>{
-    alert('スコアを保存しました（オフラインモード）。');
-  });
+  }else{
+    alert('スコアをローカルに保存しました。（ネットワークエラー）');
+  }
 }
 
 function rMem(){
@@ -586,7 +498,7 @@ function rMem(){
     d.innerHTML=`<div class="av ${isWarn?'av-warn':''}">${m.name.charAt(0)}</div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-          <div class="mname">${m.name}${m.fromSheet?'<span style="font-size:9px;color:var(--g4);margin-left:6px">フォーム</span>':''}</div>
+          <div class="mname">${m.name}</div>
           <span class="mbadge ${isWarn?'mbadge-warn':''}">${days!==null?days+'日前':'未記録'}</span>
         </div>
         <div style="font-size:10px;color:var(--g3);margin-top:2px">会員ID: ${m.id}</div>
@@ -620,20 +532,25 @@ function addS(){
   c.appendChild(r);
 }
 
-function saveTr(){
+// ★ GETリクエストでトレーニングを保存（1セットずつ）
+async function saveTr(){
   const mid=document.getElementById('str').value,dt=document.getElementById('idate').value;
   if(!mid||!dt){alert('会員と日付を選んでください');return;}
   const setsArr=[];
-  document.querySelectorAll('#sw .set-row').forEach(r=>{const ins=r.querySelectorAll('input');const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});});
+  document.querySelectorAll('#sw .set-row').forEach(r=>{
+    const ins=r.querySelectorAll('input');
+    const e=ins[0].value.trim(),w=parseFloat(ins[1].value),rep=parseInt(ins[2].value),st=parseInt(ins[3].value)||1;
+    if(e&&w&&rep)setsArr.push({exercise:e,weight:w,reps:rep,sets:st});
+  });
   if(!setsArr.length){alert('種目を入力してください');return;}
   T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
-  fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'saveTraining',memberId:mid,date:dt,sets:setsArr})}).then(()=>{
-    document.getElementById('sw').innerHTML='';rRec();
-    alert('保存しました！会員の専用画面に反映されています。');
-  }).catch(()=>{
-    document.getElementById('sw').innerHTML='';rRec();
-    alert('保存しました（オフラインモード）。');
-  });
+  let ok=true;
+  for(const s of setsArr){
+    const result=await gasGet({action:'saveTraining',memberId:mid,date:dt,exercise:s.exercise,weight:s.weight,reps:s.reps,sets:s.sets});
+    if(!result||result.status!=='ok')ok=false;
+  }
+  document.getElementById('sw').innerHTML='';rRec();
+  alert(ok?'保存しました！会員の専用画面に反映されています。':'保存しました（一部ネットワークエラー）。');
 }
 
 function rRec(){
@@ -666,7 +583,7 @@ function sp(name,btn){
   document.getElementById('page-'+name).classList.add('active');btn.classList.add('active');
   if(name==='dashboard')rDash();
   if(name==='sales')rSales();
-  if(name==='members'){rMem();}
+  if(name==='members')rMem();
   if(name==='training'){pSel();rRec();}
   if(name==='calendar'){pSel();rCal();}
   if(name==='progress')pSel();
