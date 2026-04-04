@@ -338,14 +338,15 @@ async function loadGasMembers(){
   const members=data?(Array.isArray(data)?data:(data.members||[])):[];
   gasMembers=[];
   members.forEach(row=>{
-    // GASは {name, id, url} で返す
     const name=String(row.name||'').trim();
     const id=String(row.id||'').trim();
+    // GASのgenderフィールドを使用（'男性'→'m'、それ以外→'f'）
+    const genderRaw=String(row.gender||'').trim();
+    const gender=genderRaw==='男性'?'m':'f';
     if(name&&id&&!gasMembers.find(m=>m.id===id)){
-      gasMembers.push({id,name,gender:'f',weights:[],dob:'',fromSheet:true});
+      gasMembers.push({id,name,gender,weights:[],dob:'',fromSheet:true});
     }
   });
-  // localStorageのMもマージ（重複IDは除外）
   M.forEach(m=>{if(!gasMembers.find(g=>g.id===m.id))gasMembers.push(m);});
   pSel();rMem();rDash();
 }
@@ -417,10 +418,14 @@ function renderSales(){
   C.csyoy=new Chart(document.getElementById('cs-yoy'),{type:'line',data:{labels:months,datasets:[{label:ty+'年',data:Object.values(cur.mD),borderColor:'#111',backgroundColor:'rgba(0,0,0,0.04)',tension:0.4,pointRadius:3,fill:true},{label:(ty-1)+'年',data:Object.values(prev.mD),borderColor:'#ccc',backgroundColor:'transparent',tension:0.4,pointRadius:3,borderDash:[4,4],fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:8,boxWidth:8}}},scales:{x:{ticks:{color:'#aaa',font:{size:9}}},y:{ticks:{color:'#aaa',callback:v=>'¥'+Math.round(v/10000)+'万'},grid:{color:'#f0f0f0'}}}}});
 
   dc('csc');
-  C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:Object.keys(cur.cD).slice(0,6),datasets:[{data:Object.keys(cur.cD).slice(0,6).map(k=>cur.cD[k].total),backgroundColor:['#111','#444','#777','#aaa','#ccc','#e0e0e0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:6,boxWidth:8}}}}});
+  // コース別を件数順に並び替え
+  const courseColors=['#DB444C','#5BB9CD','#F5A623','#7ED321','#9B59B6','#1ABC9C'];
+  const sortedCourses=Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).slice(0,6);
+  C.csc=new Chart(document.getElementById('cs-course'),{type:'doughnut',data:{labels:sortedCourses.map(([n])=>n),datasets:[{data:sortedCourses.map(([,d])=>d.total),backgroundColor:courseColors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:10},padding:6,boxWidth:8}}}}});
 
   const det=document.getElementById('course-detail');det.innerHTML='';
-  Object.entries(cur.cD).sort((a,b)=>b[1].total-a[1].total).forEach(([n,d])=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name">${n}</div><div class="course-count">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
+  // 件数の多い順に表示
+  Object.entries(cur.cD).sort((a,b)=>b[1].count-a[1].count).forEach(([n,d],i)=>{const div=document.createElement('div');div.className='course-item';div.innerHTML=`<div><div class="course-name" style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${courseColors[i]||'#aaa'};flex-shrink:0"></span>${n}</div><div class="course-count" style="padding-left:14px">${d.count}件</div></div><div class="course-val">${fmtYen(d.total)}</div>`;det.appendChild(div);});
   const fl=document.getElementById('form-list');fl.innerHTML='';
   [...data].filter(row=>{
     const ts=row['タイムスタンプ'];if(!ts)return false;
