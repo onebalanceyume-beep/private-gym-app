@@ -305,6 +305,20 @@ function getMemberUrl(id){
   const base=location.href.split('?')[0];
   return base.replace('one_tre_trainer.html','one_tre_member.html')+'?id='+id;
 }
+function getDataUrl(id){
+  // トレーニング・スコア・名前をURLに埋め込む
+  const training=T.filter(t=>t.memberId===id);
+  const score=JSON.parse(localStorage.getItem('onetreScore_'+id)||'null');
+  const memberObj=getAllMembers().find(m=>m.id===id);
+  const name=memberObj?memberObj.name:'';
+  const payload={training,score,name};
+  const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  return getMemberUrl(id)+'&td='+encoded;
+}
+function cpDataUrl(id,btn){
+  const url=getDataUrl(id);
+  navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓ データURLコピー済';setTimeout(()=>btn.textContent='📦 データURL（記録付き）',2000);});
+}
 function daysSince(dateStr){
   if(!dateStr)return null;
   return Math.floor((new Date()-new Date(dateStr))/(1000*60*60*24));
@@ -319,17 +333,10 @@ async function fetchGasData(){
   catch(e){console.error(e);return null;}
 }
 
-async function loadGasMembers(){
-  const data=await fetchGasData();
-  if(!data)return;
-  const rows=Array.isArray(data)?data:(data.all||[]);
+function loadGasMembers(){
+  // GAS通信なし: localStorageのMをそのまま使用
   gasMembers=[];
-  rows.forEach((row,i)=>{
-    const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
-    const name=nameKey?String(row[nameKey]).trim():'';
-    if(name&&!gasMembers.find(m=>m.name===name))gasMembers.push({id:'gas_'+i,name,gender:'f',weights:[],dob:'',fromSheet:true});
-  });
-  M.forEach(m=>{if(!gasMembers.find(g=>g.name===m.name))gasMembers.push(m);});
+  M.forEach(m=>gasMembers.push(m));
   pSel();rMem();
 }
 
@@ -419,18 +426,11 @@ function renderSales(){
   });
 }
 
-async function rSales(){
-  document.getElementById('sales-loading').style.display='block';
-  document.getElementById('sales-content').style.display='none';
-  document.getElementById('sales-error').style.display='none';
-  const rawData=await fetchGasData();
-  const data=rawData&&!Array.isArray(rawData)?(rawData.all||[]):rawData;
-  if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
-  salesCache=data;
-  salesViewYear=new Date().getFullYear();
+function rSales(){
+  // 売上管理はGAS連携のため現在利用不可（GAS通信を削除したため）
   document.getElementById('sales-loading').style.display='none';
-  document.getElementById('sales-content').style.display='block';
-  renderSales();
+  document.getElementById('sales-error').style.display='block';
+  document.getElementById('sales-error').textContent='売上管理はGASスプレッドシートと連携しています。現在この機能はオフラインで利用できません。';
 }
 
 function loadBodyScore(){
@@ -464,12 +464,7 @@ function saveBodyScore(){
   const f=parseInt(document.getElementById('sc-flex').value)||0;
   const score={strength:s,core:c,agility:a,flex:f};
   localStorage.setItem('onetreScore_'+mid,JSON.stringify(score));
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveBodyScore',memberId:mid,score})
-  }).catch(()=>{});
-  alert('スコアを保存しました。会員のマイページに反映されます。');
+  alert('スコアを保存しました。データURLを生成してLINEで会員に送ってください。');
 }
 
 function checkRadarTotal(){
@@ -496,12 +491,7 @@ function saveExerciseMaster(){
   const master=getExerciseMaster();
   master[name]={strength:s,core:c,move:m};
   localStorage.setItem('onetreExMaster',JSON.stringify(master));
-  // GASにも保存
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveExerciseMaster',exercise:name,strength:s,core:c,move:m})
-  }).catch(()=>{});
+  // localStorageのみに保存
   document.getElementById('ex-name').value='';
   renderExerciseMasterList();
   alert('「'+name+'」の意識ポイントを保存しました。');
@@ -604,7 +594,11 @@ function rMem(){
         <div class="mmeta">${a?a+'歳':''}</div>
         <div class="url-box">
           <span class="url-text">${url}</span>
-          <button class="copy-btn" onclick="cpUrl('${url}',this)">URLをコピー</button>
+          <button class="copy-btn" onclick="cpUrl('${url}',this)">URLコピー</button>
+        </div>
+        <div class="url-box" style="margin-top:4px;background:#f0f8f5">
+          <span class="url-text" style="color:#3a8a6a">記録データ付きURL（LINEで送る）</span>
+          <button class="copy-btn" style="background:#3a8a6a" onclick="cpDataUrl('${m.id}',this)">📦 データURL（記録付き）</button>
         </div>
       </div>`;
     l.appendChild(d);
@@ -650,18 +644,9 @@ function saveTr(){
   if(!setsArr.length){alert('種目を入力してください');return;}
   // localStorageにも保存（オフライン対応）
   T.push({id:'t'+Date.now(),memberId:mid,date:dt,sets:setsArr});sv();
-  // GASのスプレッドシートにも書き込む（iPad→会員スマホ連動）
-  fetch(GAS_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'saveTraining',memberId:mid,date:dt,sets:setsArr})
-  }).then(()=>{
-    document.getElementById('sw').innerHTML='';rRec();
-    alert('保存しました。会員の専用画面に反映されています。');
-  }).catch(()=>{
-    document.getElementById('sw').innerHTML='';rRec();
-    alert('保存しました（オフラインモード）。');
-  });
+  // localStorageに保存
+  document.getElementById('sw').innerHTML='';rRec();
+  alert('保存しました！\n会員管理タブの「データURLを生成」からURLをコピーしてLINEで会員に送ってください。');
 }
 
 function rRec(){
