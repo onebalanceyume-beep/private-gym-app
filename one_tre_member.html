@@ -540,6 +540,7 @@ function renderWeightHistory(){
     el.appendChild(div);
   });
 }
+function saveGoal(){
   const v=parseFloat(document.getElementById('goal-wt').value);
   if(!v||v<20||v>200){alert('正しい体重を入力してください');return;}
   localStorage.setItem('onetreGoal_'+urlId,v);
