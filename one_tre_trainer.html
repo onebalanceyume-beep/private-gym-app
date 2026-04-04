@@ -327,20 +327,32 @@ function getLastVisit(memberId){
   return mts.length?mts[0].date:null;
 }
 
+let gasCache=null; // GASデータを1回だけ取得してキャッシュ
+
 async function fetchGasData(){
-  try{const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});if(!res.ok)throw new Error();return await res.json();}
-  catch(e){console.error(e);return null;}
+  if(gasCache)return gasCache; // キャッシュがあれば再利用
+  try{
+    const res=await fetch(GAS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    gasCache=await res.json();
+    return gasCache;
+  }catch(e){console.error('GAS fetch error:',e);return null;}
 }
 
 async function loadGasMembers(){
   const data=await fetchGasData();
+  if(!data){
+    // GAS取得失敗時はlocalStorageのMを使う
+    gasMembers=[...M];
+    pSel();rMem();rDash();
+    return;
+  }
   // GASレスポンスから members 配列を取得
-  const members=data?(Array.isArray(data)?data:(data.members||[])):[];
+  const members=Array.isArray(data)?data:(data.members||[]);
   gasMembers=[];
   members.forEach(row=>{
     const name=String(row.name||'').trim();
     const id=String(row.id||'').trim();
-    // GASのgenderフィールドを使用（'男性'→'m'、それ以外→'f'）
     const genderRaw=String(row.gender||'').trim();
     const gender=genderRaw==='男性'?'m':'f';
     if(name&&id&&!gasMembers.find(m=>m.id===id)){
@@ -446,7 +458,8 @@ async function rSales(){
   document.getElementById('sales-content').style.display='none';
   document.getElementById('sales-error').style.display='none';
   const rawData=await fetchGasData();
-  const data=rawData&&!Array.isArray(rawData)?(rawData.all||[]):rawData;
+  if(!rawData){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
+  const data=Array.isArray(rawData)?(rawData):(rawData.all||[]);
   if(!data||!data.length){document.getElementById('sales-loading').style.display='none';document.getElementById('sales-error').style.display='block';return;}
   salesCache=data;
   salesViewYear=new Date().getFullYear();
@@ -735,8 +748,8 @@ function rPro(){
   last.sets.forEach(s=>{const ps=prev.sets.find(p=>p.exercise===s.exercise);if(!ps)return;const dw=s.weight-ps.weight,dr=s.reps-ps.reps;const div=document.createElement('div');div.className='pi';div.innerHTML=`<div class="pn">${s.exercise}</div><div class="pvs"><span class="pp">${ps.weight}kg×${ps.reps}回</span><span style="color:var(--g4)">→</span><span class="pc">${s.weight}kg×${s.reps}回</span><span class="pu">${dw>0?'+'+dw.toFixed(1)+'kg':''}${dr>0?' +'+dr+'回':''}</span></div>`;cmp.appendChild(div);});
 }
 
-rDash();rCal();
-loadGasMembers();
+rCal();
+loadGasMembers(); // rDash・rMem・pSelはloadGasMembers完了後に呼ばれる
 </script>
 </body>
 </html>
