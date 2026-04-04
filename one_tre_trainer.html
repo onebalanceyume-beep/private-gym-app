@@ -334,16 +334,20 @@ async function fetchGasData(){
 
 async function loadGasMembers(){
   const data=await fetchGasData();
-  if(!data)return;
-  const rows=Array.isArray(data)?data:(data.all||[]);
+  // GASレスポンスから members 配列を取得
+  const members=data?(Array.isArray(data)?data:(data.members||[])):[];
   gasMembers=[];
-  rows.forEach((row,i)=>{
-    const nameKey=Object.keys(row).find(k=>k.replace(/\s/g,'').includes('お名前')||k==='name');
-    const name=nameKey?String(row[nameKey]).trim():'';
-    if(name&&!gasMembers.find(m=>m.name===name))gasMembers.push({id:'gas_'+i,name,gender:'f',weights:[],dob:'',fromSheet:true});
+  members.forEach(row=>{
+    // GASは {name, id, url} で返す
+    const name=String(row.name||'').trim();
+    const id=String(row.id||'').trim();
+    if(name&&id&&!gasMembers.find(m=>m.id===id)){
+      gasMembers.push({id,name,gender:'f',weights:[],dob:'',fromSheet:true});
+    }
   });
-  M.forEach(m=>{if(!gasMembers.find(g=>g.name===m.name))gasMembers.push(m);});
-  pSel();rMem();
+  // localStorageのMもマージ（重複IDは除外）
+  M.forEach(m=>{if(!gasMembers.find(g=>g.id===m.id))gasMembers.push(m);});
+  pSel();rMem();rDash();
 }
 
 let salesCache=null;
