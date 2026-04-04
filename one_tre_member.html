@@ -279,7 +279,7 @@ function init(){
 
   // localStorageから名前を取得（トレーナーが設定した名前）
   const savedName=localStorage.getItem('ot_name_'+urlId);
-  const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','62WB3H':'ヨシ'};
+  const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'ヨシ'};
   const memberName=savedName||nameMap[urlId]||'会員';
   mem={id:urlId,name:memberName,weights:[],dob:'',gender:'f'};
 
