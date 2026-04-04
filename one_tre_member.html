@@ -246,7 +246,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--blac
 
 <script>
 const urlId=new URLSearchParams(location.search).get('id');
-const GAS_URL='https://script.google.com/macros/s/AKfycbxzr06fX90hYqP9Ut1aeJk-n3KzfDKkwFN9P9MR4RsxPplq3G-BMH6mLpfDHVmWiNww/exec';
+const GAS_URL='https://script.google.com/macros/s/AKfycbxWxunuWRr-tFe6pYCHePoB9_eBPNdwclWCOzPNjJcxT8DxZ6yD61U_JalO_CXnB1mz/exec';
 let M=JSON.parse(localStorage.getItem('onetreM')||'[]');
 let T=JSON.parse(localStorage.getItem('onetreT')||'[]');
 let mem=null,mts=[];
@@ -258,37 +258,60 @@ function dc(k){if(C[k]){C[k].destroy();delete C[k];}}
 
 function daysSince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/(1000*60*60*24));}
 
-function init(){
+async function init(){
   if(!urlId){showError('URLが正しくありません。\nトレーナーから送られたURLを使ってください。');return;}
   document.getElementById('member-name').textContent='データを読み込み中...';
 
-  // URLパラメータからトレーナーデータを受信
-  const tdParam=new URLSearchParams(location.search).get('td');
-  if(tdParam){
-    try{
-      const decoded=JSON.parse(atob(tdParam));
-      if(decoded.training){localStorage.setItem('onetreT',JSON.stringify(decoded.training));}
-      if(decoded.score){localStorage.setItem('onetreScore_'+urlId,JSON.stringify(decoded.score));}
-      if(decoded.name){localStorage.setItem('ot_name_'+urlId,decoded.name);}
-      T=JSON.parse(localStorage.getItem('onetreT')||'[]');
-      // URLクリーンアップ
-      const url=new URL(location.href);url.searchParams.delete('td');
-      history.replaceState({},'',url);
-    }catch(e){console.log('td parse error',e);}
+  const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'長尾 儀弘'};
+
+  // GASからデータを取得
+  try{
+    const res=await fetch(GAS_URL+'?memberId='+urlId+'&t='+Date.now(),{method:'GET',mode:'cors'});
+    const data=await res.json();
+
+    // 会員名
+    const gasMem=(data.members||[]).find(m=>String(m.id)===urlId);
+    const memberName=gasMem?gasMem.name:(nameMap[urlId]||'会員');
+    mem={id:urlId,name:memberName,weights:[],dob:'',gender:'f'};
+
+    // トレーニングデータ
+    if(data.training&&data.training.length){
+      const grouped={};
+      data.training.forEach(r=>{
+        const key=r.date;
+        if(!grouped[key])grouped[key]={id:'gas_'+key,memberId:urlId,date:key,sets:[]};
+        grouped[key].sets.push({exercise:r.exercise,weight:r.weight,reps:r.reps,sets:r.sets||1});
+      });
+      mts=Object.values(grouped).sort((a,b)=>b.date.localeCompare(a.date));
+      // localStorageにも保存
+      localStorage.setItem('onetreT',JSON.stringify(mts));
+    }else{
+      mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
+    }
+
+    // 体重データ
+    if(data.weights&&data.weights.length){
+      mem.weights=data.weights.map(w=>w.weight).filter(w=>w>0);
+      localStorage.setItem('onetreWeights_'+urlId,JSON.stringify(data.weights.map(w=>({date:w.date,weight:w.weight}))));
+    }else{
+      const weightEntries=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]');
+      mem.weights=weightEntries.map(e=>e.weight).filter(w=>w>0);
+    }
+
+    // ボディスコア
+    if(data.bodyScore){
+      localStorage.setItem('onetreScore_'+urlId,JSON.stringify(data.bodyScore));
+    }
+
+  }catch(e){
+    // GAS失敗時はlocalStorageから取得
+    console.log('GAS失敗、localStorage使用:', e);
+    const nameMap2={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'長尾 儀弘'};
+    mem={id:urlId,name:nameMap2[urlId]||'会員',weights:[],dob:'',gender:'f'};
+    const weightEntries=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]');
+    mem.weights=weightEntries.map(e=>e.weight).filter(w=>w>0);
+    mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
   }
-
-  // localStorageから名前を取得（トレーナーが設定した名前）
-  const savedName=localStorage.getItem('ot_name_'+urlId);
-  const nameMap={'KATO01':'桂藤 陽子','TCG5F3':'吉田 美香','DDD4DF':'ヨシ'};
-  const memberName=savedName||nameMap[urlId]||'会員';
-  mem={id:urlId,name:memberName,weights:[],dob:'',gender:'f'};
-
-  // 体重データはlocalStorageから取得
-  const weightEntries=JSON.parse(localStorage.getItem('onetreWeights_'+urlId)||'[]');
-  mem.weights=weightEntries.map(e=>e.weight).filter(w=>w>0);
-
-  // トレーニングデータはlocalStorageから取得
-  mts=T.filter(t=>t.memberId===urlId).sort((a,b)=>b.date.localeCompare(a.date));
 
   if(!mem){showError('会員情報が見つかりません。\nトレーナーにお問い合わせください。');return;}
 
